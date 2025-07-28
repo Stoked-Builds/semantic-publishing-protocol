@@ -1,4 +1,3 @@
-
 # Agent Personality Profile Specification
 
 **File:** `specs/agent-interface/agent-personality-profile.md`  
@@ -97,11 +96,12 @@ Developers may:
 | 0.2   | Memory graph linking between agents   | 🔲 Planned |
 | 0.3   | Agent personality marketplace         | 🔲 Planned |
 
+
 ---
 
-## Related Documents
+## Related Specs
 
-- `ai-memory.md`
-- `agent-authentication.md`
-- `agent-rating.md`
-- `trust-engine.md`
+- [`agent-authentication.md`](./agent-authentication.md)
+- [`agent-rating.md`](./agent-rating.md)
+- [`agent-lifecycle.md`](./agent-lifecycle.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)

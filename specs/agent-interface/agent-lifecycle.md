@@ -45,9 +45,12 @@ Agents must declare and update:
 - `on_suspend`: Trigger cleanup or revocation tasks
 - `on_retire`: Archive memory, terminate routines, export state
 
-## 📚 Related Specs
 
-- `agent-authentication.md`
-- `agent-personality-profile.md`
-- `agent-rating.md`
-- `registry-and-discovery.md`
+---
+
+## Related Specs
+
+- [`agent-authentication.md`](./agent-authentication.md)
+- [`agent-personality-profile.md`](./agent-personality-profile.md)
+- [`agent-rating.md`](./agent-rating.md)
+- [`registry-and-discovery.md`](../publishing/registry-and-discovery.md)

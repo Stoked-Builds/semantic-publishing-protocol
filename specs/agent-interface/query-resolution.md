@@ -92,3 +92,12 @@ This specification outlines the lifecycle of a query — from natural language i
 - Real-time collaborative queries (multi-agent input)
 - Context threading across sessions
 - Agent marketplace plugins for niche domains
+
+---
+
+## Related Specs
+
+- [`agent-authentication.md`](./agent-authentication.md)
+- [`agent-rating.md`](./agent-rating.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`ssot-id.md`](../identity/ssot-id.md)

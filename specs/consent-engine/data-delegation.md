@@ -1,4 +1,3 @@
-
 # Data Delegation Specification
 
 **File:** `specs/consent-engine/data-delegation.md`  
@@ -115,9 +114,8 @@ They must **refuse** to act on behalf of any SSOT without a valid delegation.
 
 ---
 
-## Related Documents
+## Related Specs
 
-- `consent-audit-log.md`
-- `trust-engine.md`
-- `ssot-id.md`
-- `identity-verification.md`
+- [`trust-engine.md`](./trust-engine.md)
+- [`consent-audit-log.md`](./consent-audit-log.md)
+- [`ssot-id.md`](../identity/ssot-id.md)

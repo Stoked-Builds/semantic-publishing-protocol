@@ -83,3 +83,12 @@ Agents MUST respect the `agent-behaviour.md` guidelines for alignment, politenes
 - Federated agent swarms for complex goals
 - Group policy configuration for agent groups
 - Agent self-regulation using behavioral feedback
+
+---
+
+## Related Specs
+
+- [`agent-authentication.md`](./agent-authentication.md)
+- [`agent-rating.md`](./agent-rating.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`query-resolution.md`](./query-resolution.md)

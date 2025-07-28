@@ -1,4 +1,3 @@
-
 # Consent Audit Log Specification
 
 **File:** `specs/consent-engine/consent-audit-log.md`  
@@ -106,8 +105,8 @@ When a revocation event occurs:
 
 ---
 
-## Related Documents
+## Related Specs
 
-- `trust-engine.md`
-- `data-access-protocol.md`
-- `identity-verification.md`
+- [`trust-engine.md`](./trust-engine.md)
+- [`data-delegation.md`](./data-delegation.md)
+- [`ssot-id.md`](../identity/ssot-id.md)

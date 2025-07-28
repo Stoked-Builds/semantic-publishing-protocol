@@ -76,3 +76,12 @@ Agents authenticate via a combination of:
 - OAuth-style delegation between agents
 - Hardware-bound DID support
 - Multi-signature agent approvals (e.g. for legal entities)
+
+---
+
+## Related Specs
+
+- [`agent-rating.md`](./agent-rating.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`query-resolution.md`](./query-resolution.md)
+- [`ssot-id.md`](../identity/ssot-id.md)
