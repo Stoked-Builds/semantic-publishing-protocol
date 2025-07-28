@@ -1,10 +1,20 @@
 # Glossary – Semantic Publishing Protocol (SPP)
-
 This glossary defines key terms, acronyms, and concepts used throughout the SPP specifications. Use this as a reference for consistent terminology and understanding across all protocol documents.
 
 ---
 
-## A
+## C (Core Protocol Terms)
+
+- **Job**: A discrete publishing or processing task tracked by the protocol, such as validating a submission or generating output. Each job has a unique ID and status.
+- **Submission**: A content item (e.g., article, dataset) provided by an author or agent for processing and publication within the protocol.
+- **Processor**: A tool, service, or agent that validates, enriches, or transforms submissions according to defined rules and templates.
+- **Processing Template**: A structured definition that specifies required fields, data types, and validation rules for a particular type of submission. Used to match and process incoming content.
+- **Escalation**: A protocol event triggered when a job cannot be completed automatically (e.g., due to errors or low confidence), requiring manual review or further intervention.
+- **Confidence Threshold**: A minimum score (e.g., 0.95) that a submission must meet during validation to be accepted automatically. Submissions below this threshold may be escalated.
+- **Intervention**: Manual or automated action taken to resolve issues with a job, such as correcting data, approving escalated submissions, or handling exceptions.
+- **Event**: A significant occurrence within the protocol (e.g., submission received, job succeeded, escalation triggered) that may trigger notifications or further processing.
+- **Output**: The final, structured, and trusted result produced by the protocol after processing a submission. This is what gets published or made available for discovery.
+- **Message Schema**: The structured format used for communication between protocol components (e.g., service bus messages), defining required fields and data types for status updates and events.
 
 - **Agent**: An AI-powered service or software component that acts on behalf of a user or publisher within the SPP ecosystem (e.g., browser agent, query resolver).
 - **Attribution**: The process of crediting authors, publishers, or contributors for content or actions within the protocol.
