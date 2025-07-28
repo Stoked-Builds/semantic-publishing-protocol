@@ -1,85 +1,78 @@
-# Agent Coordination – Specification v0.1
+# Agent Authentication – Specification v0.1
 
 ## Overview
 
-In the Semantic Publishing Protocol (SPP), multiple agents may operate concurrently on behalf of a user, publisher, or service. Agent coordination defines how these agents interact, delegate tasks, share memory (if permitted), and avoid duplication or conflict.
+In the Semantic Publishing Protocol (SPP), agents are autonomous software entities acting on behalf of users or publishers. To ensure privacy, trust, and accountability, all agents must be able to authenticate themselves across the ecosystem.
 
-This specification outlines secure, intent-aligned coordination patterns that maintain user autonomy and systemic integrity.
-
----
-
-## Agent Roles
-
-Agents MAY assume different functional roles:
-
-- **Query Agent**: Resolves user queries
-- **Memory Agent**: Manages long-term data
-- **Publisher Agent**: Represents content creators
-- **Consent Agent**: Manages data access permissions
-- **Ad Agent**: Handles intent-aligned ad sourcing
-- **Trust Agent**: Scores source credibility
-
-Coordination ensures these roles don’t work in isolation or conflict.
+This spec defines how agents identify, verify, and maintain secure, revocable relationships with other entities — including users, publishers, registries, and AI browsers.
 
 ---
 
-## Delegation Protocol
+## Agent Identity
 
-Agents MAY delegate subtasks to other agents via:
+Each agent is assigned a **decentralised identifier (DID)** at creation.
 
-- **Signed delegation envelope**:
-  - Task ID
-  - Intent description
-  - Expiry
-  - Trust requirements
-- **Local broker** to manage intra-agent dispatch
-- **Consent check** before memory or action delegation
+Example:
+```
+did:spp:agent:8932abcdef123
+```
 
----
-
-## Coordination Methods
-
-| Coordination Type | Example Use Case                             | Mechanism                            |
-|-------------------|-----------------------------------------------|--------------------------------------|
-| Sequential         | Memory agent feeds context → query agent     | Linear dispatch + context injection |
-| Parallel           | Query and ad agent fetch in tandem           | Shared TTL + local results merge    |
-| Conditional        | Trust agent vetoes disallowed sources        | Policy-based short-circuiting       |
-| Escalation         | Consent agent denies → requires UI prompt    | User interrupt or fallback route    |
+Agents MAY be tied to:
+- A user (personal assistant)
+- A content publisher (auto responder or syndication agent)
+- An organisation (discovery or registry agent)
+- A content object (autonomous content broker)
 
 ---
 
-## Shared Knowledge Bus
+## Authentication Mechanisms
 
-A local “agent bus” MAY be used to:
-- Share ephemeral data during resolution
-- Emit status and alerts (e.g., `"PublisherAgent::rate_limit_exceeded"`)
-- Coordinate backoff, retries, or escalation
+Agents authenticate via a combination of:
 
-This bus MUST NOT leak data externally unless consent is granted.
+### 1. DID Document & Public Key
+- Each agent exposes a DID document with a current public key.
+- Browsers, registries, and services validate signatures via this key.
 
----
+### 2. Mutual Key Verification (handshake)
+- Agents and recipients may establish secure sessions using key exchange.
+- Optional for long-term relationships.
 
-## Priority & Arbitration
-
-If agents disagree:
-- **Consent agent** always wins over memory agent
-- **User interrupt** (e.g., “Stop that agent”) halts all downstream action
-- **Trust agent** MAY override delegation to disreputable agents
-
-Agents MUST respect the `agent-behaviour.md` guidelines for alignment, politeness, and deferral.
+### 3. Registry Lookup
+- Agents may optionally publish their DID to a trusted registry for discoverability.
+- Trust levels may vary based on registry reputation.
 
 ---
 
-## Security
+## Authentication Use Cases
 
-- Each agent MUST authenticate (`agent-authentication.md`)
-- Delegated calls MUST include audit trail
-- User MAY inspect or revoke agent rights at any time
+| Use Case                          | Required Auth Method           | Notes                                      |
+|----------------------------------|--------------------------------|--------------------------------------------|
+| User Agent Sync (multi-device)   | DID + Key Exchange             | Encrypted memory sync between devices      |
+| Publisher Agent Verification     | DID + Registry Signature       | To prevent spoofing of brand agents        |
+| Ad Agent Submission              | Signed Payload + DID Proof     | Ensures traceability and rate-limiting     |
+| Discovery Requests               | Anonymous or DID Optional      | For privacy-preserving discovery queries   |
+| Consent Access Requests          | DID + User Approval            | Required for requesting user data access   |
+
+---
+
+## Revocation & Rotation
+
+- Agents MUST support key rotation (e.g., every 90 days)
+- Revocation of keys or full DID must be possible via local user browser
+- Compromised agents must be flagged and quarantined via registry
+
+---
+
+## Privacy Considerations
+
+- Agents SHOULD minimise transmission of identifiable data
+- Ephemeral DIDs or aliases MAY be used for specific tasks
+- DID resolution SHOULD be rate-limited and privacy-preserving
 
 ---
 
 ## Future Extensions
 
-- Federated agent swarms for complex goals
-- Group policy configuration for agent groups
-- Agent self-regulation using behavioral feedback
+- OAuth-style delegation between agents
+- Hardware-bound DID support
+- Multi-signature agent approvals (e.g. for legal entities)
