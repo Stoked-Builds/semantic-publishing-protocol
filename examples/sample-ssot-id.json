@@ -1,0 +1,24 @@
+{
+  "ssot_id_version": "0.1",
+  "ssot_id": "ssot:markstokes",
+  "preferred_name": "Mark",
+  "email": "mark.stokes@outlook.com",
+  "birthdate": "1982-05-14",
+  "gender": "male",
+  "country": "UK",
+  "language": "en-GB",
+  "interests": ["ADHD", "tech", "writing", "motorbikes"],
+  "purchase_history": [
+    "product:neurofocus-buds",
+    "product:overlay-glasses-v1"
+  ],
+  "ad_preferences": {
+    "relevance_threshold": 80,
+    "max_ads_per_hour": 2,
+    "allow_product_retargeting": false
+  },
+  "field_visibility": {
+    "public": ["preferred_name", "language"],
+    "restricted": ["email", "purchase_history", "ad_preferences"]
+  }
+}

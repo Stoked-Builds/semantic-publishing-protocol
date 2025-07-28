@@ -1,0 +1,11 @@
+{
+  "amount": "1.00",
+  "currency": "USD",
+  "to": "wallet_or_account_id",
+  "from": "user_wallet_id",
+  "description": "Ad view reward",
+  "meta": {
+    "consentRequired": true,
+    "adapter": "crypto"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "sps:block/recipe",
+  "id": "block:xyz789",
+  "title": "Quick Tomato Pasta",
+  "author": "user:0xAlice",
+  "created": "2025-07-28T10:00:00Z",
+  "modified": "2025-07-28T12:00:00Z",
+  "tags": ["pasta", "vegetarian", "quick"],
+  "payload": {
+    "ingredients": [
+      { "item": "Tomatoes", "quantity": "400g" },
+      { "item": "Garlic", "quantity": "2 cloves" }
+    ],
+    "steps": [
+      "Boil pasta",
+      "Blend tomatoes and garlic",
+      "Mix and simmer"
+    ],
+    "cookTime": "PT20M",
+    "servings": 2
+  }
+}
