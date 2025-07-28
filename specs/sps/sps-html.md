@@ -35,7 +35,7 @@ At a minimum, the following should be provided:
   "title": "How AI Browsers Will Replace Web Pages",
   "author": "Mark Stokes",
   "tags": ["AI", "semantic web", "browsers"],
-  "published": "2025-07-27T08:00:00Z",
+  "published_at": "2025-07-27T08:00:00Z",
   "summary": "Exploring the death of traditional web pages and the rise of generative, intent-based browsing.",
   "canonical_url": "https://stoked.tech/articles/ai-browser-revolution"
 }
@@ -47,10 +47,10 @@ At a minimum, the following should be provided:
 ## 🧩 Meta Tag Integration
 
 ```html
-<meta name="sps:type" content="article">
-<meta name="sps:title" content="The Stoked Protocol Manifesto">
-<meta name="sps:author" content="Mark Stokes">
-<meta name="sps:tags" content="AI,protocol,vision">
+<meta name="sps_type" content="article">
+<meta name="title" content="The Stoked Protocol Manifesto">
+<meta name="author" content="Mark Stokes">
+<meta name="tags" content="AI,protocol,vision">
 ```
 
 ---
@@ -58,7 +58,7 @@ At a minimum, the following should be provided:
 ## 🏷 Inline Block Annotation
 
 ```html
-<div data-sps-type="section" data-sps-label="Call to Action">
+<div data-sps_type="section" data-sps_label="Call to Action">
   <p>Ready to join the new web? Install the Stoked Browser prototype.</p>
 </div>
 ```

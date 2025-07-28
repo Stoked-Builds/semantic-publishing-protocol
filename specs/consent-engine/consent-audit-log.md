@@ -18,9 +18,9 @@ This enables traceability, user control, and legal accountability across the Sem
 
 Every log entry MUST contain:
 
-| Field             | Type      | Description |
+| field             | type      | description |
 |------------------|-----------|-------------|
-| `event_id`        | UUID      | Unique ID of the consent event |
+| `event_id`        | uuid      | Unique ID of the consent event |
 | `ssot_id`         | string    | Subject’s Single Source of Truth ID |
 | `actor_id`        | string    | Entity requesting or accessing data (user, agent, org) |
 | `action`          | string    | One of `granted`, `revoked`, `queried`, `expired` |

@@ -34,9 +34,9 @@ Specific actions or data the delegate is permitted to perform or access.
 
 Each delegation object includes:
 
-| Field          | Type      | Description |
+| field          | type      | description |
 |----------------|-----------|-------------|
-| `grant_id`      | UUID      | Unique ID of this delegation record |
+| `grant_id`      | uuid      | Unique ID of this delegation record |
 | `ssot_id`       | string    | User identity granting the authority |
 | `delegate_id`   | string    | Agent or registry receiving the authority |
 | `scope`         | string[]  | List of permissions granted |
@@ -44,7 +44,7 @@ Each delegation object includes:
 | `expires_at`    | datetime  | Optional expiry timestamp |
 | `proof`         | object    | Digital signature or secure verification method |
 | `delegated_by`  | string    | Could be `self`, another delegate, or organisation |
-| `conditions`    | object    | Optional runtime constraints (e.g. hours, device ID, task limits) |
+| `conditions`    | object    | Optional runtime constraints (e.g. hours, device_id, task_limits) |
 
 ---
 

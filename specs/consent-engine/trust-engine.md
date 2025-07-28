@@ -11,7 +11,7 @@ The Trust Engine (TE) is the scoring and verification system that underpins conf
 1. **Agents**
    - Query resolvers, browsers, content assemblers
 2. **Content Sources**
-   - Domain, origin, publisher metadata
+   - Domain, origin, publisher_metadata
 3. **Advertisers**
    - Based on delivery, complaint rate, click fraud, consent violations
 4. **Tokens**
@@ -68,14 +68,14 @@ Each weighting is configurable and can be adapted by user or agent.
 ```json
 {
   "entity": "agent:example-resolver",
-  "trustScore": 0.86,
+  "trust_score": 0.86,
   "source": ["registry:trusted-agents"],
   "signals": {
     "verified": 0.9,
     "complaints": 0.02,
-    "dwellTime": 0.78
+    "dwell_time": 0.78
   },
-  "lastEvaluated": "2025-07-28T17:10:00Z"
+  "last_evaluated": "2025-07-28T17:10:00Z"
 }
 ```
 
