@@ -1,1 +1,72 @@
-{}
+{
+  "$schema": "https://semantic-publishing.org/schemas/ad-token-v1.json",
+  "type": "spp:ad-token",
+  "id": "ad:example-001",
+  "title": "20% Off All Hiking Gear",
+  "description": "Get an exclusive discount on hiking boots, backpacks, and outdoor essentials.",
+  "advertiser": {
+    "id": "org:mountain-outfitters",
+    "name": "Mountain Outfitters",
+    "reputation": 0.92,
+    "verified": true
+  },
+  "created": "2025-07-28T12:00:00Z",
+  "expires": "2025-08-15T00:00:00Z",
+  "categories": [
+    "outdoor",
+    "hiking",
+    "sportswear"
+  ],
+  "targeting": {
+    "intent": [
+      "travel",
+      "equipment",
+      "summer-adventures"
+    ],
+    "regions": [
+      "EU",
+      "UK"
+    ],
+    "w2aMinScore": 0.4,
+    "keywords": [
+      "hiking",
+      "boots",
+      "trail",
+      "gear"
+    ]
+  },
+  "display": {
+    "formats": [
+      "banner-top",
+      "inline-card"
+    ],
+    "media": {
+      "image": "https://cdn.mountoutfit.com/ads/hiking-gear-banner.jpg",
+      "alt": "Happy hikers with backpacks and boots in forest"
+    },
+    "cta": {
+      "text": "Shop Now",
+      "url": "https://mountoutfit.com/hiking-deals"
+    }
+  },
+  "licensing": {
+    "reuse": false,
+    "tracking": false,
+    "consentRequired": true
+  },
+  "payment": {
+    "currency": "SPX",
+    "bidPerImpression": 0.0015,
+    "bidPerClick": 0.005
+  },
+  "saturation": {
+    "maxViewsPerDay": 3,
+    "decay": "linear",
+    "resetOnClick": true
+  },
+  "metrics": {
+    "impressions": 0,
+    "clicks": 0,
+    "lastServed": null
+  }
+}
