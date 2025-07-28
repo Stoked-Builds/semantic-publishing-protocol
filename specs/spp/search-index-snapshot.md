@@ -50,11 +50,3 @@ A Search Index Snapshot (SIS) is a point-in-time capture of an agent's indexed s
 
 - May never include user profile blocks unless explicitly authorised
 - Can be encrypted for secure transfer between agents
-
----
-
-## 🔗 Related Specs
-
-- `semantic-inventory.md`
-- `registry-and-discovery.md`
-- `agent-coordination.md`

@@ -103,7 +103,7 @@ By embedding SPS:
 
 ---
 
-## 🔗 Related
+## 🔗 Related Specs
 
 - [`semantic-publishing-specification.md`](semantic-publishing-specification.md)
 - [`protocol-overview.md`](../spp/protocol-overview.md)

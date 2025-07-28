@@ -142,7 +142,13 @@ SSOT agents MAY support a “sharing vault” for optional sync/backup.
 
 ---
 
-This system ensures **data access is earned**, not taken.  
-The **individual remains sovereign** over their information —  
-...with cryptographic receipts to prove it.
+## Related Specs
 
+- [`focus-mode.md`](./focus-mode.md)
+- [`ssot-id.md`](./ssot-id.md)
+- [`identity-verification.md`](./identity-verification.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+
+> _"This system ensures **data access is earned**, not taken.  
+The **individual remains sovereign** over their information —  
+...with cryptographic receipts to prove it."_

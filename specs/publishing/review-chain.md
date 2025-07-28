@@ -67,9 +67,3 @@ Each record includes:
 - [`trust-engine.md`](../consent-engine/trust-engine.md)
 
 > _"Review chains are referenced by trust, attribution, and publisher rating systems. See related specs for integration details."_
-
-## Related Specs
-
-- `content-attribution.md`
-- `publisher-metadata.md`
-- `trust-engine.md`

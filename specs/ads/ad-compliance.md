@@ -57,7 +57,6 @@ All ads shown in the SPP ecosystem must comply with strict ethical, legal, and u
 
 ## Metadata Fields
 
-```json
 {
   "ad_id": "ad://example/456",
   "sponsored": true,
@@ -83,6 +82,8 @@ All ads shown in the SPP ecosystem must comply with strict ethical, legal, and u
 
 ## Related Specs
 
-- `trust-engine.md`
-- `ad-ranking-engine.md`
-- `agent-rating.md`
+- [`intent-aligned-ads.md`](./intent-aligned-ads.md)
+- [`fars-split.md`](./fars-split.md)
+- [`saturation-penalty.md`](./saturation-penalty.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)

@@ -130,7 +130,14 @@ These can be enforced via browser settings, agent config, or smart contract.
 
 ---
 
-The FARS model puts **humans, not platforms**, at the centre of ad economics.  
-No more silent harvesting. No more invisible labour.  
-**Consent earns compensation. Context earns credit.**
+## Related Specs
 
+- [`intent-aligned-ads.md`](./intent-aligned-ads.md)
+- [`ad-auction-engine.md`](./ad-auction-engine.md)
+- [`saturation-penalty.md`](./saturation-penalty.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`content-revenue-split.md`](../payments/content-revenue-split.md)
+
+> _"The FARS model puts **humans, not platforms**, at the centre of ad economics.  
+No more silent harvesting. No more invisible labour.  
+**Consent earns compensation. Context earns credit.**"_

@@ -55,6 +55,7 @@ if (viewed && !engaged) {
 
 If the ad is not shown again for `resetPeriod` (default: 30 days), the penalty is **reset to baseline**.
 
+
 This allows for fresh re-evaluation without permanent blacklisting.
 
 ---
@@ -100,6 +101,12 @@ Saturation scoring is **entirely local**:
 
 ---
 
-The Saturation Penalty System brings dignity to digital attention.  
-Less noise. More signal.
+## Related Specs
 
+- [`intent-aligned-ads.md`](./intent-aligned-ads.md)
+- [`fars-split.md`](./fars-split.md)
+- [`ad-auction-engine.md`](./ad-auction-engine.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+
+> _"The Saturation Penalty System brings dignity to digital attention.  
+Less noise. More signal."_

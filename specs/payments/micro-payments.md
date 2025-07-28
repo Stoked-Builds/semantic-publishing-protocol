@@ -58,16 +58,6 @@ This specification outlines payment flow, supported formats, adapter architectur
 
 ---
 
-## Related Specs
-
-- [`payment-adapter-contract.md`](./payment-adapter-contract.md)
-- [`spp-token-roadmap.md`](./spp-token-roadmap.md)
-- [`intent-aligned-ads.md`](../ads/intent-aligned-ads.md)
-- [`ad-auction-engine.md`](../ads/ad-auction-engine.md)
-- [`trust-engine.md`](../consent-engine/trust-engine.md)
-- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
-
-> _"Micro-payments are tightly coupled with payment adapters and future SPP token flows. See related specs for implementation and roadmap details."_
 ## Adapter Interface
 
 All SPP-compliant payment adapters MUST implement:
@@ -117,3 +107,16 @@ Users MUST be able to configure:
 - Global “Ad Equity Pool” for fairer content funding
 - Revenue distribution tracking for cooperative publishing networks
 - Self-custodial escrow smart contracts for multi-agent flows
+
+---
+
+## Related Specs
+
+- [`payment-adapter-contract.md`](./payment-adapter-contract.md)
+- [`spp-token-roadmap.md`](./spp-token-roadmap.md)
+- [`intent-aligned-ads.md`](../ads/intent-aligned-ads.md)
+- [`ad-auction-engine.md`](../ads/ad-auction-engine.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+
+> _"Micro-payments are tightly coupled with payment adapters and future SPP token flows. See related specs for implementation and roadmap details."_

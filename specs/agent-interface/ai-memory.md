@@ -58,6 +58,7 @@ Context is scoped to avoid contamination, bias, or hallucination amplification.
 | SSOT Reference  | Live only             | Cache TTLs allowed           |
 
 Users may configure:
+
 - Retention policy
 - Forgetfulness preference
 - "Autofade" for stale data
@@ -86,3 +87,12 @@ Users may configure:
 - Semantic memory clustering
 - Event-based memory triggers
 - Multi-agent shared memory bus (user scoped)
+
+---
+
+## Related Specs
+
+- [`agent-interface.md`](./agent-interface.md)
+- [`agent-personality-profile.md`](./agent-personality-profile.md)
+- [`ssot-id.md`](../identity/ssot-id.md)
+- [`consent-engine.md`](../identity/consent-engine.md)

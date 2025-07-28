@@ -105,7 +105,12 @@ No central storage or tracking of focus mode is allowed.
 
 ---
 
-Focus Mode is a cornerstone of the **sovereign attention economy**.  
-It protects the user's right to peace, clarity, and focus —  
-...and demands respect from every layer of the digital ecosystem.
+## Related Specs
 
+- [`consent-engine.md`](./consent-engine.md)
+- [`ssot-id.md`](./ssot-id.md)
+- [`agent-interface.md`](../agent-interface/agent-interface.md)
+
+> _"Focus Mode is a cornerstone of the **sovereign attention economy**.  
+It protects the user's right to peace, clarity, and focus —  
+...and demands respect from every layer of the digital ecosystem."_

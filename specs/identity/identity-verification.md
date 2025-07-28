@@ -93,7 +93,7 @@ This score is readable via the **Trust Engine** and can be used by agents or bro
   "score": 82,
   "last_updated": "2025-07-28T18:35:00Z"
 }
-```
+``` 
 
 ---
 
@@ -107,8 +107,8 @@ This score is readable via the **Trust Engine** and can be used by agents or bro
 
 ---
 
-## Related Docs
+## Related Specs
 
-- `ssot-id.md`
-- `consent-engine/trust-engine.md`
-- `identity/data-access-protocol.md`
+- [`ssot-id.md`](./ssot-id.md)
+- [`consent-engine.md`](./consent-engine.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)

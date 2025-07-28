@@ -116,5 +116,12 @@ User profiles may be exported or backed up as:
 
 ---
 
-SSOT-ID is **your digital self, on your terms** — designed to be recognised, respected, and revoked.
+## Related Specs
 
+- [`consent-engine.md`](./consent-engine.md)
+- [`focus-mode.md`](./focus-mode.md)
+- [`identity-verification.md`](./identity-verification.md)
+- [`agent-interface.md`](../agent-interface/agent-interface.md)
+
+
+> _"SSOT-ID is **your digital self, on your terms** — designed to be recognised, respected, and revoked."_

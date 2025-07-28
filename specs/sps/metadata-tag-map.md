@@ -66,7 +66,3 @@ These can live in `<head>` for easy agent discovery.
 - [`ssot-id.md`](../identity/ssot-id.md)
 
 > _"Where `ssot_id` or `ssot://` identifiers are referenced, see: SSOT URI structure in [`ssot-id.md`](../identity/ssot-id.md). Where `semantic_block_type` or `block_type` is referenced, see: [`semantic-blocks.md`](../publishing/semantic-blocks.md)."_
-
-- `ssot-id.md`
-- `semantic-blocks.md`
-- `html-compatibility.md`

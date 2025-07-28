@@ -37,17 +37,11 @@ Defines how agents or intermediary systems receive **commission payments** for s
     "geo_limit": ["GB", "IE"]
   }
 }
-```
 
 ---
-
-## Supported Models
-
 | Type           | Description |
-|----------------|-------------|
 | `pay-per-click` | Commission on each valid clickthrough |
 | `pay-per-action` | After user performs downstream action |
-| `pay-per-view` | Based on visibility threshold reached |
 
 ---
 
@@ -59,11 +53,12 @@ Defines how agents or intermediary systems receive **commission payments** for s
 
 ---
 
-## Related Files
+## Related Specs
 
-- `micro-payments.md`
-- `intent-aligned-ads.md`
-- `ad-token.json`
+- [`micro-payments.md`](./micro-payments.md)
+- [`payment-adapter-contract.md`](./payment-adapter-contract.md)
+- [`intent-aligned-ads.md`](../ads/intent-aligned-ads.md)
+- [`fars-split.md`](../ads/fars-split.md)
 
 **Token Model Reference:**
 - [`spp-token-roadmap.md`](./spp-token-roadmap.md)

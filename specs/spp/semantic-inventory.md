@@ -58,11 +58,3 @@ To provide a consistent structure for:
 - **Cold Inventory**: Background indexed data for future recall, periodically refreshed
 - Agents may maintain rolling caches and expiration rules
 
----
-
-## 📚 Related Specs
-
-- `semantic-blocks.md`
-- `query-resolution.md`
-- `agent-memory.md`
-- `search-index-snapshot.md`
