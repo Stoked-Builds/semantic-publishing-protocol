@@ -58,7 +58,9 @@ Each block includes a core header and a typed payload. Field names use `camelCas
 }
 ```
 
-> _"References to `blockRef` or attribution metadata should be interpreted as defined in [`content-attribution.md`](./content-attribution.md) and [`publisher-metadata.md`](./publisher-metadata.md)."_
+> _"References to `blockRef` (a field for linking to other semantic blocks by ID) should follow the conventions in [`content-attribution.md`](./content-attribution.md) and [`publisher-metadata.md`](./publisher-metadata.md). The `blockRef` field is used to reference another block's unique identifier, typically in the form `block:{id}`. This enables modular composition and traceability of content blocks across documents and registries."_
+
+> _"Where `ssot://` or `ssot_id` identifiers are used, these refer to Single Source of Truth URIs as defined in [`ssot-id.md`](../identity/ssot-id.md). The `ssot://` scheme provides a globally unique, resolvable reference for identity and attribution across the protocol."_
 
 ---
 
