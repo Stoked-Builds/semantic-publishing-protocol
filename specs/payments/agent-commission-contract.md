@@ -64,3 +64,6 @@ Defines how agents or intermediary systems receive **commission payments** for s
 - `micro-payments.md`
 - `intent-aligned-ads.md`
 - `ad-token.json`
+
+**Token Model Reference:**
+- [`spp-token-roadmap.md`](./spp-token-roadmap.md)

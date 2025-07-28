@@ -111,3 +111,6 @@ Each entry MUST include:
 - [`micro-payments.md`](./micro-payments.md)
 - [`registry-and-discovery.md`](./registry-and-discovery.md)
 - [`agent-behaviour.md`](./agent-behaviour.md)
+
+**Token Model Reference:**
+- [`spp-token-roadmap.md`](./spp-token-roadmap.md)
