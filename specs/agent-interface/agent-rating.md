@@ -128,4 +128,7 @@ Trust Scores are used by:
 - [`micro-payments.md`](../payments/micro-payments.md)
 - [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
 
+**Back-link:**
+- [`intent-aligned-ads.md`](../ads/intent-aligned-ads.md)
+
 > _"Agent ratings may influence trust scores, payment eligibility, and agent discovery. See related specs for integration details."_

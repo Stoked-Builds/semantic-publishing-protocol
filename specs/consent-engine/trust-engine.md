@@ -108,6 +108,9 @@ Each weighting is configurable and can be adapted by user or agent.
 - [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
 - [`ssot-id.md`](../identity/ssot-id.md)
 
+**Back-link:**
+- [`intent-aligned-ads.md`](../ads/intent-aligned-ads.md)
+
 > _"Trust Engine scores may reference agent ratings, content attribution, and payment/commission events. See related specs for details on these integrations."_
 
 Where `ssot_id` or `ssot://` identifiers are referenced, see: _"SSOT URI structure is defined in [`ssot-id.md`](../identity/ssot-id.md)."_

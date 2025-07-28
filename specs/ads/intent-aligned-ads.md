@@ -27,4 +27,7 @@ This document defines the requirements and structure for intent-aligned advertis
 - [`trust-engine.md`](../consent-engine/trust-engine.md)
 - [`semantic-blocks.md`](../publishing/semantic-blocks.md)
 
+**Back-link:**
+- [`agent-rating.md`](../agent-interface/agent-rating.md)
+
 > _"Ad auctions, payments, and token flows are defined in the related specs above. For future compliance features, see: `compliance-matrix.md` (not yet implemented)."_
