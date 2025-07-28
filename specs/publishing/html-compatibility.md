@@ -1,3 +1,12 @@
+---
+
+## Related Specs
+
+- [`semantic-blocks.md`](./semantic-blocks.md)
+- [`publisher-metadata.md`](./publisher-metadata.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+
+> _"HTML compatibility enables SPP-compliant metadata extraction for trust, attribution, and payment systems. See related specs for integration details."_
 # HTML Compatibility – Specification v0.1
 
 ## Purpose

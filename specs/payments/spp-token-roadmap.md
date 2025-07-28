@@ -82,3 +82,15 @@ The SPP architecture is compatible with SPX as a future adapter. No token contra
 2. Draft `spx-token.md` (technical specification)
 3. Evaluate candidate blockchain platforms
 4. Engage with open-source monetary and privacy experts
+---
+
+## Related Specs
+
+- [`micro-payments.md`](./micro-payments.md)
+- [`payment-adapter-contract.md`](./payment-adapter-contract.md)
+- [`intent-aligned-ads.md`](../ads/intent-aligned-ads.md)
+- [`ad-auction-engine.md`](../ads/ad-auction-engine.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+
+> _"SPX token design is intended to integrate with SPP's micro-payments, adapters, and trust-weighted payment flows. See related specs for implementation and roadmap details."_

@@ -45,8 +45,14 @@ These endpoints may be exposed by AI browsers, agent runtimes, content registrie
 
 ---
 
+
 ## Related Specs
 
-- `consent-engine.md`
-- `query-resolution.md`
-- `micro-payments.md`
+- [`consent-engine.md`](../consent-engine/consent-engine.md)
+- [`query-resolution.md`](../agent-interface/query-resolution.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+- [`spp-token-roadmap.md`](../payments/spp-token-roadmap.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+
+> _"API endpoints may trigger payment, token, or trust flows. See related specs for integration details. Where `ssot_id` or `ssot://` identifiers are referenced, see: SSOT URI structure in [`ssot-id.md`](../identity/ssot-id.md)."_

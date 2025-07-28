@@ -50,6 +50,7 @@ Each record includes:
 
 ---
 
+
 ## Use Cases
 
 - Academic publishing with open peer review
@@ -57,6 +58,15 @@ Each record includes:
 - Newsrooms tracking editorial accountability
 
 ---
+
+## Related Specs
+
+- [`publisher-rating.md`](./publisher-rating.md)
+- [`publisher-metadata.md`](./publisher-metadata.md)
+- [`semantic-blocks.md`](./semantic-blocks.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+
+> _"Review chains are referenced by trust, attribution, and publisher rating systems. See related specs for integration details."_
 
 ## Related Specs
 

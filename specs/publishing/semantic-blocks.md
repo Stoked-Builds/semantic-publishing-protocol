@@ -28,9 +28,10 @@ These blocks can be embedded in HTML, served via registry APIs, or passed direct
 
 ---
 
+
 ## Block Format
 
-Each block includes a core header and a typed payload:
+Each block includes a core header and a typed payload. Field names use `camelCase` for all metadata fields for consistency within the publishing group.
 
 ```json
 {
@@ -56,6 +57,8 @@ Each block includes a core header and a typed payload:
   }
 }
 ```
+
+> _"References to `blockRef` or attribution metadata should be interpreted as defined in [`content-attribution.md`](./content-attribution.md) and [`publisher-metadata.md`](./publisher-metadata.md)."_
 
 ---
 
@@ -115,8 +118,15 @@ Semantic Blocks allow:
 
 ---
 
+
 ## Related Specs
 
 - [`registry-and-discovery.md`](./registry-and-discovery.md)
-- [`agent-interface.md`](./agent-interface.md)
+- [`agent-interface.md`](../agent-interface/agent-interface.md)
 - [`html-compatibility.md`](./html-compatibility.md)
+- [`content-attribution.md`](./content-attribution.md)
+- [`publisher-metadata.md`](./publisher-metadata.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+- [`ssot-id.md`](../identity/ssot-id.md)

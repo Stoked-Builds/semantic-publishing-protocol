@@ -99,7 +99,13 @@ interface PaymentAdapter {
 
 ---
 
-## Related Files
+## Related Specs
 
 - [`micro-payments.md`](./micro-payments.md)
 - [`spp-token-roadmap.md`](./spp-token-roadmap.md)
+- [`intent-aligned-ads.md`](../ads/intent-aligned-ads.md)
+- [`ad-auction-engine.md`](../ads/ad-auction-engine.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+
+> _"Payment adapters are core to SPP's micro-payments and token flows. See related specs for integration and roadmap details."_

@@ -51,8 +51,15 @@ Establish a standard metadata structure that publishers can declare to define th
 
 ---
 
+
 ## Related Specs
 
-- `publisher-rating.md`
-- `content-attribution.md`
-- `review-chain.md`
+- [`publisher-rating.md`](./publisher-rating.md)
+- [`content-attribution.md`](./content-attribution.md)
+- [`review-chain.md`](./review-chain.md)
+- [`semantic-blocks.md`](./semantic-blocks.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+
+> _"Publisher metadata is referenced by trust, attribution, and payment systems. See related specs for integration details."_

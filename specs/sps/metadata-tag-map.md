@@ -57,7 +57,15 @@ These can live in `<head>` for easy agent discovery.
 
 ---
 
-## 🔗 Related Specs
+
+## Related Specs
+
+- [`semantic-publishing-specification.md`](./semantic-publishing-specification.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`ssot-id.md`](../identity/ssot-id.md)
+
+> _"Where `ssot_id` or `ssot://` identifiers are referenced, see: SSOT URI structure in [`ssot-id.md`](../identity/ssot-id.md). Where `semantic_block_type` or `block_type` is referenced, see: [`semantic-blocks.md`](../publishing/semantic-blocks.md)."_
 
 - `ssot-id.md`
 - `semantic-blocks.md`

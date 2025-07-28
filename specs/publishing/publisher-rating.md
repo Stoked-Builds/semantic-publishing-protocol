@@ -52,6 +52,7 @@ Enable a decentralised system for rating **publishers** based on their trustwort
 
 ---
 
+
 ## Privacy & Abuse Prevention
 
 - Voting is optional and pseudonymous
@@ -62,6 +63,12 @@ Enable a decentralised system for rating **publishers** based on their trustwort
 
 ## Related Specs
 
-- `trust-engine.md`
-- `agent-rating.md`
-- `review-chain.md`
+- [`publisher-metadata.md`](./publisher-metadata.md)
+- [`review-chain.md`](./review-chain.md)
+- [`semantic-blocks.md`](./semantic-blocks.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`agent-rating.md`](../agent-interface/agent-rating.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+
+> _"Publisher ratings are referenced by trust, attribution, and payment systems. See related specs for integration details."_

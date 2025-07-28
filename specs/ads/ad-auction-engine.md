@@ -78,9 +78,16 @@ ad_score = (relevance_score * relevance_weight) + (normalised_bid * bid_weight) 
 
 ---
 
-## Related Files
 
-- `intent-aligned-ads.md`
-- `ad-ranking-engine.md`
-- `ad-token.json`
-- `ad-compliance.md`
+## Related Specs
+
+- [`intent-aligned-ads.md`](./intent-aligned-ads.md)
+- [`ad-ranking-engine.md`](./ad-ranking-engine.md)
+- [`ad-compliance.md`](./ad-compliance.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+- [`spp-token-roadmap.md`](../payments/spp-token-roadmap.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+
+> _"Ad auction outcomes, payments, and trust signals are defined in the related specs above. For future compliance features, see: `compliance-matrix.md` (not yet implemented)."_

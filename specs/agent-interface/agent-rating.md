@@ -72,10 +72,11 @@ Trust Scores are used by:
 
 ## Rating Storage Format
 
+
 ```json
 {
   "agent_id": "agent://get-stoked",
-  "ssot_id": "user:markstokes",
+  "ssot_id": "ssot:markstokes",
   "helpfulness": 5,
   "respect": 4,
   "accuracy": 5,
@@ -85,6 +86,8 @@ Trust Scores are used by:
   "timestamp": "2025-07-28T22:30:00Z"
 }
 ```
+
+> _"SSOT URI structure is defined in [`ssot-id.md`](../identity/ssot-id.md)."_
 
 ---
 
@@ -115,8 +118,14 @@ Trust Scores are used by:
 
 ---
 
-## Related Documents
 
-- `trust-engine.md`
-- `agent-authentication.md`
-- `consent-engine/data-delegation.md`
+## Related Specs
+
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`agent-authentication.md`](./agent-authentication.md)
+- [`consent-engine/data-delegation.md`](../consent-engine/data-delegation.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+
+> _"Agent ratings may influence trust scores, payment eligibility, and agent discovery. See related specs for integration details."_

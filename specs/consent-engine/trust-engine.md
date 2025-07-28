@@ -97,9 +97,17 @@ Each weighting is configurable and can be adapted by user or agent.
 
 ---
 
-## Related Files
+## Related Specs
 
 - [`consent-engine.md`](./consent-engine.md)
-- [`agent-rating.md`](./agent-rating.md)
-- [`content-attribution.md`](./content-attribution.md)
-- [`publisher-metadata.md`](./publisher-metadata.md)
+- [`agent-rating.md`](../agent-interface/agent-rating.md)
+- [`content-attribution.md`](../publishing/content-attribution.md)
+- [`publisher-metadata.md`](../publishing/publisher-metadata.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+- [`ssot-id.md`](../identity/ssot-id.md)
+
+> _"Trust Engine scores may reference agent ratings, content attribution, and payment/commission events. See related specs for details on these integrations."_
+
+Where `ssot_id` or `ssot://` identifiers are referenced, see: _"SSOT URI structure is defined in [`ssot-id.md`](../identity/ssot-id.md)."_
