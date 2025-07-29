@@ -1,15 +1,3 @@
----
-
-## Related Specs
-
-- [`metadata-tag-map.md`](./metadata-tag-map.md)
-- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
-- [`trust-engine.md`](../consent-engine/trust-engine.md)
-- [`ssot-id.md`](../identity/ssot-id.md)
-- [`micro-payments.md`](../payments/micro-payments.md)
-- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
-
-> _"Where `ssot_id` or `ssot://` identifiers are referenced, see: SSOT URI structure in [`ssot-id.md`](../identity/ssot-id.md). Where `semantic_block_type` or `block_type` is referenced, see: [`semantic-blocks.md`](../publishing/semantic-blocks.md)."_
 # Semantic Publishing Specification (SPS)
 **Version:** 0.1  
 **Status:** Draft  
@@ -184,4 +172,17 @@ Clients may ignore or warn if version is unsupported.
 
 The Semantic Publishing Spec bridges the legacy web and the agent-powered future.  
 It’s not just content — it’s **context with consent**.
+
+---
+
+## Related Specs
+
+- [`metadata-tag-map.md`](./metadata-tag-map.md)
+- [`semantic-blocks.md`](../publishing/semantic-blocks.md)
+- [`trust-engine.md`](../consent-engine/trust-engine.md)
+- [`ssot-id.md`](../identity/ssot-id.md)
+- [`micro-payments.md`](../payments/micro-payments.md)
+- [`payment-adapter-contract.md`](../payments/payment-adapter-contract.md)
+
+> _"Where `ssot_id` or `ssot://` identifiers are referenced, see: SSOT URI structure in [`ssot-id.md`](../identity/ssot-id.md). Where `semantic_block_type` or `block_type` is referenced, see: [`semantic-blocks.md`](../publishing/semantic-blocks.md)."_
 
