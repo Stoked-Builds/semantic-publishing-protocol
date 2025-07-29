@@ -1,4 +1,6 @@
 # Glossary – Semantic Publishing Protocol (SPP)
+
+[← Back to Specification Index](spec-index.md)
 This glossary defines key terms, acronyms, and concepts used throughout the SPP specifications. Use this as a reference for consistent terminology and understanding across all protocol documents.
 
 ---

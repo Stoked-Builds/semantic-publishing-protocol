@@ -1,2 +1,11 @@
 issues/
 **/.DS_Store
+
+# OS-generated metadata files
+.DS_Store
+__MACOSX/
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.Spotlight-V100
+*.Trashes

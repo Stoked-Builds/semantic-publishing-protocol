@@ -32,3 +32,9 @@ By submitting a contribution, you agree to license your contribution under the p
 ---
 
 Thank you for helping build the future of open, semantic publishing!
+
+---
+
+## Release Packaging
+
+Before publishing or distributing a release ZIP, see [Release Packaging Guide](./docs/release-packaging.md) for instructions on preparing a clean, public archive.

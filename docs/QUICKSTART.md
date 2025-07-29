@@ -106,3 +106,17 @@ This walkthrough shows how SPP:
 - Updates job status for transparency and automation
 
 Explore the repo for more templates, processors, and advanced flows!
+
+---
+
+## Validating Your SPS Files
+
+You can validate `.sps.md` files for compliance using the Python validator in [`tools/validate.py`](../tools/README.md).
+
+Example:
+
+```sh
+python tools/validate.py examples/example-01.sps.md
+```
+
+See [`tools/README.md`](../tools/README.md) for details.

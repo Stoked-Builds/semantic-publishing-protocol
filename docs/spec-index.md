@@ -1,10 +1,14 @@
 # Semantic Publishing Protocol – Specification Index
 
+[→ Glossary of Terms](glossary.md)
+[→ System Flow Diagram](overview/system-flow-diagram.md)
+
+→ [Specification Hierarchy](spec-hierarchy.md)
+
 This index provides a structured overview and navigation map for all major SPP specification documents. Use it as a starting point for exploring the protocol's architecture, components, and related standards.
 
 ---
 
-## Core & Reference
 - [Glossary](./glossary.md)
 - [Semantic Publishing Specification](../specs/sps/semantic-publishing-specification.md)
 - [Metadata Tag Map](../specs/sps/metadata-tag-map.md)
