@@ -48,14 +48,14 @@ Below is a simple block-style diagram showing the end-to-end flow of a document 
 
 ```mermaid
 flowchart TD
-  A[Submission\n(Author submits content)] --> B[Template Matching\n(Finds appropriate template)]
-  B --> C[Processor Execution\n(Validation, enrichment, transformation)]
-  C --> D[Output Generation\n(Structured, trusted content)]
+  A[Submission: Author submits content] --> B[Template Matching: Finds template]
+  B --> C[Processor Execution: Validation, enrichment, transformation]
+  C --> D[Output Generation: Structured, trusted content]
   C --> E[Job Status Update]
-  E --> F[Status]
-  F -->|Succeeded| G[Content Published / Available]
-  F -->|Failed| H[Error Reported\n to Author]
-  F -->|Escalated| I[Manual Review\n or Further Processing]
+  E --> F[Status Check]
+  F -->|Succeeded| G[Content Published or Available]
+  F -->|Failed| H[Error Reported to Author]
+  F -->|Escalated| I[Manual Review or Further Processing]
 ```
 
 This diagram illustrates the main steps and decision points in the SPP document lifecycle.
