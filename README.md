@@ -29,7 +29,7 @@ AI agents are **devouring the web** without giving back.
 🧠 AI is learning… but creators are starving.  
 We call this the **AI Starvation Loop**.
 
-[Read more](https://medium.com/@mark_stokes/the-ai-starvation-loop-how-ai-is-starving-the-web-and-what-we-can-do-about-it-e0e567f13ad4{:target="_blank"})
+[Read more](https://medium.com/@mark_stokes/the-ai-starvation-loop-how-ai-is-starving-the-web-and-what-we-can-do-about-it-e0e567f13ad4)
 
 > Left unchecked, it will collapse the content economy — and take AI quality down with it.
 
