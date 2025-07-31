@@ -92,7 +92,7 @@ Let’s make it speak again — **with us, for us**.
 
 ## 🧠 Learn More
 
-- 📖 [The AI Starvation Loop](https://medium.com/your-article-link)
+- 📖 [The AI Starvation Loop]([https://medium.com/your-article-link](https://medium.com/@mark_stokes/the-ai-starvation-loop-how-ai-is-starving-the-web-and-what-we-can-do-about-it-e0e567f13ad4))
 - 🌐 [Stoked Builds Homepage](https://github.com/Stoked-Builds)
 
 ---
