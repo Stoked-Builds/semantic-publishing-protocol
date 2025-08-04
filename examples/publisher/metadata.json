@@ -1,0 +1,14 @@
+{
+  "id": "publisher:anchor",
+  "name": "Anchor News",
+  "uri": "https://anchor.news",
+  "publicKey": "did:anchor:news#main-key",
+  "contact": "mailto:info@anchor.news",
+  "topics": [
+    "technology",
+    "policy",
+    "geopolitics"
+  ],
+  "licenses": ["CC-BY-4.0"],
+  "trustModel": "editorial-chain+endorsement"
+}

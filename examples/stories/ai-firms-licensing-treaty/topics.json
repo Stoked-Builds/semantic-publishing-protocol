@@ -1,0 +1,17 @@
+[
+  {
+    "id": "technology",
+    "label": {
+      "en": "Technology",
+      "fr": "Technologie"
+    },
+    "global": "wikidata:Q739"
+  },
+  {
+    "id": "policy",
+    "label": {
+      "en": "Policy",
+      "fr": "Politique"
+    }
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "id": "ai-firms-licensing-treaty",
+  "chain": [
+    {
+      "actor": "editor:john-smith",
+      "role": "initial-review",
+      "timestamp": "2025-07-10T12:34:56Z"
+    },
+    {
+      "actor": "editor:fatima-rahman",
+      "role": "fact-check",
+      "timestamp": "2025-07-11T09:17:42Z"
+    },
+    {
+      "actor": "editor-in-chief:lucy-zhou",
+      "role": "final-approval",
+      "timestamp": "2025-07-12T14:01:00Z"
+    }
+  ]
+}

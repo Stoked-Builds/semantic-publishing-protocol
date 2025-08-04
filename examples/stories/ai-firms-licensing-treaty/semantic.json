@@ -1,0 +1,36 @@
+{
+  "id": "ai-firms-licensing-treaty",
+  "title": "AI firms to need licences under new global treaty",
+  "summary": "Countries back move to register large AI models used in critical sectors.",
+  "topics": [
+    {
+      "id": "technology",
+      "label": "Technology",
+      "global": "wikidata:Q739"
+    },
+    {
+      "id": "policy",
+      "label": "Policy"
+    }
+  ],
+  "tags": ["ai", "regulation"],
+  "lang": "en",
+  "date": "2025-07-12",
+  "version": "1.0.0",
+  "digest": "fakehash1234567890abcdef",
+  "author": {
+    "name": "Priya Desai",
+    "id": "author:priya-desai",
+    "uri": "https://anchor.news/authors/priya-desai"
+  },
+  "publisher": {
+    "name": "Anchor News",
+    "id": "publisher:anchor",
+    "uri": "https://anchor.news"
+  },
+  "source": "Reuters",
+  "license": "CC-BY-4.0",
+  "canonical": "https://anchor.news/stories/ai-firms-licensing-treaty",
+  "endorsements": [],
+  "archived": false
+}

@@ -1,0 +1,16 @@
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:example:priya-desai",
+  "verificationMethod": [{
+    "id": "did:example:priya-desai#key-1",
+    "type": "Ed25519VerificationKey2018",
+    "controller": "did:example:priya-desai",
+    "publicKeyBase58": "H3C2AVvLMfQ..."
+  }],
+  "authentication": ["did:example:priya-desai#key-1"],
+  "service": [{
+    "id": "did:example:priya-desai#profile",
+    "type": "ProfileService",
+    "serviceEndpoint": "https://anchor.news/authors/priya-desai"
+  }]
+}

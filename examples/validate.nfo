@@ -1,0 +1,11 @@
+# validate.n8n
+
+🧪 This is a placeholder for a visual n8n workflow to:
+
+1. Read all folders under `/examples/stories/`
+2. Load and parse each `story.md`
+3. Extract frontmatter and generate digest
+4. Validate against `semantic.json` and `topics.json`
+5. Output pass/fail status to Telegram or Webhook
+
+Use this as a base for workflow automation in a self-hosted n8n instance.

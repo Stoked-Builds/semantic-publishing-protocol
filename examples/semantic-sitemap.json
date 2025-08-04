@@ -1,0 +1,30 @@
+{
+  "version": "0.2",
+  "publisher": {
+    "id": "publisher:anchor",
+    "name": "Anchor News",
+    "uri": "https://anchor.news"
+  },
+  "updated": "2025-08-04T00:00:00Z",
+  "stories": [
+    {
+      "id": "ai-firms-licensing-treaty",
+      "title": "AI firms to need licences under new global treaty",
+      "lang": "en",
+      "semantic": "https://anchor.news/stories/ai-firms-licensing-treaty/semantic.json",
+      "canonical": "https://anchor.news/stories/ai-firms-licensing-treaty/"
+    }
+  ],
+  "topics": "https://anchor.news/topics.json",
+  "authors": [
+    {
+      "id": "author:priya-desai",
+      "name": "Priya Desai",
+      "uri": "https://anchor.news/authors/priya-desai",
+      "did": "did:example:priya-desai"
+    }
+  ],
+  "media": [
+    "https://anchor.news/stories/ai-firms-licensing-treaty/media/featured.jpg"
+  ]
+}

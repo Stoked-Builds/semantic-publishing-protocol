@@ -1,0 +1,17 @@
+{
+  "@context": "https://schema.org",
+  "type": "Endorsement",
+  "endorser": {
+    "name": "OpenFactCheck",
+    "id": "endorser:openfactcheck",
+    "uri": "https://openfactcheck.org"
+  },
+  "endorsed": "https://anchor.news/stories/ai-firms-licensing-treaty",
+  "date": "2025-07-13",
+  "verdict": "accurate",
+  "confidence": 0.92,
+  "evidence": [
+    "https://openfactcheck.org/evidence/ai-policy"
+  ],
+  "signature": "fake-signature-placeholder"
+}
