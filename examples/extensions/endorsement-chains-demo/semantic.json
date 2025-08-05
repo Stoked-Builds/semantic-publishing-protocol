@@ -1,0 +1,61 @@
+{
+  "id": "climate-research-2025-001",
+  "title": "Climate Change Impact on Ocean Ecosystems",
+  "summary": "Comprehensive analysis of climate change effects on marine biodiversity.",
+  "topics": [
+    {
+      "id": "climate-science",
+      "label": "Climate Science"
+    },
+    {
+      "id": "marine-biology",
+      "label": "Marine Biology"
+    }
+  ],
+  "tags": ["climate", "oceans", "research"],
+  "lang": "en",
+  "date": "2025-01-15",
+  "version": "1.0.0",
+  "digest": "sha256:af09ad5030dac42aad5da6ee660fca0b81a132c523059b8c3c4a34dd06097f69",
+  "author": {
+    "name": "Dr. Sarah Ocean",
+    "id": "author:sarah-ocean",
+    "uri": "https://oceanresearch.edu/authors/sarah-ocean"
+  },
+  "publisher": {
+    "name": "Ocean Research Institute",
+    "id": "publisher:ocean-research",
+    "uri": "https://oceanresearch.edu"
+  },
+  "license": "CC-BY-4.0",
+  "canonical": "https://oceanresearch.edu/papers/climate-research-2025-001",
+  "extensions": [
+    {
+      "id": "spp:endorsement-chains",
+      "version": "0.3.0"
+    }
+  ],
+  "endorsements": [
+    {
+      "endorser_did": "did:web:climatescience.mit.edu:researchers:jane-smith",
+      "endorser_name": "Dr. Jane Smith, MIT Climate Lab",
+      "timestamp": "2025-01-15T14:30:00Z",
+      "signature": "zQmF3ysuHnLmKxn2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2E",
+      "comment": "Methodology is sound and conclusions align with peer-reviewed literature.",
+      "endorsement_type": "content",
+      "signature_algorithm": "ed25519",
+      "delegation_chain": []
+    },
+    {
+      "endorser_did": "did:web:noaa.gov:marine-biology:experts:robert-fish",
+      "endorser_name": "Dr. Robert Fish, NOAA Marine Biology Division",
+      "timestamp": "2025-01-15T15:45:00Z",
+      "signature": "zQmB7xtuHnLmKxn2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2A",
+      "comment": "Data analysis confirms trends observed in our independent studies.",
+      "endorsement_type": "content",
+      "signature_algorithm": "ed25519",
+      "delegation_chain": []
+    }
+  ],
+  "archived": false
+}
