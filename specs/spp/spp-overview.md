@@ -7,7 +7,7 @@
 
 ---
 
-## 🌐 What is SPP?
+## 🌐 What is SPP? [Informative]
 
 The Semantic Publishing Protocol (SPP) defines a modern, AI-native web architecture that **decouples content from pages** and delivers fully contextual, user-owned digital experiences.
 
@@ -17,7 +17,7 @@ SPP allows websites, individuals, and AI agents to **publish, discover, consume,
 
 ---
 
-## 🧱 Protocol Layers
+## 🧱 Protocol Layers [Normative]
 
 | Layer | Spec | Description |
 |-------|------|-------------|
@@ -28,7 +28,7 @@ SPP allows websites, individuals, and AI agents to **publish, discover, consume,
 
 ---
 
-## 🔁 Key Principles
+## 🔁 Key Principles [Normative]
 
 - **Users Own Their Identity** (via `ssot-id`)
 - **Consent is Granular and Verifiable**
@@ -39,7 +39,7 @@ SPP allows websites, individuals, and AI agents to **publish, discover, consume,
 
 ---
 
-## 🔑 Roles in the Ecosystem
+## 🔑 Roles in the Ecosystem [Normative]
 
 | Role        | Description |
 |-------------|-------------|
@@ -52,7 +52,9 @@ SPP allows websites, individuals, and AI agents to **publish, discover, consume,
 
 ---
 
-## 🧭 Workflow Snapshot
+## 🧭 Workflow Snapshot [Informative]
+
+<!-- Note: This section provides an example workflow for illustration purposes -->
 
 ```
 [User] ←→ [SSOT Agent] ←→ [AI Browser]
@@ -70,7 +72,7 @@ SPP allows websites, individuals, and AI agents to **publish, discover, consume,
 
 ---
 
-## 🗺 Future Compatibility
+## 🗺 Future Compatibility [Informative]
 
 SPP is designed to evolve. Future extensions include:
 
@@ -81,7 +83,7 @@ SPP is designed to evolve. Future extensions include:
 
 ---
 
-## 🤝 Governance
+## 🤝 Governance [Normative]
 
 SPP is governed by the open community.
 
@@ -90,7 +92,7 @@ Versioning follows [Semantic Versioning 2.0](https://semver.org/).
 
 ---
 
-## 🔥 Why It Matters
+## 🔥 Why It Matters [Informative]
 
 SPP is a **rebellion against platform monopolies**, a blueprint for an ethical, AI-integrated web where users regain control, creators get rewarded fairly, and context—not surveillance—drives value.
 

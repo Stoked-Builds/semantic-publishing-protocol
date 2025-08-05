@@ -1,13 +1,13 @@
 
 # Intent-Aligned Ads – Specification v0.1
 
-## Purpose
+## Purpose [Informative]
 
 This document defines the requirements and structure for intent-aligned advertising in the Semantic Publishing Protocol (SPP). Intent-aligned ads are delivered based on user context, declared preferences, and agent-driven relevance, with a focus on privacy and user control.
 
 ---
 
-## Core Concepts
+## Core Concepts [Normative]
 
 - **Intent Matching**: Ads are selected based on explicit user queries, recent activity, and declared interests.
 - **Consent-Driven Delivery**: No ad is shown without user or agent consent.
@@ -16,7 +16,7 @@ This document defines the requirements and structure for intent-aligned advertis
 
 ---
 
-## Related Specs
+## Related Specs [Informative]
 
 - [`ad-auction-engine.md`](./ad-auction-engine.md)
 - [`saturation-penalty.md`](./saturation-penalty.md)
