@@ -8,7 +8,9 @@ Each term links to where it is normatively defined and used across the protocol 
 
 ## A
 
+- **Ad Scorecard**: A transparency UI component that shows users why an ad was shown to them, promoting trust and user agency. See [Ad Scorecard UI](../browser/ad-scorecard-ui.md).
 - **Agent**: An AI-powered service or software component that acts on behalf of a user or publisher within the SPP ecosystem (e.g., browser agent, query resolver). See [Agent Interface Specifications](../agent-interface/).
+- **AI Browser**: An intelligent context engine that dynamically renders SPS content, respects user consent, and integrates agents, ads, and personalization while avoiding surveillance. See [AI Browser Specification](../spp/ai-browser-spec.md).
 - **Amendment**: A record of a change, correction, or update to a Document or Claim, ensuring transparency and auditability of changes. See [SPS-Core](../SPS-Core.md#3-amendment).
 - **Attribution**: The process of crediting authors, publishers, or contributors for content or actions within the protocol. See [Content Attribution](../spp/content-attribution.md).
 
@@ -32,6 +34,10 @@ Each term links to where it is normatively defined and used across the protocol 
 
 - **Entity**: A person, organization, or agent involved in publishing, authorship, or attribution, supporting multiple identifier schemes. See [SPS-Core](../SPS-Core.md#5-entity).
 - **Escalation**: A protocol event triggered when a job cannot be completed automatically, requiring manual review or further intervention. See protocol processing specifications.
+
+## F
+
+- **Focus Mode**: A user-controlled state that minimizes digital distractions during high-priority activities (deep work, mental health, etc.) by suppressing ads and non-essential content. See [Focus Mode Specification](../identity/focus-mode.md).
 
 ## I
 
@@ -63,6 +69,7 @@ Each term links to where it is normatively defined and used across the protocol 
 
 ## S
 
+- **Saturation Penalty**: A system that reduces the display score of ads that users repeatedly see but don't engage with, preventing ad fatigue and improving targeting quality. See [Saturation Penalty System](../ads/saturation-penalty.md).
 - **Semantic Block**: A modular, self-contained unit of structured content with embedded metadata. Same as Content Block. See [Semantic Blocks](../publishing/semantic-blocks.md).
 - **semantic.json**: The machine-readable canonical representation of a content artefact, generated from story.md and used by agents, search systems, and AI browsers. See [semantic.json](../publishing/semantic-json.md).
 - **Signature**: A cryptographic proof of authorship, amendment, or endorsement, providing verifiable proof using multiple cryptographic algorithms. See [SPS-Core](../SPS-Core.md#7-signature).
@@ -70,7 +77,12 @@ Each term links to where it is normatively defined and used across the protocol 
 - **SPP Token (SPX)**: The native or planned token for micro-payments and incentive alignment in the protocol. See [SPP Token Roadmap](../payments/spp-token-roadmap.md).
 - **Split**: A revenue or royalty allocation among multiple recipients, defined in content or registry metadata. See [Content Revenue Split](../payments/content-revenue-split.md).
 - **SSOT-ID**: A portable, user-owned identity format that acts as the single source of truth for all personal data. See [SSOT-ID](../identity/ssot-id.md).
+- **Stoked Navigator**: An AI-native browser implementation designed for consuming SPP content with intelligent context awareness. See [Stoked Navigator Architecture](../browser/stoked-navigator-architecture.md).
 - **Submission**: A content item (e.g., article, dataset) provided by an author or agent for processing and publication within the protocol.
+
+## U
+
+- **User Receptiveness**: A model that scores user openness to advertisements based on behavior patterns, context, and engagement history. See [User Receptiveness Model](../browser/user-receptiveness.md).
 
 ## T
 
