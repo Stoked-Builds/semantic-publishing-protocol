@@ -76,7 +76,7 @@ SPP is designed for:
 To adopt SPP:
 - Tag your content with SPS metadata
 - Provide optional consent endpoints
-- Join the SPP Ecosystem Registry (coming soon)
+- Join the SPP Ecosystem Registry <!-- Will be resolved in v0.4 -->
 - (Optional) Submit plugins, UI components, or browser agents
 
 ---

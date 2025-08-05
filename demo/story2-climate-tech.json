@@ -55,7 +55,7 @@
         "https://ai-experts.org/evidence/patent-analysis",
         "https://ai-experts.org/evidence/tech-validation"
       ],
-      "signature": "alice-signature-placeholder-2"
+      "signature": "alice-signature-placeholder-2"  // Demo placeholder - replace with real signature in production
     },
     {
       "@context": "https://schema.org",

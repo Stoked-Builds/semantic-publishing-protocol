@@ -13,5 +13,5 @@
   "evidence": [
     "https://openfactcheck.org/evidence/ai-policy"
   ],
-  "signature": "fake-signature-placeholder"
+  "signature": "fake-signature-placeholder"  // Example placeholder - replace with real signature in production
 }

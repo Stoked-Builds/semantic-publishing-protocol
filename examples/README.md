@@ -55,6 +55,7 @@ examples/
 
 ## 🔍 Coming Soon
 
+<!-- Will be resolved in v0.4 -->
 - `validate.n8n` flow for automatic checking of stories, topics, and semantic output.
 - `examples/validate.js` CLI for use in dev environments.
 - Sample agent interface to crawl and render these examples semantically.

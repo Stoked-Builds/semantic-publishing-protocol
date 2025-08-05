@@ -80,7 +80,7 @@ Ensure AI agents or bots are **not blocked** from accessing these resources via 
 
 You can validate embedded SPS content using:
 
-- `spp-validator` CLI (coming soon)
+- `spp-validator` CLI <!-- Will be resolved in v0.4 -->
 - Online tools at: `https://spp.tools/validate`
 - Structured data test frameworks (JSON-LD compatible)
 

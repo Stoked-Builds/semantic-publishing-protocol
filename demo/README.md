@@ -41,5 +41,5 @@ All semantic.json files follow the SPP schema at `/schema/semantic.json` with pr
 - DID-based endorser identification
 - Confidence scoring (0.0-1.0)
 - Evidence links for transparency
-- Digital signature placeholders
+- Digital signature placeholders (for demo purposes)
 - Structured verdict types (accurate, verified, promising, etc.)
