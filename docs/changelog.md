@@ -4,6 +4,32 @@ This changelog documents major changes, improvements, and fixes between protocol
 
 ---
 
+## [v0.3.0] – 2025-08-05
+
+### 🧩 Extensions System
+- **NEW**: Comprehensive extensions framework for modular SPP enhancement
+- **NEW**: 5 extension types: endorsement-chains, time-versioning, trust-weighting, ephemeral-content, alt-content-types
+- **NEW**: Extension registry (`v0.3-extensions.json`) with standardized metadata
+
+### 🔧 Enhanced Tooling
+- **NEW**: `spp-validate` CLI tool for content validation with extension support
+- **NEW**: `spp-conformance` CLI tool for agent compliance testing  
+- **NEW**: Comprehensive test suite with extension validation
+
+### 📚 Documentation & Structure
+- **NEW**: Specification hierarchy documentation explaining SPP/SPS relationships
+- **NEW**: Release notes system (`docs/releases/`)
+- **NEW**: Enhanced interoperability guides (RSS-to-SPP conversion)
+- **IMPROVED**: Navigation and cross-referencing throughout specs
+
+### ✅ Full Backward Compatibility
+- All v0.2.x content works unchanged in v0.3.0
+- Extensions are purely additive and optional
+
+For complete details, see [Release Notes v0.3.0](./releases/v0.3.0.md).
+
+---
+
 ## [v0.2.2] – 2025-08-05
 
 ### Highlights
