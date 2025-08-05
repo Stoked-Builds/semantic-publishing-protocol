@@ -42,7 +42,7 @@ This index provides a structured overview of all major SPP specification documen
 - [Ad Auction Engine](../ads/ad-auction-engine.md)
 - [Ad Ranking Engine](../ads/ad-ranking-engine.md)
 - [Ad Compliance](../ads/ad-compliance.md)
-- [Ad Token Schema](../ads/ad-token-schema.json)
+- [Ad Token Schema](../schema/ad-token.json)
 - [Saturation Penalty](../ads/saturation-penalty.md)
 - [FARS Split](../ads/fars-split.md)
 

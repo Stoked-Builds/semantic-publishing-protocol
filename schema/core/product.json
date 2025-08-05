@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/core/product.json",
+  "title": "Product",
+  "description": "Schema for product content type in SPS",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://spec.stoked.tech/schemas/sps-license-metadata.json"
+    },
+    {
+      "properties": {
+        "sps_type": {
+          "const": "product"
+        },
+        "price": {
+          "type": "object",
+          "description": "Product pricing information",
+          "properties": {
+            "amount": {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d{1,2})?$",
+              "description": "Price amount as string to preserve precision"
+            },
+            "currency": {
+              "type": "string",
+              "description": "Currency code (ISO 4217)",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "sale_price": {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d{1,2})?$",
+              "description": "Sale price if on sale"
+            }
+          },
+          "required": ["amount", "currency"],
+          "additionalProperties": false
+        },
+        "availability": {
+          "type": "string",
+          "description": "Product availability status",
+          "enum": ["in_stock", "out_of_stock", "limited", "pre_order", "discontinued"]
+        },
+        "affiliate_tracking_id": {
+          "type": "string",
+          "description": "Affiliate tracking identifier if revenue-sharing is active"
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock keeping unit identifier"
+        },
+        "brand": {
+          "type": "string",
+          "description": "Product brand name"
+        },
+        "category": {
+          "type": "string",
+          "description": "Product category"
+        },
+        "specifications": {
+          "type": "object",
+          "description": "Product specifications as key-value pairs",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "images": {
+          "type": "array",
+          "description": "Product images",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "alt": {
+                "type": "string"
+              },
+              "primary": {
+                "type": "boolean",
+                "description": "Whether this is the primary product image"
+              }
+            },
+            "required": ["url", "alt"],
+            "additionalProperties": false
+          }
+        },
+        "reviews": {
+          "type": "object",
+          "description": "Product review summary",
+          "properties": {
+            "average_rating": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "total_reviews": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

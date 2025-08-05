@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/payment-intent.json",
+  "title": "Payment Intent",
+  "description": "Schema for payment intent objects in the Semantic Publishing Protocol",
+  "type": "object",
+  "properties": {
+    "amount": {
+      "type": "string",
+      "description": "Payment amount as a string to preserve precision",
+      "pattern": "^\\d+(\\.\\d+)?$"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency code (ISO 4217 or crypto symbol)",
+      "examples": ["USD", "EUR", "BTC", "ETH", "SPX"]
+    },
+    "to": {
+      "type": "string",
+      "description": "Recipient wallet or account identifier"
+    },
+    "from": {
+      "type": "string",
+      "description": "Sender wallet or account identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the payment"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Optional reference or transaction identifier"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the payment intent was created"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the payment intent expires"
+    },
+    "meta": {
+      "type": "object",
+      "description": "Additional metadata for the payment",
+      "properties": {
+        "consentRequired": {
+          "type": "boolean",
+          "description": "Whether user consent is required for this payment"
+        },
+        "adapter": {
+          "type": "string",
+          "description": "Payment adapter to use",
+          "enum": ["crypto", "traditional", "micropayment", "loyalty"]
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the payment",
+          "enum": ["ad_view", "content_access", "tip", "subscription", "purchase", "reward"]
+        },
+        "split": {
+          "type": "array",
+          "description": "Revenue split configuration",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recipient": {
+                "type": "string"
+              },
+              "percentage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "amount": {
+                "type": "string",
+                "pattern": "^\\d+(\\.\\d+)?$"
+              }
+            },
+            "required": ["recipient"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "processing", "completed", "failed", "cancelled", "expired"],
+      "description": "Current status of the payment intent"
+    }
+  },
+  "required": ["amount", "currency", "to", "from"],
+  "additionalProperties": false
+}

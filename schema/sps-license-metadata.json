@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/sps-license-metadata.json",
+  "title": "SPS License Metadata",
+  "description": "Schema for SPS license metadata objects",
+  "type": "object",
+  "properties": {
+    "sps_version": {
+      "type": "string",
+      "description": "Version of the SPS specification being used",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "sps_type": {
+      "type": "string",
+      "description": "Type of SPS content",
+      "enum": [
+        "article",
+        "video", 
+        "product",
+        "person",
+        "organisation",
+        "event",
+        "app",
+        "knowledge",
+        "collection"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "format": "uri",
+      "description": "Unique identifier for the content"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the content"
+    },
+    "author": {
+      "$ref": "https://spec.stoked.tech/schemas/common/author.json"
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags associated with the content",
+      "items": {
+        "type": "string"
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief summary of the content"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Publication timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time", 
+      "description": "Last update timestamp"
+    },
+    "content_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the actual content"
+    },
+    "preview_image": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to preview image"
+    },
+    "estimated_duration": {
+      "type": "string",
+      "description": "Estimated reading/viewing duration (e.g., '6m', '2h')",
+      "pattern": "^\\d+[smh]$"
+    },
+    "consent_required": {
+      "type": "array",
+      "description": "Array of consent requirements",
+      "items": {
+        "type": "string",
+        "examples": ["read:profile", "access:health"]
+      }
+    },
+    "license": {
+      "type": "string",
+      "description": "Content license"
+    },
+    "language": {
+      "type": "string",
+      "description": "Content language (ISO 639-1)",
+      "pattern": "^[a-z]{2}$"
+    }
+  },
+  "required": ["sps_version", "sps_type", "id", "title", "author"],
+  "additionalProperties": false
+}
