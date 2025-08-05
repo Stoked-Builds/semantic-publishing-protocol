@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/topic.json",
+  "title": "Topic",
+  "description": "Schema for topic definition objects",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the topic"
+    },
+    "label": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Simple string label for the topic"
+        },
+        {
+          "type": "object",
+          "description": "Multilingual label object",
+          "patternProperties": {
+            "^[a-z]{2}$": {
+              "type": "string",
+              "description": "Label in specific language (ISO 639-1 code)"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "global": {
+      "type": "string",
+      "description": "Global identifier for the topic (e.g., wikidata:Q739)",
+      "pattern": "^[a-zA-Z]+:[a-zA-Z0-9._-]+$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description of the topic"
+    },
+    "parent": {
+      "type": "string",
+      "description": "Parent topic identifier for hierarchical topics"
+    },
+    "aliases": {
+      "type": "array",
+      "description": "Alternative names or aliases for this topic",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["id", "label"],
+  "additionalProperties": false
+}

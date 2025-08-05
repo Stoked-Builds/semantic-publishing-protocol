@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/semantic.json",
+  "title": "Semantic Content",
+  "description": "Schema for semantic content objects in the Semantic Publishing Protocol",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the content"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the content"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief summary of the content"
+    },
+    "topics": {
+      "type": "array",
+      "description": "Array of topic objects",
+      "items": {
+        "$ref": "https://spec.stoked.tech/schemas/topic.json"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Array of string tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lang": {
+      "type": "string",
+      "description": "Language code (ISO 639-1)",
+      "pattern": "^[a-z]{2}$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Publication date in YYYY-MM-DD format"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the content",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "digest": {
+      "type": "string",
+      "description": "Content hash or digest for integrity verification"
+    },
+    "author": {
+      "$ref": "https://spec.stoked.tech/schemas/common/author.json"
+    },
+    "publisher": {
+      "$ref": "https://spec.stoked.tech/schemas/common/publisher.json"
+    },
+    "source": {
+      "type": "string",
+      "description": "Original source attribution"
+    },
+    "license": {
+      "type": "string",
+      "description": "Content license"
+    },
+    "canonical": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical URL for this content"
+    },
+    "endorsements": {
+      "type": "array",
+      "description": "Array of endorsements",
+      "items": {
+        "type": "object"
+      }
+    },
+    "archived": {
+      "type": "boolean",
+      "description": "Whether this content is archived",
+      "default": false
+    }
+  },
+  "required": ["id", "title", "author"],
+  "additionalProperties": false
+}
