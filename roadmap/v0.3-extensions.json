@@ -11,8 +11,11 @@
     {
       "id": "spp:time-versioning",
       "title": "Time-Based Versioning",
-      "description": "Support for diffs, snapshots, and time-stamped content histories.",
-      "spec": "specs/extensions/time-versioning.md"
+      "description": "Support for diffs, snapshots, and time-stamped content histories with Archive.org integration.",
+      "spec": "specs/extensions/time-versioning.md",
+      "status": "implemented",
+      "schema": "schema/extensions/time-versioning.json",
+      "example": "examples/extensions/time-versioning-demo/"
     },
     {
       "id": "spp:ephemeral-content",
