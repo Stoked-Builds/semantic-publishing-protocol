@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Publishing Protocol - Endorsement Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .story-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .story-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .story-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .story-meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .story-content {
+            padding: 20px;
+        }
+        
+        .story-summary {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .story-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        
+        .trust-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #4caf50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .trust-badge:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        .trust-badge.high-trust {
+            background: #4caf50;
+        }
+        
+        .trust-badge.medium-trust {
+            background: #ff9800;
+        }
+        
+        .trust-popup {
+            position: absolute;
+            top: 50px;
+            right: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 300px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .trust-popup.visible {
+            display: block;
+        }
+        
+        .trust-chain {
+            margin-bottom: 15px;
+        }
+        
+        .trust-chain h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .breadcrumb-item {
+            background: #f1f3f4;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #555;
+        }
+        
+        .breadcrumb-arrow {
+            color: #999;
+            font-size: 0.8em;
+        }
+        
+        .endorsers {
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        
+        .endorsers h4 {
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        
+        .endorser {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 0.85em;
+        }
+        
+        .endorser-name {
+            color: #333;
+        }
+        
+        .confidence {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        
+        .trust-icon {
+            width: 12px;
+            height: 12px;
+        }
+        
+        .demo-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .demo-info h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .demo-info p {
+            color: #666;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Semantic Publishing Protocol</h1>
+            <h2>Endorsement UX Demo</h2>
+            <p>Interactive demo showing trust badges and endorsement chains</p>
+        </div>
+        
+        <div class="stories-grid" id="stories-container">
+            <!-- Stories will be loaded here by JavaScript -->
+        </div>
+        
+        <div class="demo-info">
+            <h3>Demo Features</h3>
+            <p>• <strong>Trust Badges:</strong> Hover over the green badges to see endorsement details</p>
+            <p>• <strong>Trust Chains:</strong> Shows how you're connected to the story through trusted agents</p>
+            <p>• <strong>DID-based Endorsements:</strong> Each endorser has a unique decentralized identifier</p>
+            <p>• <strong>Confidence Scores:</strong> Endorsers provide confidence ratings for transparency</p>
+        </div>
+    </div>
+    
+    <script src="trust-widget.js"></script>
+    <script>
+        // Initialize the demo when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            TrustWidget.init();
+        });
+    </script>
+</body>
+</html>

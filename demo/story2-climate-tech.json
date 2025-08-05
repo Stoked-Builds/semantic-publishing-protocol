@@ -1,0 +1,81 @@
+{
+  "id": "climate-tech-investment",
+  "title": "Revolutionary Carbon Capture Technology Receives $2B Investment",
+  "summary": "New atmospheric carbon capture system promises to remove CO2 at unprecedented scale and efficiency, backed by major climate fund.",
+  "topics": [
+    {
+      "id": "climate",
+      "label": "Climate",
+      "global": "wikidata:Q7942"
+    },
+    {
+      "id": "technology",
+      "label": "Technology",
+      "global": "wikidata:Q11016"
+    },
+    {
+      "id": "investment",
+      "label": "Investment",
+      "global": "wikidata:Q1266946"
+    }
+  ],
+  "tags": ["climate", "carbon-capture", "investment", "green-tech"],
+  "lang": "en",
+  "date": "2025-01-14",
+  "version": "1.0.0",
+  "digest": "f6e5d4c3b2a1098765432",
+  "author": {
+    "name": "Maria Rodriguez",
+    "id": "did:example:maria-climate-reporter",
+    "uri": "https://climate-news.net/authors/maria-rodriguez"
+  },
+  "publisher": {
+    "name": "Climate News Network",
+    "id": "did:example:climate-news-network",
+    "uri": "https://climate-news.net"
+  },
+  "source": "GreenTech Solutions Inc.",
+  "license": "CC-BY-4.0",
+  "canonical": "https://climate-news.net/stories/carbon-capture-investment",
+  "endorsements": [
+    {
+      "@context": "https://schema.org",
+      "type": "Endorsement",
+      "endorser": {
+        "name": "Alice (Trusted AI Expert)",
+        "id": "did:example:alice-ai-expert",
+        "uri": "https://ai-experts.org/alice"
+      },
+      "endorsed": "https://climate-news.net/stories/carbon-capture-investment",
+      "date": "2025-01-14",
+      "verdict": "verified",
+      "confidence": 0.92,
+      "type": "technical-review",
+      "evidence": [
+        "https://ai-experts.org/evidence/patent-analysis",
+        "https://ai-experts.org/evidence/tech-validation"
+      ],
+      "signature": "alice-signature-placeholder-2"
+    },
+    {
+      "@context": "https://schema.org",
+      "type": "Endorsement",
+      "endorser": {
+        "name": "Climate Science Collective",
+        "id": "did:example:climate-science-collective",
+        "uri": "https://climate-science.org"
+      },
+      "endorsed": "https://climate-news.net/stories/carbon-capture-investment",
+      "date": "2025-01-14",
+      "verdict": "promising",
+      "confidence": 0.85,
+      "type": "peer-review",
+      "evidence": [
+        "https://climate-science.org/reviews/carbon-capture-analysis",
+        "https://climate-science.org/reviews/investment-viability"
+      ],
+      "signature": "climate-collective-signature"
+    }
+  ],
+  "archived": false
+}
