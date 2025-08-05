@@ -7,10 +7,26 @@
   "properties": {
     "endorsements": {
       "type": "array",
-      "description": "Array of verifiable endorsements with optional delegation chains",
+      "description": "Array of verifiable endorsements with optional delegation chains and confidence scores",
       "items": {
         "type": "object",
         "properties": {
+          "endorser": {
+            "type": "object",
+            "description": "Optional human-readable details for endorser",
+            "properties": {
+              "name": { "type": "string" },
+              "id": { "type": "string" },
+              "uri": { "type": "string", "format": "uri" },
+              "type": {
+                "type": "string",
+                "enum": ["fact-checker", "publisher", "expert", "community"],
+                "description": "Optional classification of endorser"
+              }
+            },
+            "required": ["name", "id"],
+            "additionalProperties": false
+          },
           "endorser_did": {
             "type": "string",
             "pattern": "^did:[a-z0-9]+:[a-zA-Z0-9._-]+",
@@ -20,29 +36,75 @@
             "type": "string",
             "description": "Human-readable name of the endorser"
           },
-          "timestamp": {
+          "endorsed": {
             "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 timestamp when endorsement was created"
+            "format": "uri",
+            "description": "URI of content being endorsed"
           },
-          "signature": {
+          "verdict": {
             "type": "string",
-            "pattern": "^[A-Za-z0-9+/=]+$",
-            "description": "Cryptographic signature of the endorsement"
-          },
-          "comment": {
-            "type": "string",
-            "description": "Optional commentary from the endorser"
+            "enum": ["accurate", "verified", "corroborated", "referenced", "disputed", "questionable", "false", "misleading"],
+            "description": "Endorsement verdict"
           },
           "endorsement_type": {
             "type": "string",
             "enum": ["content", "delegated", "peer"],
             "description": "Type of endorsement"
           },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp when endorsement was created"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp (alternate key)"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Confidence level in the endorsement"
+          },
+          "trust_weight": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Weight assigned to this endorser"
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/=]+$",
+            "description": "Cryptographic signature of the endorsement"
+          },
           "signature_algorithm": {
             "type": "string",
             "enum": ["ed25519", "secp256k1", "secp256r1"],
-            "description": "Algorithm used for signature"
+            "description": "Algorithm used for the signature"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Optional commentary from the endorser"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "URLs or identifiers supporting the endorsement"
+          },
+          "chain_depth": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Depth in endorsement chain"
+          },
+          "transitive_endorsements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/properties/endorsements/items"
+            },
+            "description": "Endorsements that led to this one"
           },
           "delegation_chain": {
             "type": "array",
@@ -67,7 +129,7 @@
                 "delegation_timestamp": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "ISO 8601 timestamp when delegation was granted"
+                  "description": "When the delegation was granted"
                 },
                 "delegation_scope": {
                   "type": "string",
@@ -76,7 +138,7 @@
                 "delegation_expires": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "ISO 8601 timestamp when delegation expires"
+                  "description": "When the delegation expires"
                 }
               },
               "required": ["delegator_did", "delegation_signature", "delegation_timestamp", "delegation_scope"],
@@ -84,7 +146,7 @@
             }
           }
         },
-        "required": ["endorser_did", "timestamp", "signature", "endorsement_type", "signature_algorithm"],
+        "required": ["endorsement_type", "signature", "timestamp"],
         "additionalProperties": false
       }
     }

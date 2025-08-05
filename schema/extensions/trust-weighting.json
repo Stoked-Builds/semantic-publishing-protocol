@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/extensions/trust-weighting.json",
+  "title": "Trust Weighting Extension",
+  "description": "Schema for trust weighting extension in SPP",
+  "type": "object",
+  "properties": {
+    "trust_signals": {
+      "type": "object",
+      "description": "Collection of trust indicators and computed scores",
+      "properties": {
+        "source_credibility": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Base credibility of content source"
+        },
+        "peer_review": {
+          "type": "boolean",
+          "description": "Whether content has undergone peer review"
+        },
+        "fact_checked": {
+          "type": "boolean",
+          "description": "Whether content has been fact-checked"
+        },
+        "controversy_detected": {
+          "type": "boolean",
+          "description": "Whether controversial elements are detected"
+        },
+        "breaking_news": {
+          "type": "boolean",
+          "description": "Whether this is breaking/urgent news"
+        },
+        "time_sensitive": {
+          "type": "boolean",
+          "description": "Whether content becomes less reliable over time"
+        },
+        "anonymous_author": {
+          "type": "boolean",
+          "description": "Whether author identity is unknown"
+        },
+        "editorial_oversight": {
+          "type": "boolean",
+          "description": "Whether content has editorial review"
+        },
+        "endorsement_chain_length": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of endorsements in chain"
+        },
+        "aggregate_trust_score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Final computed trust score"
+        },
+        "trust_decay_rate": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Rate at which trust decreases over time"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of last trust calculation"
+        },
+        "context_scores": {
+          "type": "object",
+          "description": "Trust scores for different contexts",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        },
+        "network_effects": {
+          "type": "object",
+          "description": "Trust network calculations",
+          "properties": {
+            "related_content_scores": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              }
+            },
+            "network_average": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "network_influence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "trust_config": {
+      "type": "object",
+      "description": "Configuration for trust calculation algorithms",
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "enum": ["weighted_average", "bayesian", "neural"],
+          "description": "Trust calculation method"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of algorithm used"
+        },
+        "weights": {
+          "type": "object",
+          "description": "Relative importance of different factors",
+          "properties": {
+            "source_credibility": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "endorsement_quality": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "evidence_strength": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "temporal_factors": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            }
+          },
+          "additionalProperties": false
+        },
+        "thresholds": {
+          "type": "object",
+          "description": "Score ranges for trust levels",
+          "properties": {
+            "high_trust": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "medium_trust": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "low_trust": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            }
+          },
+          "additionalProperties": false
+        },
+        "decay": {
+          "type": "object",
+          "description": "Time-based trust degradation settings",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "half_life": {
+              "type": "string",
+              "description": "Duration string (e.g., '30d', '6h')"
+            },
+            "minimum_score": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
