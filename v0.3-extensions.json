@@ -1,0 +1,36 @@
+{
+  "$schema": "https://semantic-publishing.org/schema/extensions.json",
+  "version": "0.3.0",
+  "extensions": [
+    {
+      "id": "spp:endorsement-chains",
+      "title": "Endorsement Chains",
+      "description": "Declare trust relationships and endorsement lineage between agents or identities.",
+      "spec": "specs/extensions/endorsement-chains.md"
+    },
+    {
+      "id": "spp:time-versioning",
+      "title": "Time-Based Versioning",
+      "description": "Support for diffs, snapshots, and time-stamped content histories.",
+      "spec": "specs/extensions/time-versioning.md"
+    },
+    {
+      "id": "spp:ephemeral-content",
+      "title": "Ephemeral Content",
+      "description": "Allows content to self-expire or degrade after a defined window.",
+      "spec": "specs/extensions/ephemeral-content.md"
+    },
+    {
+      "id": "spp:trust-weighting",
+      "title": "Trust Weighting",
+      "description": "Calculates content trust based on graph endorsement and context.",
+      "spec": "specs/extensions/trust-weighting.md"
+    },
+    {
+      "id": "spp:alt-content-types",
+      "title": "Alternate Content Types",
+      "description": "Support for podcasts, videos, books, and longform media blocks.",
+      "spec": "specs/extensions/alt-content-types.md"
+    }
+  ]
+}
