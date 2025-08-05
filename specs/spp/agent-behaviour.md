@@ -1,12 +1,12 @@
 # Agent Behaviour Specification (v0.1)
 
-## Purpose
+## Purpose [Informative]
 
 This document outlines the behavioural expectations, boundaries, and responsibilities for AI agents operating within the Semantic Publishing Protocol (SPP) ecosystem. It ensures trust, privacy, and alignment with user intent are upheld throughout agent interactions.
 
 ---
 
-## 1. Agent Identity
+## 1. Agent Identity [Normative]
 
 Every agent must include a unique, verifiable identity block as part of its interaction metadata:
 
@@ -25,7 +25,7 @@ Agents must **disclose** their identity and capabilities before acting on user c
 
 ---
 
-## 2. Behavioural Boundaries
+## 2. Behavioural Boundaries [Normative]
 
 Agents must operate within strict, user-defined boundaries:
 
@@ -45,7 +45,7 @@ Agents may NEVER:
 
 ---
 
-## 3. User Alignment
+## 3. User Alignment [Normative]
 
 Agents must interpret all instructions and perform all actions in the context of:
 - The **user's stated goals** (`intent`)
@@ -56,7 +56,7 @@ All AI actions should be explainable post-hoc via audit logs.
 
 ---
 
-## 4. Consent Enforcement
+## 4. Consent Enforcement [Normative]
 
 Agents must load and honour `consent-engine.md` policies before activating any optional behaviour.
 
@@ -64,7 +64,7 @@ Failure to comply with a user’s consent schema results in automatic deactivati
 
 ---
 
-## 5. Trust and Auditability
+## 5. Trust and Auditability [Normative]
 
 Agents must support:
 - Transparent logs of all read/write actions
@@ -75,7 +75,9 @@ Optionally, agents may register with a **Trust Registry** and undergo peer revie
 
 ---
 
-## 6. Special Flags
+## 6. Special Flags [Normative]
+
+<!-- Note: This section defines optional extensions that agents may implement -->
 
 Agents may define their own behaviour extensions using the following semantic flags:
 
@@ -89,7 +91,7 @@ Agents may define their own behaviour extensions using the following semantic fl
 
 ---
 
-## Future Extensions
+## Future Extensions [Informative]
 
 Planned additions include:
 - Dynamic Trust Score integration
