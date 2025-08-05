@@ -1,0 +1,100 @@
+{
+  "id": "climate-summit-breakthrough",
+  "title": "Major Breakthrough at Climate Summit: New Carbon Capture Agreement",
+  "summary": "World leaders announce unprecedented agreement on carbon capture technology funding and deployment.",
+  "extensions": [
+    {
+      "id": "spp:time-versioning",
+      "version": "0.3.0"
+    }
+  ],
+  "topics": [
+    {
+      "id": "environment",
+      "label": "Environment",
+      "global": "wikidata:Q2249"
+    },
+    {
+      "id": "policy",
+      "label": "Policy"
+    }
+  ],
+  "tags": ["climate", "carbon-capture", "summit", "international-agreement"],
+  "lang": "en",
+  "date": "2025-01-15",
+  "version": "1.2.0",
+  "digest": "sha256:bc47e4823b9c7f2a8d5e6f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c",
+  "author": {
+    "name": "Sarah Chen",
+    "id": "author:sarah-chen",
+    "uri": "https://greennews.com/authors/sarah-chen"
+  },
+  "publisher": {
+    "name": "Green News Network",
+    "id": "publisher:green-news",
+    "uri": "https://greennews.com"
+  },
+  "source": "Direct reporting from COP30",
+  "license": "CC-BY-4.0",
+  "canonical": "https://greennews.com/stories/climate-summit-breakthrough",
+  "endorsements": [],
+  "archived": false,
+  "snapshots": [
+    {
+      "timestamp": "2025-01-15T08:00:00Z",
+      "version": "1.0.0",
+      "content_hash": "sha256:1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2",
+      "archive_url": "https://web.archive.org/web/20250115080000/https://greennews.com/stories/climate-summit-breakthrough",
+      "archive_provider": "archive.org"
+    },
+    {
+      "timestamp": "2025-01-15T12:30:00Z",
+      "version": "1.1.0",
+      "content_hash": "sha256:2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3",
+      "archive_url": "https://web.archive.org/web/20250115123000/https://greennews.com/stories/climate-summit-breakthrough",
+      "archive_provider": "archive.org",
+      "changes_from_previous": [
+        {
+          "type": "addition",
+          "path": "$.content.blocks[3]",
+          "description": "Added quote from EU Climate Commissioner"
+        },
+        {
+          "type": "edit",
+          "path": "$.content.blocks[1].text",
+          "description": "Corrected funding amount from $50B to $75B"
+        }
+      ]
+    },
+    {
+      "timestamp": "2025-01-15T16:45:00Z",
+      "version": "1.2.0",
+      "content_hash": "sha256:bc47e4823b9c7f2a8d5e6f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c",
+      "archive_url": "https://web.archive.org/web/20250115164500/https://greennews.com/stories/climate-summit-breakthrough",
+      "archive_provider": "archive.org",
+      "changes_from_previous": [
+        {
+          "type": "addition",
+          "path": "$.content.blocks[5]",
+          "description": "Added breaking news: China and India join the agreement"
+        },
+        {
+          "type": "edit",
+          "path": "$.title",
+          "description": "Updated title to reflect broader participation"
+        },
+        {
+          "type": "addition",
+          "path": "$.content.blocks[6]",
+          "description": "Added timeline for implementation phases"
+        }
+      ]
+    }
+  ],
+  "version_history": {
+    "created_at": "2025-01-15T08:00:00Z",
+    "last_modified": "2025-01-15T16:45:00Z",
+    "revision_count": 3,
+    "editorial_notes": "Story significantly expanded as major developing nations joined the agreement. Timeline and implementation details added."
+  }
+}
