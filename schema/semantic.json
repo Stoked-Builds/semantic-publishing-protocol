@@ -80,6 +80,36 @@
       "type": "boolean",
       "description": "Whether this content is archived",
       "default": false
+    },
+    "extensions": {
+      "type": "array",
+      "description": "Array of extension declarations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Extension identifier"
+          },
+          "version": {
+            "type": "string",
+            "description": "Extension version"
+          }
+        },
+        "required": ["id", "version"],
+        "additionalProperties": false
+      }
+    },
+    "snapshots": {
+      "type": "array",
+      "description": "Point-in-time snapshots (requires spp:time-versioning extension)",
+      "items": {
+        "$ref": "https://spec.stoked.tech/schemas/extensions/time-versioning.json#/properties/snapshots/items"
+      }
+    },
+    "version_history": {
+      "description": "Version history metadata (requires spp:time-versioning extension)",
+      "$ref": "https://spec.stoked.tech/schemas/extensions/time-versioning.json#/properties/version_history"
     }
   },
   "required": ["id", "title", "author"],
