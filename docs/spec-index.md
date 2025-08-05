@@ -67,6 +67,9 @@ This index provides a structured overview and navigation map for all major SPP s
 - [API Endpoints](../specs/dev/api-endpoints.md)
 - [Extensibility Guide](../specs/dev/extensibility-guide.md)
 
+## Interoperability
+- [RSS to SPP Conversion Guide](interop/rss-to-spp.md)
+
 ---
 
 _This index is updated as the protocol evolves. For definitions, see the [Glossary](./glossary.md)._
