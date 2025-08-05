@@ -16,11 +16,11 @@ This document outlines the targeted deliverables for Q3 2025, aligned with the v
 
 | Spec Module              | Description                                      | Owner | Status |
 |--------------------------|--------------------------------------------------|-------|--------|
-| `endorsement-chains.md` | Verifiable trust graphs, agent endorsements      | TBD   | Planned |
-| `time-versioning.md`    | Temporal diffs and canonical snapshots           | TBD   | Planned |
-| `ephemeral-content.md`  | Publish-once, time-limited and decayable blocks  | TBD   | Planned |
-| `trust-weighting.md`    | Agent-calculated trust scores and ranking logic  | TBD   | Planned |
-| `alt-content-types.md`  | Audio, video, longform, books in semantic.json   | TBD   | Planned |
+| `endorsement-chains.md` | Verifiable trust graphs, agent endorsements      | <!-- Will be resolved in v0.4 --> | Planned |
+| `time-versioning.md`    | Temporal diffs and canonical snapshots           | <!-- Will be resolved in v0.4 --> | Planned |
+| `ephemeral-content.md`  | Publish-once, time-limited and decayable blocks  | <!-- Will be resolved in v0.4 --> | Planned |
+| `trust-weighting.md`    | Agent-calculated trust scores and ranking logic  | <!-- Will be resolved in v0.4 --> | Planned |
+| `alt-content-types.md`  | Audio, video, longform, books in semantic.json   | <!-- Will be resolved in v0.4 --> | Planned |
 
 ---
 

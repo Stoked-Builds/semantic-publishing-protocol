@@ -54,7 +54,7 @@
         "https://ai-experts.org/evidence/coalition-verification",
         "https://ai-experts.org/evidence/regulatory-analysis"
       ],
-      "signature": "alice-signature-placeholder"
+      "signature": "alice-signature-placeholder"  // Demo placeholder - replace with real signature in production
     },
     {
       "@context": "https://schema.org",
@@ -73,7 +73,7 @@
         "https://techwatch.org/verification/coalition-documents",
         "https://techwatch.org/verification/official-statements"
       ],
-      "signature": "techwatch-signature-placeholder"
+      "signature": "techwatch-signature-placeholder"  // Demo placeholder - replace with real signature in production
     }
   ],
   "archived": false
