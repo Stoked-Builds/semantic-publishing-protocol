@@ -26,6 +26,9 @@ All schemas follow JSON Schema Draft 2020-12 specification and use modular `$ref
 ### Type-Specific Schemas (core/)
 - `core/article.json` - Article content type schema
 - `core/product.json` - Product content type schema
+- `core/event.json` - Event content type schema
+- `core/video.json` - Video content type schema
+- `core/person.json` - Person profile content type schema
 
 ### Common Components
 - `common/author.json` - Author object definition

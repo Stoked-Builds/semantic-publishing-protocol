@@ -1,0 +1,10 @@
+{
+  "id": "technology",
+  "label": {
+    "en": "Technology",
+    "fr": "Technologie",
+    "es": "Tecnología"
+  },
+  "global": "wikidata:Q739",
+  "description": "Technology-related topics including software, hardware, and digital innovation"
+}
