@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "bin": {
-    "spp-validate": "./bin/spp-validate.js"
+    "spp-validate": "./bin/spp-validate.js",
+    "spp-conformance": "./bin/spp-conformance.js"
   },
   "scripts": {
     "test": "node --test",
