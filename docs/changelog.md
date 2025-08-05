@@ -4,6 +4,25 @@ This changelog documents major changes, improvements, and fixes between protocol
 
 ---
 
+## [v0.2.2] – 2025-08-05
+
+### Highlights
+- 📦 Stable release of v0.2.x branch
+- 🔧 Restructured and modularised all specs under `specs/`
+- 🧪 Rich example set added in `/examples`, covering:
+  - Stories with semantic blocks
+  - Semantic sitemaps
+  - Consent tokens, review chains, endorsements
+- ✅ Schema definitions and working validation examples in `/schema`
+- 📚 Spec index and spec hierarchy added to aid navigation
+- 🔄 Includes semantic-sitemap, semantic-blocks, consent-engine, agent-interface, and browser extensions
+
+### Notes
+- This release freezes the `v0.2.x` structure before we begin breaking changes in `v0.3`.
+- All files are self-contained and ready for public publishing and downstream integration.
+
+---
+
 ## v0.2 (2025-07-28)
 
 ### Major Improvements
