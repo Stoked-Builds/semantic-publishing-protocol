@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/common/attribution.json",
+  "title": "Attribution",
+  "description": "Schema for content attribution information",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "Original source of the content"
+    },
+    "license": {
+      "type": "string",
+      "description": "Content license (e.g., CC-BY-4.0, MIT, proprietary)",
+      "examples": ["CC-BY-4.0", "CC-BY-SA-4.0", "MIT", "proprietary"]
+    },
+    "canonical": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical URL for this content"
+    },
+    "endorsements": {
+      "type": "array",
+      "description": "List of endorsements for this content",
+      "items": {
+        "type": "object",
+        "properties": {
+          "endorser": {
+            "type": "string",
+            "description": "Identifier of the endorser"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the endorsement was made"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Cryptographic signature of the endorsement"
+          }
+        },
+        "required": ["endorser", "timestamp"]
+      }
+    },
+    "archived": {
+      "type": "boolean",
+      "description": "Whether this content is archived",
+      "default": false
+    }
+  },
+  "additionalProperties": false
+}

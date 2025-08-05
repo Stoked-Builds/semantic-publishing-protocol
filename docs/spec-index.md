@@ -46,7 +46,7 @@ This index provides a structured overview and navigation map for all major SPP s
 - [Ad Auction Engine](../specs/ads/ad-auction-engine.md)
 - [Ad Ranking Engine](../specs/ads/ad-ranking-engine.md)
 - [Ad Compliance](../specs/ads/ad-compliance.md)
-- [Ad Token Schema](../specs/ads/ad-token-schema.json)
+- [Ad Token Schema](../schema/ad-token.json)
 - [Saturation Penalty](../specs/ads/saturation-penalty.md)
 - [FARS Split](../specs/ads/fars-split.md)
 

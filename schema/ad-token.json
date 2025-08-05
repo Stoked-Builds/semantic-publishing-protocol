@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/ad-token.json",
+  "title": "Ad Token",
+  "description": "Schema for advertisement token objects in the Semantic Publishing Protocol",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri",
+      "description": "JSON Schema URI reference"
+    },
+    "type": {
+      "type": "string",
+      "const": "spp:ad-token",
+      "description": "Type identifier for ad tokens"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the ad token",
+      "pattern": "^ad:[a-zA-Z0-9-_]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the advertisement"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the advertisement offer"
+    },
+    "advertiser": {
+      "type": "object",
+      "description": "Information about the advertiser",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^org:[a-zA-Z0-9-_]+$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "reputation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "verified": {
+          "type": "boolean"
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "expires": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Expiration timestamp"
+    },
+    "categories": {
+      "type": "array",
+      "description": "Advertisement categories",
+      "items": {
+        "type": "string"
+      }
+    },
+    "targeting": {
+      "type": "object",
+      "description": "Targeting parameters for the ad",
+      "properties": {
+        "intent": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "w2aMinScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "display": {
+      "type": "object",
+      "description": "Display configuration for the ad",
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "media": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "format": "uri"
+            },
+            "alt": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "cta": {
+          "type": "object",
+          "description": "Call to action",
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": ["text", "url"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "licensing": {
+      "type": "object",
+      "description": "Licensing and permission settings",
+      "properties": {
+        "reuse": {
+          "type": "boolean"
+        },
+        "tracking": {
+          "type": "boolean"
+        },
+        "consentRequired": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "payment": {
+      "type": "object",
+      "description": "Payment configuration",
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "bidPerImpression": {
+          "type": "number",
+          "minimum": 0
+        },
+        "bidPerClick": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "saturation": {
+      "type": "object",
+      "description": "Saturation control settings",
+      "properties": {
+        "maxViewsPerDay": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "decay": {
+          "type": "string",
+          "enum": ["linear", "exponential", "none"]
+        },
+        "resetOnClick": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Performance metrics",
+      "properties": {
+        "impressions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "clicks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lastServed": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["type", "id", "title", "advertiser"],
+  "additionalProperties": false
+}

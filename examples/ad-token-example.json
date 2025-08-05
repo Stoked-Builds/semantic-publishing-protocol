@@ -1,5 +1,5 @@
 {
-  "$schema": "https://semantic-publishing.org/schemas/ad-token-v1.json",
+  "$schema": "https://spec.stoked.tech/schemas/ad-token.json",
   "type": "spp:ad-token",
   "id": "ad:example-001",
   "title": "20% Off All Hiking Gear",

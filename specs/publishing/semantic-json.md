@@ -71,7 +71,7 @@ Should be stored alongside the `story.md` or published to a `.well-known/semanti
   "lang": "en",
   "date": "2025-07-12",
   "version": "1.0.0",
-  "digest": "8e1a3a1ffb9a57e1ad4a...7e3bf",
+  "digest": "af09ad5030dac42aad5da6ee660fca0b81a132c523059b8c3c4a34dd06097f69",
   "author": {
     "name": "Priya Desai",
     "id": "author:priya-desai",

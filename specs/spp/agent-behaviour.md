@@ -91,7 +91,7 @@ Agents may define their own behaviour extensions using the following semantic fl
 
 ---
 
-## Future Extensions [Informative]
+## Future Extensions
 
 Planned additions include:
 - Dynamic Trust Score integration

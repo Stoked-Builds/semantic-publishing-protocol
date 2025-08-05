@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/common/author.json",
+  "title": "Author",
+  "description": "Schema for author object used across SPP content types",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the author"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the author (e.g., author:username)",
+      "pattern": "^author:[a-zA-Z0-9._-]+$"
+    },
+    "ssot_id": {
+      "type": "string",
+      "description": "Single Source of Truth identifier",
+      "pattern": "^ssot:[a-zA-Z0-9._-]+$"
+    },
+    "uri": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI to the author's profile or page"
+    },
+    "publicKey": {
+      "type": "string",
+      "description": "Public key for verification (DID format preferred)"
+    },
+    "contact": {
+      "type": "string",
+      "description": "Contact information (email, etc.)",
+      "format": "email"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

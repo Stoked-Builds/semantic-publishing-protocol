@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/core/article.json",
+  "title": "Article",
+  "description": "Schema for article content type in SPS",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://spec.stoked.tech/schemas/sps-license-metadata.json"
+    },
+    {
+      "properties": {
+        "sps_type": {
+          "const": "article"
+        },
+        "transcript": {
+          "type": "string",
+          "description": "Full text transcript for accessibility"
+        },
+        "structured_summary": {
+          "type": "array",
+          "description": "Structured summary with headings",
+          "items": {
+            "type": "object",
+            "properties": {
+              "heading": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              }
+            },
+            "required": ["heading", "summary"],
+            "additionalProperties": false
+          }
+        },
+        "reading_level": {
+          "type": "string",
+          "description": "Reading difficulty level",
+          "enum": ["elementary", "middle", "high", "college", "graduate", "adult"]
+        },
+        "source_citations": {
+          "type": "array",
+          "description": "Array of source citations",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "author": {
+                "type": "string"
+              },
+              "published": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "required": ["title"],
+            "additionalProperties": false
+          }
+        },
+        "word_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Approximate word count"
+        }
+      }
+    }
+  ]
+}
