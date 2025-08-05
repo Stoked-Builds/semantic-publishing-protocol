@@ -1,0 +1,80 @@
+{
+  "id": "ai-regulation-breakthrough",
+  "title": "Breakthrough AI Regulation Framework Adopted by Global Coalition",
+  "summary": "Major tech companies and governments agree on comprehensive AI safety standards that balance innovation with public protection.",
+  "topics": [
+    {
+      "id": "technology",
+      "label": "Technology",
+      "global": "wikidata:Q11016"
+    },
+    {
+      "id": "policy",
+      "label": "Policy",
+      "global": "wikidata:Q1156854"
+    },
+    {
+      "id": "ai-safety",
+      "label": "AI Safety"
+    }
+  ],
+  "tags": ["ai", "regulation", "policy", "safety"],
+  "lang": "en",
+  "date": "2025-01-15",
+  "version": "1.0.0",
+  "digest": "a1b2c3d4e5f6789012345",
+  "author": {
+    "name": "Dr. Sarah Chen",
+    "id": "did:example:sarah-chen-tech-policy",
+    "uri": "https://tech-policy.org/authors/sarah-chen"
+  },
+  "publisher": {
+    "name": "Tech Policy Today",
+    "id": "did:example:tech-policy-today",
+    "uri": "https://tech-policy.org"
+  },
+  "source": "Global AI Safety Coalition",
+  "license": "CC-BY-4.0",
+  "canonical": "https://tech-policy.org/stories/ai-regulation-breakthrough",
+  "endorsements": [
+    {
+      "@context": "https://schema.org",
+      "type": "Endorsement",
+      "endorser": {
+        "name": "Alice (Trusted AI Expert)",
+        "id": "did:example:alice-ai-expert",
+        "uri": "https://ai-experts.org/alice"
+      },
+      "endorsed": "https://tech-policy.org/stories/ai-regulation-breakthrough",
+      "date": "2025-01-15",
+      "verdict": "accurate",
+      "confidence": 0.95,
+      "type": "fact-check",
+      "evidence": [
+        "https://ai-experts.org/evidence/coalition-verification",
+        "https://ai-experts.org/evidence/regulatory-analysis"
+      ],
+      "signature": "alice-signature-placeholder"
+    },
+    {
+      "@context": "https://schema.org",
+      "type": "Endorsement",
+      "endorser": {
+        "name": "TechWatch Verification",
+        "id": "did:example:techwatch-verification",
+        "uri": "https://techwatch.org"
+      },
+      "endorsed": "https://tech-policy.org/stories/ai-regulation-breakthrough",
+      "date": "2025-01-15",
+      "verdict": "reliable",
+      "confidence": 0.88,
+      "type": "source-verification",
+      "evidence": [
+        "https://techwatch.org/verification/coalition-documents",
+        "https://techwatch.org/verification/official-statements"
+      ],
+      "signature": "techwatch-signature-placeholder"
+    }
+  ],
+  "archived": false
+}
