@@ -6,36 +6,54 @@
 
 ## Purpose
 
-The Endorsement Chains extension enables content to declare trust relationships and endorsement lineage between agents, publishers, and other entities. This allows agents to build trust networks and make informed decisions about content credibility.
+The Endorsement Chains extension enables verifiable endorsements of content and delegation of trust between agents, publishers, and other entities. This allows for cryptographically signed testimonials, agent-to-content endorsements, and recursive chains of delegated authority that can be verified independently. It also supports semantic verdicts, trust scoring, and endorsement lineage for contextual credibility.
 
 ## Schema Fields
 
 When using this extension, content MAY include the following additional fields in `semantic.json`:
 
-### Endorsements Array
+### Endorsements
 
 ```json
 {
   "endorsements": [
     {
-      "endorser": {
-        "name": "OpenFactCheck",
-        "id": "endorser:openfactcheck",
-        "uri": "https://openfactcheck.org",
-        "type": "fact-checker"
-      },
-      "endorsed": "https://example.com/article",
-      "verdict": "accurate",
-      "confidence": 0.92,
-      "date": "2025-01-15T14:30:00Z",
-      "trust_weight": 0.88,
-      "evidence": [
-        "https://openfactcheck.org/evidence/climate-data",
-        "peer-review-verification"
-      ],
-      "chain_depth": 1,
-      "signature": "sha256:abc123...",
-      "transitive_endorsements": []
+      "endorser_did": "did:web:expert.example.com",
+      "endorser_name": "Dr. Jane Smith",
+      "timestamp": "2025-01-15T14:30:00Z",
+      "signature": "zQmF3ysuHnLmKxn2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2E",
+      "comment": "This analysis aligns with current research findings.",
+      "endorsement_type": "content",
+      "signature_algorithm": "ed25519",
+      "delegation_chain": []
+    }
+  ]
+}
+```
+
+### Delegation Chains
+
+```json
+{
+  "endorsements": [
+    {
+      "endorser_did": "did:web:assistant.example.com",
+      "endorser_name": "Research Assistant AI",
+      "timestamp": "2025-01-15T15:00:00Z",
+      "signature": "zQmK4xtuJnPmKyn3eKcnF3nLsAkYsJzY2JYFCsLrE5ZHxi9JGwW3F",
+      "comment": "Endorsed on behalf of supervising researcher.",
+      "endorsement_type": "delegated",
+      "signature_algorithm": "ed25519",
+      "delegation_chain": [
+        {
+          "delegator_did": "did:web:supervisor.example.com",
+          "delegator_name": "Prof. John Doe",
+          "delegation_signature": "zQmA1wriHmLkNxm2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2E",
+          "delegation_timestamp": "2025-01-15T14:45:00Z",
+          "delegation_scope": "research_endorsement",
+          "delegation_expires": "2025-12-31T23:59:59Z"
+        }
+      ]
     }
   ]
 }
@@ -47,44 +65,49 @@ When using this extension, content MAY include the following additional fields i
 
 - **Type:** Array of endorsement objects
 - **Required:** No
-- **Description:** Collection of endorsements from trusted entities
+- **Description:** Collection of endorsements from trusted entities with verifiable trust anchors.
 
 #### Endorsement Object
 
-- `endorser` (object, required): Information about the endorsing entity
-  - `name` (string, required): Display name of endorser
-  - `id` (string, required): Unique identifier for endorser
-  - `uri` (string, optional): Web presence of endorser
-  - `type` (string, optional): Type of endorser ("fact-checker", "publisher", "expert", "community")
+- `endorser_did` (string, required): Decentralized Identifier of the endorsing entity
+- `endorser_name` (string, optional): Human-readable name of the endorser
+- `timestamp` / `date` (string, required): ISO 8601 timestamp when endorsement was made
+- `signature` (string, required): Cryptographic signature of the endorsement
+- `signature_algorithm` (string, required): Algorithm used for signature (e.g., `ed25519`, `secp256k1`)
+- `endorsement_type` (string, required): One of `"content"`, `"delegated"`, or `"peer"`
+- `comment` (string, optional): Endorser commentary
+- `verdict` (string, optional): Semantic judgment (see Verdict Types below)
+- `confidence` (number, optional): Confidence level (0.0 to 1.0)
+- `trust_weight` (number, optional): Relative weight of the endorser's trust (0.0 to 1.0)
+- `endorsed` (string, optional): URI of the content being endorsed
+- `evidence` (array of string, optional): Links or identifiers supporting the endorsement
+- `chain_depth` (integer, optional): Number indicating endorsement’s depth in a chain
+- `transitive_endorsements` (array, optional): Nested endorsements that this one is based on
+- `delegation_chain` (array, optional): See below.
 
-- `endorsed` (string, optional): URI of content being endorsed (defaults to current content)
-- `verdict` (string, required): Endorsement verdict
-- `confidence` (number, required): Confidence level (0.0 to 1.0)
-- `date` (string, required): ISO 8601 timestamp of endorsement
-- `trust_weight` (number, optional): Weight assigned to this endorser (0.0 to 1.0)
-- `evidence` (array, optional): URLs or identifiers supporting the endorsement
-- `chain_depth` (number, optional): Depth in endorsement chain (1 = direct)
-- `signature` (string, optional): Cryptographic signature for verification
-- `transitive_endorsements` (array, optional): Endorsements that led to this one
+#### Delegation Object
+
+- `delegator_did` (string, required)
+- `delegator_name` (string, optional)
+- `delegation_signature` (string, required)
+- `delegation_timestamp` (string, required)
+- `delegation_scope` (string, required)
+- `delegation_expires` (string, optional)
 
 ### Verdict Types
 
-Standard verdict values:
-
-- `accurate` - Content is factually correct
-- `verified` - Content has been independently verified
-- `corroborated` - Content is supported by other sources
-- `referenced` - Content is mentioned or cited by endorser
-- `disputed` - Content accuracy is questioned
-- `questionable` - Content has reliability concerns
-- `false` - Content contains factual errors
-- `misleading` - Content is deceptively presented
+- `accurate`
+- `verified`
+- `corroborated`
+- `referenced`
+- `disputed`
+- `questionable`
+- `false`
+- `misleading`
 
 ## Usage
 
 ### Declaring the Extension
-
-Add the extension to your `semantic.json`:
 
 ```json
 {
@@ -97,12 +120,12 @@ Add the extension to your `semantic.json`:
 }
 ```
 
-### Simple Endorsement
+### Complete Example: Research Paper with Expert Endorsement
 
 ```json
 {
-  "id": "news:climate-report",
-  "title": "Climate Change Impact Assessment",
+  "id": "research-climate-2025-001",
+  "title": "Advanced Climate Modeling Predictions for 2030",
   "extensions": [
     {
       "id": "spp:endorsement-chains",
@@ -111,24 +134,19 @@ Add the extension to your `semantic.json`:
   ],
   "endorsements": [
     {
-      "endorser": {
-        "name": "Climate Science Institute",
-        "id": "endorser:climate-institute",
-        "uri": "https://climate-institute.org",
-        "type": "expert"
-      },
-      "verdict": "accurate",
-      "confidence": 0.95,
-      "date": "2025-01-15T14:30:00Z",
-      "evidence": [
-        "https://climate-institute.org/peer-review/cr2025"
-      ]
+      "endorser_did": "did:web:climatescience.mit.edu:researchers:jane-smith",
+      "endorser_name": "Dr. Jane Smith, MIT Climate Lab",
+      "timestamp": "2025-01-15T14:30:00Z",
+      "signature": "zQmF3ysuHnLmKxn2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2E",
+      "comment": "Methodology is sound and conclusions align with peer-reviewed literature.",
+      "endorsement_type": "content",
+      "signature_algorithm": "ed25519"
     }
   ]
 }
 ```
 
-### Chained Endorsements
+### Chained Endorsement with Trust Decay
 
 ```json
 {
@@ -160,93 +178,79 @@ Add the extension to your `semantic.json`:
 }
 ```
 
-## Trust Network Construction
+## Signature Verification
 
-### Direct Endorsements
-- Endorsements with `chain_depth: 1`
-- Highest trust weight
-- Direct verification by endorser
+### Signature Payload
 
-### Transitive Endorsements
-- Endorsements through intermediate parties
-- Reduced trust weight based on chain length
-- Tracked via `transitive_endorsements` array
+```json
+{
+  "content_id": "research-climate-2025-001",
+  "content_digest": "sha256:af09ad5030dac42aad5da6ee660fca0b81a132c523059b8c3c4a34dd06097f69",
+  "endorser_did": "did:web:expert.example.com",
+  "timestamp": "2025-01-15T14:30:00Z",
+  "endorsement_type": "content"
+}
+```
+
+### Delegation Signature Payload
+
+```json
+{
+  "delegator_did": "did:web:supervisor.example.com",
+  "delegate_did": "did:web:assistant.example.com",
+  "delegation_scope": "research_endorsement",
+  "delegation_timestamp": "2025-01-15T14:45:00Z",
+  "delegation_expires": "2025-12-31T23:59:59Z"
+}
+```
+
+### Verification Process
+
+1. Resolve DIDs to fetch public keys
+2. Validate endorsement and delegation signatures
+3. Check timestamps and expiry
+4. Evaluate trust chain integrity
+
+## Trust Network Modelling
 
 ### Trust Decay Formula
+
 ```
 effective_trust = base_trust × (decay_factor ^ (chain_depth - 1))
 ```
 
-Where:
-- `base_trust`: Original endorser trust weight
-- `decay_factor`: Typically 0.8-0.9
-- `chain_depth`: Length of endorsement chain
-
-## Verification Methods
-
-### Cryptographic Signatures
-- Use `signature` field for tamper detection
-- Support for multiple signature schemes
-- Public key resolution via endorser URI
-
-### Evidence Links
-- URLs to supporting documentation
-- Verification trails and audit logs
-- Cross-reference with external systems
-
 ## Use Cases
 
-### Fact-Checking Integration
-- Automated fact-checker endorsements
-- Real-time verification results
-- Confidence scoring and evidence trails
-
-### Publisher Networks
-- Cross-publisher verification
-- Breaking news corroboration
-- Editorial integrity chains
-
-### Expert Validation
-- Subject matter expert endorsements
-- Academic peer review integration
-- Professional certification tracking
-
-### Community Verification
-- Crowdsourced validation
-- Community consensus tracking
-- Reputation-based weighting
+- **Fact-checker endorsements**
+- **Cross-publisher corroboration**
+- **Expert and academic validation**
+- **Delegated institutional statements**
+- **Agent-to-agent trust graphs**
 
 ## Implementation Considerations
 
 ### Performance
-- Cache trust calculations
-- Limit chain depth to prevent cycles
-- Batch endorsement processing
+- Cache endorsement validations
+- Index by DID or content URI
+- Limit chain depth
 
 ### Security
-- Validate endorser identities
-- Prevent endorsement spoofing
-- Rate limit to prevent spam
+- Signature verification required
+- Prevent replay and spoofing
+- Use key expiry & rotation policies
 
 ### Privacy
-- Respect endorser anonymity preferences
-- Handle private verification channels
-- Protect sensitive evidence links
+- Support pseudonymous DIDs
+- Respect opt-outs from visibility
+- Don’t expose private evidence links
 
-## Backward Compatibility
+## Compatibility
 
-This extension is fully backward compatible. Agents that don't recognize the extension will ignore endorsement fields without breaking core functionality.
+This extension is backward compatible. Clients ignoring it will safely fallback to basic rendering.
 
-## Future Enhancements
+## Future Extensions
 
-### Planned Features
-- Real-time endorsement updates
-- Conditional endorsements
-- Expiring endorsements
-- Multi-modal evidence support
-
-### Integration Opportunities
-- Blockchain trust anchoring
-- W3C Verifiable Credentials
-- OAuth endorser authentication
-- Federated trust networks
+- Conditional or revocable endorsements
+- Endorsement summarisation and scoring
+- Verifiable Credential integration
+- Federated reputation networks

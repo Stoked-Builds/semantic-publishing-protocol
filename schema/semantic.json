@@ -71,9 +71,9 @@
     },
     "endorsements": {
       "type": "array",
-      "description": "Array of endorsements",
+      "description": "Array of endorsements (enhanced with spp:endorsement-chains extension)",
       "items": {
-        "type": "object"
+        "$ref": "https://spec.stoked.tech/schemas/extensions/endorsement-chains.json#/properties/endorsements/items"
       }
     },
     "archived": {

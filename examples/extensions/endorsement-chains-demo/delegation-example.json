@@ -1,0 +1,70 @@
+{
+  "id": "policy-report-2025-003",
+  "title": "Economic Impact Assessment: Green Energy Transition",
+  "summary": "Analysis of economic implications of transitioning to renewable energy sources.",
+  "topics": [
+    {
+      "id": "economics",
+      "label": "Economics"
+    },
+    {
+      "id": "energy-policy",
+      "label": "Energy Policy"
+    }
+  ],
+  "tags": ["economics", "energy", "policy", "renewable"],
+  "lang": "en",
+  "date": "2025-01-15",
+  "version": "1.1.0",
+  "digest": "sha256:bf19bd6040ebc53bae5eb7ff991fb1b89b143d824f97ed81a143c534e6098a90",
+  "author": {
+    "name": "Economic Research Team",
+    "id": "author:econ-team",
+    "uri": "https://brookings.edu/authors/econ-team"
+  },
+  "publisher": {
+    "name": "Brookings Institution",
+    "id": "publisher:brookings",
+    "uri": "https://brookings.edu"
+  },
+  "license": "CC-BY-4.0",
+  "canonical": "https://brookings.edu/research/policy-report-2025-003",
+  "extensions": [
+    {
+      "id": "spp:endorsement-chains",
+      "version": "0.3.0"
+    }
+  ],
+  "endorsements": [
+    {
+      "endorser_did": "did:web:brookings.edu:research-assistant:ai-agent-07",
+      "endorser_name": "Brookings Research AI Assistant",
+      "timestamp": "2025-01-15T16:00:00Z",
+      "signature": "zQmK4xtuJnPmKyn3eKcnF3nLsAkYsJzY2JYFCsLrE5ZHxi9JGwW3F",
+      "comment": "Endorsed based on institutional review process.",
+      "endorsement_type": "delegated",
+      "signature_algorithm": "ed25519",
+      "delegation_chain": [
+        {
+          "delegator_did": "did:web:brookings.edu:directors:john-smith",
+          "delegator_name": "Dr. John Smith, Research Director",
+          "delegation_signature": "zQmA1wriHmLkNxm2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2E",
+          "delegation_timestamp": "2025-01-01T00:00:00Z",
+          "delegation_scope": "institutional_research_endorsement",
+          "delegation_expires": "2025-12-31T23:59:59Z"
+        }
+      ]
+    },
+    {
+      "endorser_did": "did:web:economics.stanford.edu:professor:mary-johnson",
+      "endorser_name": "Prof. Mary Johnson, Stanford Economics",
+      "timestamp": "2025-01-15T17:30:00Z",
+      "signature": "zQmC5yuvJoQmKzo4fLdoG4oNsBlazKa3KZGDtMsF6VGxi9JHxX4G",
+      "comment": "Economic modeling appears robust and well-validated.",
+      "endorsement_type": "content",
+      "signature_algorithm": "ed25519",
+      "delegation_chain": []
+    }
+  ],
+  "archived": false
+}
