@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.stoked.tech/schemas/extensions/endorsement-chains.json",
+  "title": "Endorsement Chains Extension Schema",
+  "description": "Schema for endorsement-chains extension fields in the Semantic Publishing Protocol",
+  "type": "object",
+  "properties": {
+    "endorsements": {
+      "type": "array",
+      "description": "Array of verifiable endorsements with optional delegation chains",
+      "items": {
+        "type": "object",
+        "properties": {
+          "endorser_did": {
+            "type": "string",
+            "pattern": "^did:[a-z0-9]+:[a-zA-Z0-9._-]+",
+            "description": "Decentralized Identifier of the endorsing entity"
+          },
+          "endorser_name": {
+            "type": "string",
+            "description": "Human-readable name of the endorser"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp when endorsement was created"
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/=]+$",
+            "description": "Cryptographic signature of the endorsement"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Optional commentary from the endorser"
+          },
+          "endorsement_type": {
+            "type": "string",
+            "enum": ["content", "delegated", "peer"],
+            "description": "Type of endorsement"
+          },
+          "signature_algorithm": {
+            "type": "string",
+            "enum": ["ed25519", "secp256k1", "secp256r1"],
+            "description": "Algorithm used for signature"
+          },
+          "delegation_chain": {
+            "type": "array",
+            "description": "Array of delegation objects for delegated endorsements",
+            "items": {
+              "type": "object",
+              "properties": {
+                "delegator_did": {
+                  "type": "string",
+                  "pattern": "^did:[a-z0-9]+:[a-zA-Z0-9._-]+",
+                  "description": "DID of the entity granting delegation authority"
+                },
+                "delegator_name": {
+                  "type": "string",
+                  "description": "Human-readable name of the delegator"
+                },
+                "delegation_signature": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9+/=]+$",
+                  "description": "Signature authorizing the delegation"
+                },
+                "delegation_timestamp": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "ISO 8601 timestamp when delegation was granted"
+                },
+                "delegation_scope": {
+                  "type": "string",
+                  "description": "Scope of delegation authority"
+                },
+                "delegation_expires": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "ISO 8601 timestamp when delegation expires"
+                }
+              },
+              "required": ["delegator_did", "delegation_signature", "delegation_timestamp", "delegation_scope"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["endorser_did", "timestamp", "signature", "endorsement_type", "signature_algorithm"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
