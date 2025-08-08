@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://spec.stoked.tech/schemas/meta.schema.json",
+  "title": "Meta JSON-LD Schema",
+  "description": "Schema for meta.jsonld files in each publication following JSON-LD structure",
+  "type": "object",
+  "required": [
+    "@context",
+    "@type", 
+    "name",
+    "datePublished",
+    "protocolVersion"
+  ],
+  "properties": {
+    "@context": {
+      "type": "string",
+      "const": "https://schema.org",
+      "description": "JSON-LD context URL"
+    },
+    "@type": {
+      "type": "string",
+      "description": "The type of the entity according to schema.org vocabulary",
+      "examples": ["Article", "BlogPosting", "NewsArticle", "CreativeWork"]
+    },
+    "name": {
+      "type": "string",
+      "description": "The name/title of the publication",
+      "minLength": 1
+    },
+    "datePublished": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the publication was published (ISO 8601)"
+    },
+    "protocolVersion": {
+      "type": "string",
+      "description": "The version of the Semantic Publishing Protocol being used",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "author": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "@type": {
+              "type": "string",
+              "const": "Person"
+            },
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": ["@type", "name"]
+        },
+        {
+          "type": "object", 
+          "properties": {
+            "@type": {
+              "type": "string",
+              "const": "Organization"
+            },
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": ["@type", "name"]
+        }
+      ],
+      "description": "The author of the publication"
+    },
+    "description": {
+      "type": "string",
+      "description": "A description or summary of the publication"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The canonical URL of the publication"
+    },
+    "dateModified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the publication was last modified (ISO 8601)"
+    },
+    "publisher": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "enum": ["Person", "Organization"]
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": ["@type", "name"],
+      "description": "The publisher of the publication"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keywords or tags associated with the publication"
+    },
+    "license": {
+      "type": "string",
+      "description": "The license under which the publication is released"
+    },
+    "inLanguage": {
+      "type": "string",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "description": "The language of the publication (ISO 639-1 code)"
+    }
+  },
+  "additionalProperties": true
+}

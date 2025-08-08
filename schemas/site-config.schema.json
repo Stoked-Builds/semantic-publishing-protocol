@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://spec.stoked.tech/schemas/site-config.schema.json",
+  "title": "Site Configuration Schema",
+  "description": "Schema for site.config.json at site root containing publisher and site configuration",
+  "type": "object",
+  "required": [
+    "protocolVersion",
+    "siteMetadata"
+  ],
+  "properties": {
+    "protocolVersion": {
+      "type": "string",
+      "description": "The version of the Semantic Publishing Protocol being used",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "siteMetadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "url"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the site or publication",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The canonical URL of the site"
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the site or publication"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "description": "The primary language of the site (ISO 639-1 code)"
+        },
+        "publisher": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "organizationType": {
+              "type": "string",
+              "enum": ["individual", "company", "nonprofit", "government", "organization"]
+            }
+          },
+          "required": ["name"],
+          "description": "Information about the publisher"
+        },
+        "topics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Primary topics or focus areas of the site"
+        },
+        "license": {
+          "type": "string",
+          "description": "Default license for content on this site"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Core metadata about the site"
+    },
+    "publishingSettings": {
+      "type": "object",
+      "properties": {
+        "defaultContentType": {
+          "type": "string",
+          "enum": ["article", "video", "product", "person", "event", "organization"],
+          "default": "article",
+          "description": "Default content type for publications"
+        },
+        "feedUrl": {
+          "type": "string", 
+          "format": "uri",
+          "description": "URL to the site's semantic feed"
+        },
+        "sitemapUrl": {
+          "type": "string",
+          "format": "uri", 
+          "description": "URL to the semantic sitemap"
+        },
+        "enableAnalytics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable analytics tracking"
+        },
+        "enableComments": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to enable comments on publications"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration settings for publishing behavior"
+    },
+    "trustSettings": {
+      "type": "object",
+      "properties": {
+        "verificationLevel": {
+          "type": "string",
+          "enum": ["none", "basic", "verified", "premium"],
+          "default": "none",
+          "description": "Level of verification for this publisher"
+        },
+        "allowEndorsements": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to allow endorsements on content"
+        },
+        "trustedSources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "List of trusted source URLs for content attribution"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Trust and verification settings"
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Extension identifier"
+          },
+          "version": {
+            "type": "string",
+            "description": "Extension version"
+          },
+          "config": {
+            "type": "object",
+            "description": "Extension-specific configuration"
+          }
+        },
+        "required": ["id", "version"],
+        "additionalProperties": false
+      },
+      "description": "Enabled extensions and their configurations"
+    }
+  },
+  "additionalProperties": false
+}

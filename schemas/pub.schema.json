@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://spec.stoked.tech/schemas/pub.schema.json", 
+  "title": "Publication Item Schema",
+  "description": "Schema for each item in the pubs[] array representing individual publications",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "contentType",
+    "datePublished",
+    "protocolVersion"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the publication",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string", 
+      "description": "The title of the publication",
+      "minLength": 1
+    },
+    "contentType": {
+      "type": "string",
+      "enum": ["article", "video", "product", "person", "event", "organization", "knowledge", "collection"],
+      "description": "The type of content this publication represents"
+    },
+    "datePublished": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the publication was published (ISO 8601)"
+    },
+    "protocolVersion": {
+      "type": "string",
+      "description": "The version of the Semantic Publishing Protocol being used",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "summary": {
+      "type": "string",
+      "description": "A brief summary or description of the publication"
+    },
+    "author": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the author"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": ["name"],
+      "description": "The author of the publication"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri", 
+      "description": "The canonical URL of the publication"
+    },
+    "dateModified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the publication was last modified (ISO 8601)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags or keywords associated with the publication"
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "global": {
+            "type": "string",
+            "description": "Global identifier for the topic (e.g., Wikidata ID)"
+          }
+        },
+        "required": ["id", "label"],
+        "additionalProperties": false
+      },
+      "description": "Structured topic information"
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "description": "The language of the publication (ISO 639-1 code)"
+    },
+    "license": {
+      "type": "string",
+      "description": "The license under which the publication is released"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of the publication content (semantic versioning)"
+    },
+    "digest": {
+      "type": "string",
+      "description": "Content hash or digest for integrity verification"
+    },
+    "source": {
+      "type": "string",
+      "description": "Original source attribution if republishing content"
+    },
+    "canonical": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical URL for this content"
+    },
+    "archived": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this publication is archived"
+    },
+    "estimatedDuration": {
+      "type": "string",
+      "pattern": "^\\d+[smh]$",
+      "description": "Estimated time to consume content (e.g., '5m', '2h')"
+    },
+    "contentQuality": {
+      "type": "object",
+      "properties": {
+        "readingLevel": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "expert"]
+        },
+        "accuracy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "completeness": {
+          "type": "number", 
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false,
+      "description": "Quality metrics for the content"
+    },
+    "endorsements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "endorserName": {
+            "type": "string"
+          },
+          "endorserId": {
+            "type": "string"
+          },
+          "endorsementType": {
+            "type": "string",
+            "enum": ["approval", "recommendation", "verification", "citation"]
+          },
+          "dateEndorsed": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["endorserName", "endorsementType"],
+        "additionalProperties": false
+      },
+      "description": "Endorsements received for this publication"
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Extension identifier"
+          },
+          "version": {
+            "type": "string",
+            "description": "Extension version"
+          }
+        },
+        "required": ["id", "version"],
+        "additionalProperties": false
+      },
+      "description": "Extensions used by this publication"
+    }
+  },
+  "additionalProperties": false
+}
