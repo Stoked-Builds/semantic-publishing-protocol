@@ -1,0 +1,33 @@
+{
+  "version": "0.2",
+  "publisher": {
+    "id": "publisher:stoked-dev",
+    "name": "Stoked.dev",
+    "uri": "https://stoked.dev"
+  },
+  "updated": "2025-01-28T00:00:00Z",
+  "stories": [
+    {
+      "id": "first-post",
+      "title": "Getting Started with Semantic Publishing",
+      "lang": "en",
+      "semantic": "./pubs/first-post/meta.jsonld",
+      "canonical": "https://stoked.dev/posts/first-post/"
+    },
+    {
+      "id": "second-post", 
+      "title": "Advanced Semantic Publishing Techniques",
+      "lang": "en",
+      "semantic": "./pubs/second-post/meta.jsonld",
+      "canonical": "https://stoked.dev/posts/second-post/"
+    }
+  ],
+  "topics": "https://stoked.dev/topics.json",
+  "authors": [
+    {
+      "id": "author:stoked-team",
+      "name": "Stoked Development Team",
+      "uri": "https://stoked.dev/about/team"
+    }
+  ]
+}
