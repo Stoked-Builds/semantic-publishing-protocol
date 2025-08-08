@@ -13,6 +13,7 @@ if (!fs.existsSync(testDataDir)) {
 
 // Valid semantic.json
 const validSemantic = {
+  "protocolVersion": "1.0.0",
   "id": "test:valid",
   "title": "Test Content",
   "author": { "name": "Test Author" }
@@ -21,6 +22,7 @@ fs.writeFileSync(path.join(testDataDir, 'valid.json'), JSON.stringify(validSeman
 
 // Invalid semantic.json
 const invalidSemantic = {
+  "protocolVersion": "1.0.0",
   "id": "test:invalid",
   "title": "Test Content",
   "invalidField": "should not be here"
@@ -29,6 +31,7 @@ fs.writeFileSync(path.join(testDataDir, 'invalid.json'), JSON.stringify(invalidS
 
 // Valid SPS markdown
 const validSpsMarkdown = `---
+protocolVersion: "1.0.0"
 id: "test:sps"
 title: "Test SPS"
 author:

@@ -13,6 +13,7 @@ if (!fs.existsSync(testDataDir)) {
 
 // Valid endorsement with basic content endorsement
 const validEndorsement = {
+  "protocolVersion": "1.0.0",
   "id": "test:endorsement-valid",
   "title": "Test Content with Endorsement",
   "author": { "name": "Test Author" },
@@ -39,6 +40,7 @@ fs.writeFileSync(path.join(testDataDir, 'valid-endorsement.json'), JSON.stringif
 
 // Valid endorsement with delegation chain
 const validDelegation = {
+  "protocolVersion": "1.0.0",
   "id": "test:delegation-valid",
   "title": "Test Content with Delegated Endorsement",
   "author": { "name": "Test Author" },
@@ -74,6 +76,7 @@ fs.writeFileSync(path.join(testDataDir, 'valid-delegation.json'), JSON.stringify
 
 // Invalid endorsement - missing required fields
 const invalidEndorsement = {
+  "protocolVersion": "1.0.0",
   "id": "test:endorsement-invalid",
   "title": "Test Content with Invalid Endorsement",
   "author": { "name": "Test Author" },

@@ -108,6 +108,36 @@ Full changelog: [CHANGELOG.md](docs/changelog.md)
 
 ---
 
+## Versioning
+
+SPP follows [Semantic Versioning 2.0.0](https://semver.org/) to ensure predictable updates and backward compatibility.
+
+### Protocol Version
+
+All SPP metadata includes a `protocolVersion` field that indicates which version of the protocol the content follows:
+
+```json
+{
+  "protocolVersion": "1.0.0",
+  "id": "example-content",
+  "title": "Example Content"
+}
+```
+
+### Version Format
+
+- **MAJOR**: Incremented for breaking changes that require content updates
+- **MINOR**: Incremented for backward-compatible feature additions
+- **PATCH**: Incremented for backward-compatible bug fixes
+
+### Compatibility
+
+- Content published with protocol version `1.x.x` will remain compatible within the `1.x` series
+- Agents and validators should gracefully handle minor version differences
+- Major version changes may require content migration or updates
+
+---
+
 ## 🤝 Join the Mission
 
 Want to help fix the future of web publishing?  

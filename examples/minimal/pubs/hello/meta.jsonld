@@ -1,4 +1,5 @@
 {
+  "protocolVersion": "1.0.0",
   "id": "hello",
   "title": "Hello World",
   "summary": "A minimal example of semantic publishing protocol implementation.",
