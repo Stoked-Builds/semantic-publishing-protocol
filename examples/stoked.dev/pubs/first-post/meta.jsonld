@@ -1,0 +1,36 @@
+{
+  "id": "first-post",
+  "title": "Getting Started with Semantic Publishing",
+  "summary": "A comprehensive introduction to semantic publishing protocols and how to implement them in your content workflow.",
+  "topics": [
+    {
+      "id": "technology",
+      "label": "Technology",
+      "global": "wikidata:Q739"
+    },
+    {
+      "id": "publishing",
+      "label": "Publishing",
+      "global": "wikidata:Q3972943"
+    }
+  ],
+  "tags": ["semantic-publishing", "documentation", "getting-started", "protocol"],
+  "lang": "en",
+  "date": "2025-01-28",
+  "version": "1.0.0",
+  "digest": "sha256:a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890",
+  "author": {
+    "name": "Stoked Development Team",
+    "id": "author:stoked-team",
+    "uri": "https://stoked.dev/about/team"
+  },
+  "publisher": {
+    "name": "Stoked.dev",
+    "id": "publisher:stoked-dev",
+    "uri": "https://stoked.dev"
+  },
+  "license": "CC-BY-4.0",
+  "canonical": "https://stoked.dev/posts/first-post/",
+  "endorsements": [],
+  "archived": false
+}

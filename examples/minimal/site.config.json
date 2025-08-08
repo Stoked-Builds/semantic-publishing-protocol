@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "publisher": {
+    "id": "publisher:minimal-example",
+    "name": "Minimal Example Site",
+    "uri": "https://example.minimal"
+  },
+  "updated": "2025-01-28T00:00:00Z",
+  "stories": [
+    {
+      "id": "hello",
+      "title": "Hello World",
+      "lang": "en",
+      "semantic": "./pubs/hello/meta.jsonld",
+      "canonical": "https://example.minimal/hello/"
+    }
+  ],
+  "topics": "https://example.minimal/topics.json"
+}

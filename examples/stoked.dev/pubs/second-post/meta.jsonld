@@ -1,0 +1,41 @@
+{
+  "id": "second-post",
+  "title": "Advanced Semantic Publishing Techniques", 
+  "summary": "Deep dive into advanced concepts including endorsement chains, trust networks, and automated validation workflows.",
+  "topics": [
+    {
+      "id": "technology",
+      "label": "Technology", 
+      "global": "wikidata:Q739"
+    },
+    {
+      "id": "artificial-intelligence",
+      "label": "Artificial Intelligence",
+      "global": "wikidata:Q11660"
+    },
+    {
+      "id": "web-development",
+      "label": "Web Development"
+    }
+  ],
+  "tags": ["semantic-publishing", "advanced", "endorsements", "trust-networks", "automation"],
+  "lang": "en",
+  "date": "2025-01-28",
+  "version": "1.1.0",
+  "digest": "sha256:b2c3d4e5f67890123456789012345678901234567890123456789012345678901",
+  "author": {
+    "name": "Stoked Development Team",
+    "id": "author:stoked-team", 
+    "uri": "https://stoked.dev/about/team"
+  },
+  "publisher": {
+    "name": "Stoked.dev",
+    "id": "publisher:stoked-dev",
+    "uri": "https://stoked.dev"
+  },
+  "source": "Internal Documentation",
+  "license": "CC-BY-4.0",
+  "canonical": "https://stoked.dev/posts/second-post/",
+  "endorsements": [],
+  "archived": false
+}

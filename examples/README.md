@@ -9,6 +9,18 @@ These are fully structured content folders and documents that demonstrate compli
 
 ```plaintext
 examples/
+├── stoked.dev/
+│   ├── site.config.json
+│   └── pubs/
+│       ├── first-post/
+│       │   └── meta.jsonld
+│       └── second-post/
+│           └── meta.jsonld
+├── minimal/
+│   ├── site.config.json
+│   └── pubs/
+│       └── hello/
+│           └── meta.jsonld
 ├── stories/
 │   └── ai-firms-licensing-treaty/
 │       ├── story.md
@@ -34,6 +46,8 @@ examples/
 
 | Folder | Description |
 |--------|-------------|
+| `stoked.dev/` | **Full example** with 2 pubs and complete site configuration for reference implementation. |
+| `minimal/` | **Minimal example** showing the smallest valid drop site with 1 pub. |
 | `stories/` | Complete artefact folder with `story.md`, extracted `semantic.json`, and `topics.json`. |
 | `endorsement/` | Sample endorsement object using verifiable structure. |
 | `review-chain/` | Example of an editorial review chain attached to a story. |
