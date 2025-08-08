@@ -35,6 +35,7 @@ const trustWeights = {
 function setupTestData() {
   // 1. Content with endorsement chains
   const contentWithEndorsements = {
+    "protocolVersion": "1.0.0",
     "id": "news:climate-report-2025",
     "title": "Global Climate Report Shows Accelerating Changes",
     "author": { "name": "Sarah Climate", "id": "author:sarah-climate" },
@@ -80,6 +81,7 @@ function setupTestData() {
 
   // 2. Content with complex trust chain
   const complexTrustChain = {
+    "protocolVersion": "1.0.0",
     "id": "news:economic-analysis",
     "title": "Market Analysis: Tech Sector Outlook",
     "author": { "name": "John Economist", "id": "author:john-economist" },
@@ -125,6 +127,7 @@ function setupTestData() {
 
   // 3. Content with multiple extensions
   const multiExtensionContent = {
+    "protocolVersion": "1.0.0",
     "id": "news:breaking-story",
     "title": "Breaking: Policy Changes Announced",
     "author": { "name": "News Reporter", "id": "author:reporter" },
@@ -169,6 +172,7 @@ function setupTestData() {
 
   // 4. Untrusted content (low trust signals)
   const untrustedContent = {
+    "protocolVersion": "1.0.0",
     "id": "blog:conspiracy-theory",
     "title": "Hidden Truth About Recent Events",
     "author": { "name": "Anonymous Blogger", "id": "author:anon-blogger" },
@@ -438,6 +442,7 @@ test('Agent should make appropriate rendering decisions based on trust scores', 
 // Test: Trust Weight Respect
 test('Agent should respect configured trust weights', () => {
   const content = {
+    "protocolVersion": "1.0.0",
     "id": "test:trust-weights",
     "title": "Test Trust Weights",
     "author": { "name": "Test Author" },
@@ -470,6 +475,7 @@ test('Agent should respect configured trust weights', () => {
 // Test: Extension Compatibility 
 test('Agent should handle unknown extensions gracefully', async () => {
   const contentWithUnknownExtension = {
+    "protocolVersion": "1.0.0",
     "id": "test:unknown-ext",
     "title": "Test Unknown Extension",
     "author": { "name": "Test Author" },

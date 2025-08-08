@@ -5,6 +5,11 @@
   "description": "Schema for semantic content objects in the Semantic Publishing Protocol",
   "type": "object",
   "properties": {
+    "protocolVersion": {
+      "type": "string",
+      "description": "The version of the Semantic Publishing Protocol being used",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
     "id": {
       "type": "string",
       "description": "Unique identifier for the content"
@@ -112,6 +117,6 @@
       "$ref": "https://spec.stoked.tech/schemas/extensions/time-versioning.json#/properties/version_history"
     }
   },
-  "required": ["id", "title", "author"],
+  "required": ["id", "title", "author", "protocolVersion"],
   "additionalProperties": false
 }

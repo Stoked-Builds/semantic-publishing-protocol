@@ -1,4 +1,5 @@
 {
+  "protocolVersion": "1.0.0",
   "id": "second-post",
   "title": "Advanced Semantic Publishing Techniques", 
   "summary": "Deep dive into advanced concepts including endorsement chains, trust networks, and automated validation workflows.",
