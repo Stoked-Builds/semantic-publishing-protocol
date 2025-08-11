@@ -1,0 +1,43 @@
+{
+  "protocolVersion": "1.0",
+  "registry": {
+    "name": "Example Registry",
+    "id": "registry:example",
+    "operator": {
+      "name": "Example Operator",
+      "url": "https://example.com",
+      "contact": "admin@example.com"
+    },
+    "publicKey": {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "base64url-encoded-public-key-placeholder"
+    }
+  },
+  "endpoints": {
+    "harvest": {
+      "baseUrl": "https://registry.example.com/harvest/v1",
+      "listIdentifiers": "/ListIdentifiers",
+      "listRecords": "/ListRecords",
+      "getRecord": "/GetRecord"
+    },
+    "search": "https://registry.example.com/api/v1/search",
+    "transparency": "https://registry.example.com/ct",
+    "websub": {
+      "hub": "https://registry.example.com/websub/hub",
+      "supported": true
+    }
+  },
+  "federation": {
+    "allowHarvesting": true,
+    "allowReplication": true,
+    "updateFrequency": "hourly",
+    "retentionPolicy": "https://example.com/retention-policy"
+  },
+  "metadata": {
+    "description": "SPP Registry for academic content",
+    "topics": ["academic", "research", "science"],
+    "contentTypes": ["article", "paper", "dataset"],
+    "languages": ["en", "es", "fr"]
+  }
+}

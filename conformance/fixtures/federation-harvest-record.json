@@ -1,0 +1,48 @@
+{
+  "identifier": "oai:registry.example.com:article-123",
+  "datestamp": "2025-01-11T10:30:00Z",
+  "status": "active",
+  "id": "urn:spp:example:article-123",
+  "type": "article",
+  "title": "Example Federation Article",
+  "language": "en",
+  "authors": [
+    {
+      "name": "John Doe",
+      "url": "https://example.com/authors/john-doe"
+    }
+  ],
+  "published_at": "2025-01-10T15:30:00Z",
+  "updated_at": "2025-01-10T16:00:00Z",
+  "topics": ["federation", "protocol"],
+  "sections": ["technology"],
+  "media": [],
+  "content": {
+    "format": "markdown",
+    "value": "Article content demonstrating federation capabilities..."
+  },
+  "links": [
+    {
+      "rel": "canonical",
+      "href": "https://example.com/articles/123"
+    }
+  ],
+  "provenance": {
+    "mode": "authoritative",
+    "publisher_did": "did:key:z6MkABC123",
+    "source_url": "https://example.com/articles/123",
+    "captured_at": "2025-01-10T16:01:00Z",
+    "content_hash": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+  },
+  "signature": {
+    "signer": "did:key:z6MkABC123",
+    "sig": "base64url-signature-placeholder",
+    "signedAt": "2025-01-10T16:00:00Z"
+  },
+  "version": 1,
+  "federation": {
+    "sourceRegistry": "registry:example",
+    "harvestedAt": "2025-01-11T10:30:00Z",
+    "federationPath": ["registry:source", "registry:example"]
+  }
+}
