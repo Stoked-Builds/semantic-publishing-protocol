@@ -494,6 +494,12 @@ Content-Type: application/json
 - [DNS Discovery](dns.md) - For DNS TXT proof requirements
 - [Claims and Adoption](claims-and-adoption.md) - For publisher verification
 - [Registry Brief](../../design/registry/brief.md) - For ownership definitions
-- [JSON Schema](../../schemas/ownership.json) - For data validation
+- [JSON Schema](../../schemas/ownership.json) - For ownership data validation
+- [Semantic Schema](../../schemas/semantic.json) - For artefact hash format
+- [Publisher Schema](../../schemas/publisher.json) - For publisher verification
+- [Claim Schema](../../schemas/claim.json) - For claim validation
+- [Adoption Schema](../../schemas/adoption.json) - For adoption process
+- [Signature Schema](../../schemas/common/signature.json) - For signature validation
+- [DID Schema](../../schemas/common/did.json) - For DID format validation
 - [W3C DID Core](https://www.w3.org/TR/did-core/) - For DID specifications
 - [RFC 2119](https://tools.ietf.org/html/rfc2119) - For normative language
