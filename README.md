@@ -138,6 +138,32 @@ All SPP metadata includes a `protocolVersion` field that indicates which version
 
 ---
 
+## 🛠️ Developer Tools
+
+### Validation CLI
+
+Use the built-in validation tool to check your drop metadata files against their JSON Schemas:
+
+```bash
+# Validate all site.config.json and pubs/**/meta.jsonld files
+npm run validate
+
+# Or run directly
+node scripts/validate.js
+
+# Validate specific files
+node scripts/validate.js path/to/site.config.json path/to/meta.jsonld
+```
+
+The validator will:
+- ✅ Print "All files pass validation" on success (exit code 0)
+- ❌ Print "Validation failed" with detailed error information on failure (exit code 1)
+- Show schema keyword, data path, and error message for each validation error
+
+Works cross-platform (macOS/Linux/Windows) and is suitable for CI/CD pipelines.
+
+---
+
 ## 🤝 Join the Mission
 
 Want to help fix the future of web publishing?  
