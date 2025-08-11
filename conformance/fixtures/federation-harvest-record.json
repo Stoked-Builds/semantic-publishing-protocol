@@ -37,12 +37,15 @@
   "signature": {
     "signer": "did:key:z6MkABC123",
     "sig": "base64url-signature-placeholder",
-    "signedAt": "2025-01-10T16:00:00Z"
+    "created_at": "2025-01-10T16:00:00Z",
+    "alg": "EdDSA",
+    "kid": "did:key:z6MkABC123#z6MkABC123"
   },
   "version": 1,
   "federation": {
     "sourceRegistry": "registry:example",
     "harvestedAt": "2025-01-11T10:30:00Z",
-    "federationPath": ["registry:source", "registry:example"]
+    "federationPath": ["registry:source", "registry:example"],
+    "anchors": []
   }
 }

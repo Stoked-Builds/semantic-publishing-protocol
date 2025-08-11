@@ -73,9 +73,12 @@ Claims **MUST** conform to `/schemas/claim.json`:
   "signature": {
     "signer": "<did_identifier>",
     "sig": "<base64url_signature>"
-  }
+  },
+  "anchors": []
 }
 ```
+
+All claims **MUST** validate against `/schemas/claim.json` before acceptance.
 
 ### Adoption Structure
 
@@ -88,13 +91,16 @@ Adoptions **MUST** conform to `/schemas/adoption.json`:
   "signature": {
     "signer": "<did_identifier>",
     "sig": "<base64url_signature>"
-  }
+  },
+  "anchors": []
 }
 ```
 
+All adoptions **MUST** validate against `/schemas/adoption.json` before acceptance.
+
 ### Publisher Metadata
 
-Publishers **MUST** expose metadata conforming to `/schemas/publisher.json` via `.well-known/spp.json`.
+Publishers **MUST** expose metadata conforming to `/schemas/publisher.json` via `.well-known/spp.json` and this document **MUST** validate against its schema before acceptance by a registry.
 
 ## Security & Integrity [Normative]
 
@@ -106,13 +112,16 @@ Implementations **MUST** verify publisher claims using the precedence order defi
 2. **HTTPS only**: If DNSSEC fails but HTTPS well-known is available and valid
 3. **TXT-only**: If HTTPS well-known is unavailable, use DNS TXT record only
 
+Implementations **MUST** ensure that the `pk` value in the DNS TXT record matches the `publicKeyJwk` in `.well-known/spp.json`.
+
 ### Signature Requirements
 
 All claims and adoptions **MUST** include:
 
-- **Algorithm**: Ed25519 digital signatures
-- **Signer**: DID identifier per `/schemas/common/did.json`  
-- **Signature**: Base64url-encoded signature per `/schemas/common/signature.json`
+- Algorithm: Ed25519 digital signatures (`alg` field REQUIRED)
+- Signer: DID identifier per `/schemas/common/did.json` (`kid` field REQUIRED)
+- Signature: Base64url-encoded signature per `/schemas/common/signature.json`
+- Created At: ISO 8601 timestamp (`created_at` field REQUIRED)
 
 ### Key Management
 
@@ -135,7 +144,8 @@ Publishers **MAY** adopt specific artefacts by content hash:
   "signature": {
     "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
     "sig": "base64url-encoded-signature"
-  }
+  },
+  "anchors": []
 }
 ```
 
@@ -149,7 +159,8 @@ Publishers **MAY** adopt multiple artefacts via manifest URL:
   "signature": {
     "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe", 
     "sig": "base64url-encoded-signature"
-  }
+  },
+  "anchors": []
 }
 ```
 
@@ -178,6 +189,8 @@ _spp.example.com. TXT "did=did:key:z6Mk...; pk=ed25519:...; scopes=/,/news/*; po
 
 **Scope Patterns:** Publishers **MUST** define URL patterns for auto-adoption using glob syntax.
 
+Scope patterns **MUST** conform to the ABNF or glob syntax defined in the DNS Profile specification.
+
 ## Conflict Resolution [Normative]
 
 ### Competing Claims
@@ -187,6 +200,8 @@ When multiple publishers claim the same namespace:
 1. **DNS Authority**: Publisher with valid DNSSEC chain takes precedence
 2. **Timestamp Priority**: Earlier valid claim takes precedence if DNS is unavailable
 3. **Revocation**: Claims **MAY** be revoked by publishing new DNS records
+
+Registries **MUST** record rejected claims and adoptions with reason codes for auditability and potential dispute resolution.
 
 ### Grace Periods
 
@@ -223,7 +238,8 @@ _spp.example.com. 3600 IN TXT "did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyD
   "signature": {
     "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
     "sig": "base64url-placeholder-signature"
-  }
+  },
+  "anchors": []
 }
 ```
 
@@ -237,7 +253,8 @@ _spp.example.com. 3600 IN TXT "did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyD
   "signature": {
     "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
     "sig": "base64url-placeholder-adoption-signature"
-  }
+  },
+  "anchors": []
 }
 ```
 
@@ -279,7 +296,8 @@ _spp.example.com. 3600 IN TXT "did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyD
   "signature": {
     "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
     "sig": "base64url-placeholder-manifest-signature"
-  }
+  },
+  "anchors": []
 }
 ```
 

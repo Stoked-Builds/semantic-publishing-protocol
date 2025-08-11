@@ -42,9 +42,9 @@ Publishers and registries **SHOULD** provide service discovery via:
 
 ### Well-Known Endpoints
 
-Publishers **MUST** expose `.well-known/spp.json` containing registry metadata that aligns with `/schemas/publisher.json`.
+Publishers **MUST** expose `.well-known/spp.json` containing registry metadata that **MUST** conform to `/schemas/publisher.json`.
 
-Registries **MUST** expose `.well-known/spp/registry.json` containing registry metadata.
+Registries **MUST** expose `.well-known/spp/registry.json` containing registry metadata that **MUST** conform to `/schemas/registry.json`.
 
 ## Data Model [Normative]
 
@@ -65,6 +65,7 @@ The `.well-known/spp.json` **MUST** conform to `/schemas/publisher.json` with th
 - `publisher.publicKeyJwk`: **MUST** contain Ed25519 key matching `pk` field in TXT record
 - `endpoints.sitemap`: Publisher's content sitemap
 - `endpoints.content`: Base URL for content retrieval
+- `anchors`: **MUST** be present as a reserved field for future blockchain/NFT anchoring
 
 ### Well-Known Registry Endpoint
 
@@ -81,7 +82,8 @@ The `.well-known/spp/registry.json` **MUST** contain:
       "harvest": "https://registry.example.com/v1/harvest",
       "transparency_log": "https://registry.example.com/ct"
     }
-  }
+  },
+  "anchors": []
 }
 ```
 
@@ -91,9 +93,11 @@ The `.well-known/spp/registry.json` **MUST** contain:
 
 Consumers **MUST** verify publisher identity using the following precedence order:
 
-1. **DNSSEC + HTTPS**: If DNSSEC validation succeeds and HTTPS well-known is available and valid
+1. **DNSSEC + HTTPS**: If DNSSEC validation succeeds and HTTPS well-known is available and valid  
 2. **HTTPS only**: If DNSSEC fails but HTTPS well-known is available and valid  
 3. **TXT-only**: If HTTPS well-known is unavailable, use DNS TXT record only
+
+If both DNS TXT and `.well-known` are present, the `pk` values **MUST** match.
 
 ### Cryptographic Requirements
 
@@ -103,7 +107,7 @@ Consumers **MUST** verify publisher identity using the following precedence orde
 
 ### Security Considerations
 
-- DNS TXT records **SHOULD** have TTL ≤ 3600 seconds to enable timely key rotation
+- DNS TXT records **MUST** have TTL ≤ 3600 seconds; during key rotation TTL **MUST** be ≤ 600 seconds
 - DNS TXT records **SHOULD** be kept ≤ 512 octets for UDP compatibility (use split strings if needed per RFC 7208)
 - DNSSEC **SHOULD** be enabled when available for enhanced security
 - Publishers **MUST** update both DNS and well-known endpoints when rotating keys
@@ -219,7 +223,8 @@ Example `.well-known/spp.json`:
   "policies": {
     "consent": "https://example.com/spp/consent-policy.json",
     "privacy": "https://example.com/privacy"
-  }
+  },
+  "anchors": []
 }
 ```
 
@@ -248,7 +253,8 @@ Example `.well-known/spp/registry.json`:
       "allowHarvesting": true,
       "syncPartners": ["https://partner.registry.net"]
     }
-  }
+  },
+  "anchors": []
 }
 ```
 

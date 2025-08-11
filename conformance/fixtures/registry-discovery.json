@@ -3,6 +3,7 @@
   "registry": {
     "name": "Example Registry",
     "id": "registry:example",
+    "did": "did:web:registry.example.com",
     "operator": {
       "name": "Example Operator",
       "url": "https://example.com",
@@ -39,5 +40,6 @@
     "topics": ["academic", "research", "science"],
     "contentTypes": ["article", "paper", "dataset"],
     "languages": ["en", "es", "fr"]
-  }
+  },
+  "anchors": []
 }

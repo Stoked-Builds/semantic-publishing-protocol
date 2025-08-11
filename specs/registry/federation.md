@@ -32,6 +32,9 @@ Federation-capable registries **MUST NOT**:
 
 Registry discovery information exposed via `.well-known/spp/registry.json`:
 
+**Validation Requirement:**  
+The `.well-known/spp/registry.json` discovery record **MUST** validate against the canonical `/schemas/registry.json` schema as published by the SPP specification.
+
 ```json
 {
   "protocolVersion": "1.0",
@@ -45,7 +48,7 @@ Registry discovery information exposed via `.well-known/spp/registry.json`:
     },
     "publicKey": {
       "kty": "OKP",
-      "crv": "Ed25519", 
+      "crv": "Ed25519",
       "x": "base64url-encoded-public-key"
     }
   },
@@ -53,7 +56,7 @@ Registry discovery information exposed via `.well-known/spp/registry.json`:
     "harvest": {
       "baseUrl": "https://registry.example.com/harvest/v1",
       "listIdentifiers": "/ListIdentifiers",
-      "listRecords": "/ListRecords", 
+      "listRecords": "/ListRecords",
       "getRecord": "/GetRecord"
     },
     "search": "https://registry.example.com/api/v1/search",
@@ -74,20 +77,25 @@ Registry discovery information exposed via `.well-known/spp/registry.json`:
     "topics": ["academic", "research", "science"],
     "contentTypes": ["article", "paper", "dataset"],
     "languages": ["en", "es", "fr"]
-  }
+  },
+  "anchors": []
 }
 ```
 
 **Field Requirements:**
 - `protocolVersion`: **MUST** be "1.0" for this specification version
 - `registry.id`: **MUST** be globally unique registry identifier
-- `registry.publicKey`: **MUST** be Ed25519 public key in JWK format
+- `registry.publicKey`: **MUST** be Ed25519 public key in JWK format, and **MUST** match the public key used to sign registry transparency and ownership proofs.
 - `endpoints.harvest.baseUrl`: **MUST** be absolute HTTPS URL
 - `federation.allowHarvesting`: **MUST** indicate if harvest API is available
+- `anchors`: **MUST** be present as an array (may be empty) reserved for future blockchain/NFT anchoring.
 
 ### Harvest Record
 
-Content records returned by harvest API operations, with federation metadata extending semantic.json schema:
+Content records returned by harvest API operations, with federation metadata extending the `/schemas/semantic.json` schema:
+
+**Validation Requirement:**  
+Each harvest record **MUST** validate against `/schemas/semantic.json` extended with federation fields as described below. Where available, records **MUST** include references to valid claim, adoption, or ownership proofs conforming to `/schemas/claim.json`, `/schemas/adoption.json`, and `/schemas/ownership.json`.
 
 ```json
 {
@@ -135,7 +143,8 @@ Content records returned by harvest API operations, with federation metadata ext
   "federation": {
     "sourceRegistry": "registry:example",
     "harvestedAt": "2025-01-11T10:30:00Z",
-    "federationPath": ["registry:source", "registry:example"]
+    "federationPath": ["registry:source", "registry:example"],
+    "anchors": []
   }
 }
 ```
@@ -147,8 +156,12 @@ Content records returned by harvest API operations, with federation metadata ext
 - Core semantic fields: **MUST** conform to `/schemas/semantic.json`
 - `federation.sourceRegistry`: **MUST** identify originating registry
 - `federation.harvestedAt`: **MUST** be RFC3339 timestamp of harvest operation
+- `federation.anchors`: **MUST** be present as an array (may be empty) reserved for future blockchain/NFT anchoring.
+- Where available, references to valid claim, adoption, or ownership proofs (**MUST** conform to `/schemas/claim.json`, `/schemas/adoption.json`, `/schemas/ownership.json`) **MUST** be included.
 
 ## API Surface [Normative]
+
+All HTTP responses from endpoints defined in this section **MUST** be valid according to the relevant schema, and where applicable, **MUST** be content-signed according to SPP signature requirements.
 
 ### Discovery Endpoints
 
@@ -355,6 +368,7 @@ Accept: application/spp+json;v=1
 ### Optional WebSub Push Notifications
 
 Registries **MAY** implement WebSub for real-time content updates.
+WebSub notification payloads **MUST** validate against the same schema as harvest records (i.e., `/schemas/semantic.json` extended with federation fields).
 
 #### Hub Discovery
 
