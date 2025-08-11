@@ -114,7 +114,7 @@ Consumers **MUST** verify publisher identity using the following precedence orde
 
 ```dns
 ; SPP DNS records for example.com
-_spp.example.com. 3600 IN TXT "did=did:key:z6MkABC123...; pk=ed25519:Kf-1QwEr...; scopes=/,/news/*,/blog/*; policy=auto-adopt"
+_spp.example.com. 3600 IN TXT "did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe; pk=ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo; scopes=/,/news/*,/blog/*; policy=auto-adopt"
 _spp._tcp.example.com. 3600 IN SRV 0 0 443 example.com.
 example.com. 3600 IN HTTPS 1 . alpn="h2,h3"
 ```
@@ -130,7 +130,7 @@ aws route53 change-resource-record-sets --hosted-zone-id Z123456789 --change-bat
       "Name": "_spp.example.com",
       "Type": "TXT",
       "TTL": 3600,
-      "ResourceRecords": [{"Value": "\"did=did:key:z6MkABC123...; pk=ed25519:Kf-1QwEr...; scopes=/,/news/*; policy=auto-adopt\""}]
+      "ResourceRecords": [{"Value": "\"did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe; pk=ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo; scopes=/,/news/*; policy=auto-adopt\""}]
     }
   }]
 }'
@@ -159,7 +159,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records" 
   --data '{
     "type": "TXT",
     "name": "_spp",
-    "content": "did=did:key:z6MkABC123...; pk=ed25519:Kf-1QwEr...; scopes=/,/news/*; policy=auto-adopt",
+    "content": "did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe; pk=ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo; scopes=/,/news/*; policy=auto-adopt",
     "ttl": 3600
   }'
 
@@ -187,7 +187,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records" 
 
 ```dns
 ; Registry discovery for registry.example.net
-_spp.registry.example.net. 3600 IN TXT "did=did:key:z6MkREG456...; pk=ed25519:Rs-2TyUi...; scopes=*; policy=permissive"
+_spp.registry.example.net. 3600 IN TXT "did=did:key:z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V; pk=ed25519:Rs2TyUiT1hQHOg7hcvPapiMlrwIaaPcHURo; scopes=*; policy=permissive"
 _spp._tcp.registry.example.net. 3600 IN SRV 0 0 443 registry.example.net.
 registry.example.net. 3600 IN HTTPS 1 . alpn="h2,h3"
 ```
@@ -202,12 +202,12 @@ Example `.well-known/spp.json`:
   "publisher": {
     "name": "Example Publisher",
     "id": "publisher:example",
-    "did": "did:key:z6MkABC123...",
+    "did": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
     "uri": "https://example.com",
     "publicKeyJwk": {
       "kty": "OKP",
       "crv": "Ed25519", 
-      "x": "Kf-1QwEr..."
+      "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
     },
     "trustModel": "editorial-chain"
   },
@@ -233,7 +233,7 @@ Example `.well-known/spp/registry.json`:
   "registry": {
     "name": "Example SPP Registry",
     "operator": "Example Registry Corp",
-    "did": "did:key:z6MkREG456...",
+    "did": "did:key:z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V",
     "endpoints": {
       "api": "https://registry.example.net/v1",
       "harvest": "https://registry.example.net/v1/harvest", 
