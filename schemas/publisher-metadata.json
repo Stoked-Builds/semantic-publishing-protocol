@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/publisher-metadata.json",
+  "$id": "https://spp.dev/schemas/publisher-metadata.json",
   "title": "Publisher Metadata",
   "description": "Schema for publisher metadata objects",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://spec.stoked.tech/schemas/common/publisher.json"
+      "$ref": "https://spp.dev/schemas/common/publisher.json"
     },
     {
       "properties": {

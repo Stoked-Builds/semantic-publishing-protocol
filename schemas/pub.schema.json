@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://spec.stoked.tech/schemas/pub.schema.json", 
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/pub.schema.json", 
   "title": "Publication Item Schema",
   "description": "Schema for each item in the pubs[] array representing individual publications",
   "type": "object",

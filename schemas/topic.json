@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/topic.json",
+  "$id": "https://spp.dev/schemas/topic.json",
   "title": "Topic",
   "description": "Schema for topic definition objects",
   "type": "object",

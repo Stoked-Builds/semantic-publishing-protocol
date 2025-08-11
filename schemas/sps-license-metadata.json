@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/sps-license-metadata.json",
+  "$id": "https://spp.dev/schemas/sps-license-metadata.json",
   "title": "SPS License Metadata",
   "description": "Schema for SPS license metadata objects",
   "type": "object",
@@ -35,7 +35,7 @@
       "description": "Title of the content"
     },
     "author": {
-      "$ref": "https://spec.stoked.tech/schemas/common/author.json"
+      "$ref": "https://spp.dev/schemas/common/author.json"
     },
     "tags": {
       "type": "array",

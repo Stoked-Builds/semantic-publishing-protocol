@@ -353,7 +353,7 @@ const testFramework = new AgentConformanceTestFramework();
 // Test: Extension Declaration Parsing
 test('Agent should correctly parse extension declarations', async () => {
   const result = await validateFile(path.join(testDataDir, 'multi-extension.json'), {
-    schemaDir: path.resolve(process.cwd(), 'schema'),
+    schemaDir: path.resolve(process.cwd(), 'schemas'),
     extensionsOnly: true  // Skip core schema validation for extension testing
   });
   
@@ -491,7 +491,7 @@ test('Agent should handle unknown extensions gracefully', async () => {
   );
   
   const result = await validateFile(path.join(testDataDir, 'unknown-extension.json'), {
-    schemaDir: path.resolve(process.cwd(), 'schema')
+    schemaDir: path.resolve(process.cwd(), 'schemas')
   });
   
   // Should still validate core schema

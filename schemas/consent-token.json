@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/consent-token.json",
+  "$id": "https://spp.dev/schemas/consent-token.json",
   "title": "Consent Token",
   "description": "Schema for consent token objects in the Semantic Publishing Protocol",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/ad-token.json",
+  "$id": "https://spp.dev/schemas/ad-token.json",
   "title": "Ad Token",
   "description": "Schema for advertisement token objects in the Semantic Publishing Protocol",
   "type": "object",
