@@ -5,7 +5,8 @@
 
 ---
 
-> [🚀 Get Started](docs/QUICKSTART.md) — Build your first semantic artefact
+> [🚀 Get Started](docs/QUICKSTART.md) — Build your first semantic artefact  
+> [⚡ Read the Manifesto](MANIFESTO.md) — Why we're building this
 
 ---
 
