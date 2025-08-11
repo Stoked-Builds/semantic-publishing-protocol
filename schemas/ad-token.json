@@ -3,221 +3,130 @@
   "$id": "https://spp.dev/schemas/ad-token.json",
   "title": "Ad Token",
   "description": "Schema for advertisement token objects in the Semantic Publishing Protocol",
+  "$comment": "vNext: consider HTTPS-only media/CTA URLs, expires >= created assertion, dynamic frequency caps, and on-chain payment receipts.",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "type": "string",
-      "format": "uri",
-      "description": "JSON Schema URI reference"
-    },
-    "type": {
-      "type": "string",
-      "const": "spp:ad-token",
-      "description": "Type identifier for ad tokens"
-    },
-    "id": {
-      "type": "string",
-      "description": "Unique identifier for the ad token",
-      "pattern": "^ad:[a-zA-Z0-9-_]+$"
-    },
-    "title": {
-      "type": "string",
-      "description": "Title of the advertisement"
-    },
-    "description": {
-      "type": "string",
-      "description": "Description of the advertisement offer"
-    },
+    "type": { "type": "string", "const": "spp:ad-token", "description": "Type identifier for ad tokens" },
+    "id": { "type": "string", "description": "Unique identifier for the ad token", "pattern": "^ad:[A-Za-z0-9_-]+$" },
+    "title": { "type": "string", "minLength": 1, "description": "Title of the advertisement" },
+    "description": { "type": "string", "minLength": 1, "description": "Description of the advertisement offer" },
+
     "advertiser": {
       "type": "object",
       "description": "Information about the advertiser",
+      "additionalProperties": false,
       "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^org:[a-zA-Z0-9-_]+$"
-        },
-        "name": {
-          "type": "string"
-        },
-        "reputation": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
-        },
-        "verified": {
-          "type": "boolean"
-        }
+        "id": { "type": "string", "pattern": "^org:[A-Za-z0-9_-]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "reputation": { "type": "number", "minimum": 0, "maximum": 1 },
+        "verified": { "type": "boolean" }
       },
-      "required": ["id", "name"],
-      "additionalProperties": false
+      "required": ["id", "name"]
     },
-    "created": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Creation timestamp"
-    },
-    "expires": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Expiration timestamp"
-    },
+
+    "created": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+    "expires": { "type": "string", "format": "date-time", "description": "Expiration timestamp (SHOULD be after created)" },
+
     "categories": {
       "type": "array",
       "description": "Advertisement categories",
-      "items": {
-        "type": "string"
-      }
+      "minItems": 0,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
     },
+
     "targeting": {
       "type": "object",
       "description": "Targeting parameters for the ad",
+      "additionalProperties": false,
       "properties": {
-        "intent": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "regions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "w2aMinScore": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
-        },
-        "keywords": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false
+        "intent": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 0 },
+        "regions": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 0 },
+        "w2aMinScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "keywords": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 0 }
+      }
     },
+
     "display": {
       "type": "object",
       "description": "Display configuration for the ad",
+      "additionalProperties": false,
       "properties": {
-        "formats": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
+        "formats": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 0 },
         "media": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
-            "image": {
-              "type": "string",
-              "format": "uri"
-            },
-            "alt": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
+            "image": { "type": "string", "format": "uri" },
+            "alt": { "type": "string", "minLength": 1 }
+          }
         },
         "cta": {
           "type": "object",
           "description": "Call to action",
+          "additionalProperties": false,
           "properties": {
-            "text": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string",
-              "format": "uri"
-            }
+            "text": { "type": "string", "minLength": 1 },
+            "url": { "type": "string", "format": "uri" }
           },
-          "required": ["text", "url"],
-          "additionalProperties": false
+          "required": ["text", "url"]
         }
-      },
-      "additionalProperties": false
+      }
     },
+
     "licensing": {
       "type": "object",
       "description": "Licensing and permission settings",
+      "additionalProperties": false,
       "properties": {
-        "reuse": {
-          "type": "boolean"
-        },
-        "tracking": {
-          "type": "boolean"
-        },
-        "consentRequired": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
+        "reuse": { "type": "boolean" },
+        "tracking": { "type": "boolean" },
+        "consentRequired": { "type": "boolean" }
+      }
     },
+
     "payment": {
       "type": "object",
       "description": "Payment configuration",
+      "additionalProperties": false,
       "properties": {
-        "currency": {
-          "type": "string"
-        },
-        "bidPerImpression": {
-          "type": "number",
-          "minimum": 0
-        },
-        "bidPerClick": {
-          "type": "number",
-          "minimum": 0
-        }
+        "currency": { "type": "string", "minLength": 1, "pattern": "^[A-Z]{3}$", "description": "ISO 4217 currency code" },
+        "bidPerImpression": { "type": "number", "minimum": 0 },
+        "bidPerClick": { "type": "number", "minimum": 0 }
       },
-      "additionalProperties": false
+      "oneOf": [
+        { "required": ["bidPerImpression"] },
+        { "required": ["bidPerClick"] }
+      ]
     },
+
     "saturation": {
       "type": "object",
       "description": "Saturation control settings",
+      "additionalProperties": false,
       "properties": {
-        "maxViewsPerDay": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "decay": {
-          "type": "string",
-          "enum": ["linear", "exponential", "none"]
-        },
-        "resetOnClick": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false
+        "maxViewsPerDay": { "type": "integer", "minimum": 0 },
+        "decay": { "type": "string", "enum": ["linear", "exponential", "none"] },
+        "resetOnClick": { "type": "boolean" }
+      }
     },
+
     "metrics": {
       "type": "object",
       "description": "Performance metrics",
+      "additionalProperties": false,
       "properties": {
-        "impressions": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "clicks": {
-          "type": "integer",
-          "minimum": 0
-        },
+        "impressions": { "type": "integer", "minimum": 0 },
+        "clicks": { "type": "integer", "minimum": 0 },
         "lastServed": {
           "oneOf": [
-            {
-              "type": "string",
-              "format": "date-time"
-            },
-            {
-              "type": "null"
-            }
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
           ]
         }
-      },
-      "additionalProperties": false
+      }
     }
   },
-  "required": ["type", "id", "title", "advertiser"],
-  "additionalProperties": false
+  "required": ["type", "id", "title", "advertiser"]
 }

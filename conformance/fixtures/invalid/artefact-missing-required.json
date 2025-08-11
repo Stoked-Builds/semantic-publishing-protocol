@@ -1,0 +1,23 @@
+{
+  "artefact": {
+    "id": "urn:spp:invalid:missing-required",
+    "type": "article",
+    "title": "Missing bits",
+    "summary": "Intentionally incomplete",
+    "authors": [{ "name": "Test" }],
+    "published_at": "2025-08-11T12:00:00Z",
+    "updated_at": "2025-08-11T12:00:00Z",
+    "topics": [],
+    "sections": [],
+    "media": [],
+    "content": { "format": "markdown", "value": "…" },
+    "links": [],
+    "provenance": {
+      "mode": "reconstructed",
+      "source_url": "https://example.com/posts/1",
+      "captured_at": "2025-08-11T12:05:00Z",
+      "capture_method": "manual"
+    },
+    "version": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "artefact_hashes": [
+    "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  ],
+  "manifest_url": "https://example.com/spp/manifest.json",
+  "signature": {
+    "signer": "did:key:z6MkExampleAdopt",
+    "sig": "base64url-placeholder"
+  }
+}

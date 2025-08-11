@@ -2,50 +2,61 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/common/block.json",
   "title": "Semantic Block",
-  "description": "Schema for semantic content block",
+  "description": "Schema for a semantic content block within an SPS artefact",
+  "$comment": "vNext: enforce payload structure per 'type' using $ref to specific block schemas; support versioning of block content and change tracking.",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "description": "Type of semantic block",
-      "pattern": "^sps:block/[a-zA-Z0-9-_]+$"
+      "description": "Type of semantic block (namespace 'sps:block/...')",
+      "pattern": "^sps:block/[a-zA-Z0-9-_]+$",
+      "minLength": 1
     },
     "id": {
       "type": "string",
-      "description": "Unique identifier for the block",
-      "pattern": "^block:[a-zA-Z0-9-_]+$"
+      "description": "Unique identifier for the block (namespace 'block:...')",
+      "pattern": "^block:[a-zA-Z0-9-_]+$",
+      "minLength": 1
     },
     "title": {
       "type": "string",
-      "description": "Title of the content block"
+      "description": "Title of the content block",
+      "minLength": 1
     },
     "author": {
       "type": "string",
-      "description": "Author identifier",
-      "pattern": "^user:[a-zA-Z0-9._-]+$"
+      "description": "Author identifier (namespace 'user:...')",
+      "pattern": "^user:[a-zA-Z0-9._-]+$",
+      "minLength": 1
     },
     "created": {
       "type": "string",
       "format": "date-time",
+      "minLength": 1,
       "description": "Creation timestamp in ISO 8601 format"
     },
     "modified": {
       "type": "string",
       "format": "date-time",
+      "minLength": 1,
       "description": "Last modification timestamp in ISO 8601 format"
     },
     "tags": {
       "type": "array",
       "description": "Tags associated with the block",
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
     },
     "payload": {
       "type": "object",
-      "description": "The actual content payload - structure varies by block type"
+      "description": "The actual content payload - structure varies by block type",
+      "additionalProperties": true,
+      "$comment": "Payload structure depends on 'type' and may be validated by a more specific schema in vNext"
     }
   },
-  "required": ["type", "id", "title", "author", "created"],
-  "additionalProperties": false
+  "required": ["type", "id", "title", "author", "created"]
 }

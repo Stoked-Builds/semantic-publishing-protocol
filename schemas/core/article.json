@@ -1,4 +1,5 @@
 {
+  "$comment": "vNext may include richer structured summary formats and machine-readable citation metadata.",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/core/article.json",
   "title": "Article",
@@ -15,7 +16,8 @@
         },
         "transcript": {
           "type": "string",
-          "description": "Full text transcript for accessibility"
+          "description": "Full text transcript for accessibility",
+          "minLength": 1
         },
         "structured_summary": {
           "type": "array",
@@ -24,10 +26,12 @@
             "type": "object",
             "properties": {
               "heading": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "summary": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "required": ["heading", "summary"],
@@ -46,21 +50,24 @@
             "type": "object",
             "properties": {
               "title": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "url": {
                 "type": "string",
-                "format": "uri"
+                "format": "uri",
+                "minLength": 1
               },
               "author": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "published": {
                 "type": "string",
                 "format": "date"
               }
             },
-            "required": ["title"],
+            "required": ["title", "url"],
             "additionalProperties": false
           }
         },
@@ -69,7 +76,8 @@
           "minimum": 0,
           "description": "Approximate word count"
         }
-      }
+      },
+      "additionalProperties": false
     }
   ]
 }

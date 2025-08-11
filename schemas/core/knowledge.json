@@ -1,0 +1,218 @@
+
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/knowledge.json",
+  "title": "Knowledge",
+  "description": "Schema for knowledge-type artefacts (how-tos, FAQs, guides, reference) in the Semantic Publishing Protocol",
+  "$comment": "vNext: cross-document dependency graph, automated testable examples, executable notebooks, and structural validation of steps against code blocks.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://spp.dev/schemas/sps-license-metadata.json" },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sps_type": { "const": "knowledge" },
+
+        "doc_type": {
+          "type": "string",
+          "enum": ["howto", "faq", "reference", "guide", "troubleshooting", "spec", "concept"],
+          "description": "Primary shape of the knowledge document"
+        },
+
+        "summary": { "type": "string", "minLength": 1 },
+        "audience": { "type": "string", "enum": ["beginner", "intermediate", "advanced", "expert"] },
+        "difficulty": { "type": "string", "enum": ["easy", "medium", "hard"] },
+
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "minItems": 0
+        },
+
+        "sections": {
+          "type": "array",
+          "description": "Structured sections of the document",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "title": { "type": "string", "minLength": 1 },
+              "content": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["format", "value"],
+                "properties": {
+                  "format": { "type": "string", "enum": ["markdown", "html", "text"] },
+                  "value": { "type": "string" }
+                }
+              },
+              "code_samples": {
+                "type": "array",
+                "minItems": 0,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "language": { "type": "string", "minLength": 1 },
+                    "snippet": { "type": "string", "minLength": 1 }
+                  },
+                  "required": ["language", "snippet"]
+                }
+              }
+            },
+            "required": ["title", "content"]
+          }
+        },
+
+        "faq": {
+          "type": "array",
+          "description": "Frequently asked questions",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "question": { "type": "string", "minLength": 1 },
+              "answer": { "type": "string", "minLength": 1 }
+            },
+            "required": ["question", "answer"]
+          }
+        },
+
+        "steps": {
+          "type": "array",
+          "description": "Ordered procedural steps (for how-to/troubleshooting)",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "number": { "type": "integer", "minimum": 1 },
+              "title": { "type": "string", "minLength": 1 },
+              "description": { "type": "string", "minLength": 1 },
+              "expected_result": { "type": "string", "minLength": 1 }
+            },
+            "required": ["number", "title", "description"]
+          }
+        },
+
+        "references": {
+          "type": "array",
+          "description": "External references or related reading",
+          "minItems": 0,
+          "uniqueItems": true,
+          "items": {
+            "oneOf": [
+              { "type": "string", "format": "uri", "minLength": 1 },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "title": { "type": "string", "minLength": 1 },
+                  "href": { "type": "string", "format": "uri", "minLength": 1 },
+                  "rel": { "type": "string", "minLength": 1 }
+                },
+                "required": ["href"]
+              }
+            ]
+          }
+        },
+
+        "attachments": {
+          "type": "array",
+          "description": "Binary/document attachments",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "filename": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri", "minLength": 1 },
+              "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+            },
+            "required": ["filename", "url"]
+          }
+        },
+
+        "related_items": {
+          "type": "array",
+          "description": "Related artefact IDs or URLs",
+          "minItems": 0,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+
+        "versioning": {
+          "type": "object",
+          "description": "Version information for this knowledge document",
+          "additionalProperties": false,
+          "properties": {
+            "current_version": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+            },
+            "history": {
+              "type": "array",
+              "minItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+                  },
+                  "date": { "type": "string", "format": "date-time" },
+                  "notes": { "type": "string", "minLength": 1 }
+                },
+                "required": ["version", "date"]
+              }
+            }
+          }
+        },
+
+        "deprecation": {
+          "type": "object",
+          "description": "Deprecation metadata if this doc is superseded",
+          "additionalProperties": false,
+          "properties": {
+            "deprecated": { "type": "boolean" },
+            "date": { "type": "string", "format": "date-time" },
+            "replaced_by": { "type": "string", "format": "uri" },
+            "notes": { "type": "string", "minLength": 1 }
+          }
+        },
+
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "last_reviewed": { "type": "string", "format": "date-time" },
+            "review_cycle": { "type": "string", "pattern": "^\\d+(d|w|m|y)$", "description": "e.g., 90d, 6m, 1y" }
+          }
+        },
+
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Za-z0-9-]+)?$",
+          "description": "Language tag (ISO 639-1 or BCP47 short tag)",
+          "minLength": 2
+        },
+
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "required": ["sps_type", "sections"]
+    }
+  ]
+}

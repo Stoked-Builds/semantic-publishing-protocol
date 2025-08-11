@@ -1,122 +1,99 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/semantic.json",
-  "title": "Semantic Content",
-  "description": "Schema for semantic content objects in the Semantic Publishing Protocol",
+  "title": "SPP Artefact (MVSL)",
   "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "type", "title", "language", "content", "links", "provenance", "version"],
   "properties": {
-    "protocolVersion": {
+    "id": { "type": "string", "minLength": 1 },
+    "type": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string" },
+    "language": {
       "type": "string",
-      "description": "The version of the Semantic Publishing Protocol being used",
-      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+      "pattern": "^[a-z]{2}(-[A-Za-z0-9-]+)?$",
+      "description": "ISO 639-1 (optionally BCP 47 for locale)"
     },
-    "id": {
-      "type": "string",
-      "description": "Unique identifier for the content"
-    },
-    "title": {
-      "type": "string",
-      "description": "Title of the content"
-    },
-    "summary": {
-      "type": "string",
-      "description": "Brief summary of the content"
-    },
-    "topics": {
+    "authors": {
       "type": "array",
-      "description": "Array of topic objects",
-      "items": {
-        "$ref": "https://spp.dev/schemas/topic.json"
-      }
-    },
-    "tags": {
-      "type": "array",
-      "description": "Array of string tags",
-      "items": {
-        "type": "string"
-      }
-    },
-    "lang": {
-      "type": "string",
-      "description": "Language code (ISO 639-1)",
-      "pattern": "^[a-z]{2}$"
-    },
-    "date": {
-      "type": "string",
-      "format": "date",
-      "description": "Publication date in YYYY-MM-DD format"
-    },
-    "version": {
-      "type": "string",
-      "description": "Version of the content",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$"
-    },
-    "digest": {
-      "type": "string",
-      "description": "Content hash or digest for integrity verification"
-    },
-    "author": {
-      "$ref": "https://spp.dev/schemas/common/author.json"
-    },
-    "publisher": {
-      "$ref": "https://spp.dev/schemas/common/publisher.json"
-    },
-    "source": {
-      "type": "string",
-      "description": "Original source attribution"
-    },
-    "license": {
-      "type": "string",
-      "description": "Content license"
-    },
-    "canonical": {
-      "type": "string",
-      "format": "uri",
-      "description": "Canonical URL for this content"
-    },
-    "endorsements": {
-      "type": "array",
-      "description": "Array of endorsements (enhanced with spp:endorsement-chains extension)",
-      "items": {
-        "$ref": "https://spp.dev/schemas/extensions/endorsement-chains.json#/properties/endorsements/items"
-      }
-    },
-    "archived": {
-      "type": "boolean",
-      "description": "Whether this content is archived",
-      "default": false
-    },
-    "extensions": {
-      "type": "array",
-      "description": "Array of extension declarations",
       "items": {
         "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Extension identifier"
-          },
-          "version": {
-            "type": "string",
-            "description": "Extension version"
-          }
-        },
-        "required": ["id", "version"],
-        "additionalProperties": false
+          "name": { "type": "string", "minLength": 1 },
+          "url": { "type": "string", "format": "uri" }
+        }
       }
     },
-    "snapshots": {
+    "published_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "topics": { "type": "array", "items": { "type": "string" } },
+    "sections": { "type": "array", "items": { "type": "string" } },
+    "media": {
       "type": "array",
-      "description": "Point-in-time snapshots (requires spp:time-versioning extension)",
       "items": {
-        "$ref": "https://spp.dev/schemas/extensions/time-versioning.json#/properties/snapshots/items"
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url"],
+        "properties": {
+          "role": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "credit": { "type": "string" },
+          "license": { "type": "string" }
+        }
       }
     },
-    "version_history": {
-      "description": "Version history metadata (requires spp:time-versioning extension)",
-      "$ref": "https://spp.dev/schemas/extensions/time-versioning.json#/properties/version_history"
-    }
-  },
-  "required": ["id", "title", "author", "protocolVersion"],
-  "additionalProperties": false
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "value"],
+      "properties": {
+        "format": { "type": "string", "enum": ["markdown", "html", "text"] },
+        "value": { "type": "string" }
+      }
+    },
+    "links": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rel", "href"],
+        "properties": {
+          "rel": { "type": "string", "minLength": 1 },
+          "href": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "source_url", "content_hash"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
+        "publisher_did": { "type": "string" },
+        "adoption": { "type": "object" },
+        "source_url": { "type": "string", "format": "uri" },
+        "capture_method": { "type": "string" },
+        "captured_at": { "type": "string", "format": "date-time" },
+        "reconstruction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "snapshot_uri": { "type": "string" }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signer", "sig"],
+      "properties": {
+        "signer": { "type": "string", "minLength": 1 },
+        "sig": { "type": "string", "minLength": 1 },
+        "signedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "version": { "type": "integer", "minimum": 1 },
+    "extensions": { "type": "object", "description": "Vendor/experimental fields keyed by namespace" }
+  }
 }

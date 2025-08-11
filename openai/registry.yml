@@ -1,0 +1,369 @@
+openapi: 3.1.0
+info:
+  title: SPP Registry API
+  version: 1.0.0-draft
+  description: |
+    HTTP/JSON API for the SPP Registry. Media types:
+      - application/spp+json;v=1 (artefacts and harvest payloads)
+      - application/spp.sth+json;v=1 (Signed Tree Heads)
+servers:
+  - url: https://{host}
+    variables:
+      host:
+        default: registry.example.net
+
+components:
+  securitySchemes:
+    didSig:
+      type: http
+      scheme: bearer
+      description: |
+        Detached signature bound to publisher DID/JWK (implementation-specific).
+        Used for mutating endpoints (claims, adoptions, ingest, ownership POST).
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      description: Opaque base64url cursor token
+      schema: { type: string }
+    Limit:
+      name: limit
+      in: query
+      description: Page size (default 50, max 100)
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+    From:
+      name: from
+      in: query
+      description: Start time (inclusive, RFC3339 UTC)
+      schema: { type: string, format: date-time }
+    Until:
+      name: until
+      in: query
+      description: End time (inclusive, RFC3339 UTC)
+      schema: { type: string, format: date-time }
+    Q:
+      name: q
+      in: query
+      description: Full-text query
+      schema: { type: string }
+    PublisherDID:
+      name: publisher_did
+      in: query
+      schema: { type: string }
+    Provenance:
+      name: provenance
+      in: query
+      schema:
+        type: string
+        enum: [reconstructed, claimed, adopted, authoritative]
+    ArtefactID:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
+    ContentHash:
+      name: id
+      in: query
+      required: true
+      description: Artefact content_hash (e.g., sha256:…)
+      schema: { type: string }
+  headers:
+    Link:
+      description: Pagination link header (rel="next" when another page exists)
+      schema: { type: string }
+    RateLimit-Limit:
+      description: Total requests allowed in the window
+      schema: { type: integer }
+    RateLimit-Remaining:
+      description: Requests remaining in the current window
+      schema: { type: integer }
+    RateLimit-Reset:
+      description: Seconds until the current window resets
+      schema: { type: integer }
+  responses:
+    Problem:
+      description: Problem Details error
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              type: { type: string, format: uri }
+              title: { type: string }
+              status: { type: integer }
+              detail: { type: string }
+              instance: { type: string }
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    path: { type: string }
+                    message: { type: string }
+    NotModified:
+      description: Not modified
+  schemas:
+    Artefact:
+      $ref: ../schemas/semantic.json
+    TransparencySTH:
+      $ref: ../schemas/transparency-sth.json
+    TransparencyEntry:
+      $ref: ../schemas/transparency-log-entry.json
+    Publisher:
+      $ref: ../schemas/publisher.json
+    Claim:
+      $ref: ../schemas/claim.json
+    Adoption:
+      $ref: ../schemas/adoption.json
+    Ownership:
+      $ref: ../schemas/ownership.json
+
+paths:
+  /v1/artefacts:
+    get:
+      summary: Search/browse artefacts
+      parameters:
+        - $ref: '#/components/parameters/Q'
+        - $ref: '#/components/parameters/PublisherDID'
+        - $ref: '#/components/parameters/Provenance'
+        - $ref: '#/components/parameters/From'
+        - $ref: '#/components/parameters/Until'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link: { $ref: '#/components/headers/Link' }
+            RateLimit-Limit: { $ref: '#/components/headers/RateLimit-Limit' }
+            RateLimit-Remaining: { $ref: '#/components/headers/RateLimit-Remaining' }
+            RateLimit-Reset: { $ref: '#/components/headers/RateLimit-Reset' }
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Artefact' }
+                  next_cursor: { type: string }
+        '304': { $ref: '#/components/responses/NotModified' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+    post:
+      summary: Ingest artefact (signed)
+      security: [{ didSig: [] }]
+      requestBody:
+        required: true
+        content:
+          application/spp+json;v=1:
+            schema: { $ref: '#/components/schemas/Artefact' }
+      responses:
+        '202': { description: Accepted }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '413': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+
+  /v1/artefacts/{id}:
+    get:
+      summary: Retrieve artefact by ID
+      parameters:
+        - $ref: '#/components/parameters/ArtefactID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema: { $ref: '#/components/schemas/Artefact' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/claims:
+    post:
+      summary: Submit namespace claim proof
+      description: Idempotent per nonce; duplicate submissions return original result.
+      security: [{ didSig: [] }]
+      requestBody:
+        required: true
+        content:
+          application/spp+json;v=1:
+            schema: { $ref: '#/components/schemas/Claim' }
+      responses:
+        '202': { description: Accepted }
+        '200': { description: OK (idempotent repeat) }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+
+  /v1/adoptions:
+    post:
+      summary: Adopt artefacts by hash or manifest
+      security: [{ didSig: [] }]
+      requestBody:
+        required: true
+        content:
+          application/spp+json;v=1:
+            schema: { $ref: '#/components/schemas/Adoption' }
+      responses:
+        '202': { description: Accepted }
+        '200': { description: OK (idempotent repeat) }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+
+  /v1/harvest/ListIdentifiers:
+    get:
+      summary: Harvest identifiers (cursored)
+      parameters:
+        - $ref: '#/components/parameters/From'
+        - $ref: '#/components/parameters/Until'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link: { $ref: '#/components/headers/Link' }
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string }
+                        content_hash: { type: string }
+                        updated_at: { type: string, format: date-time }
+                  next_cursor: { type: string }
+        '400': { $ref: '#/components/responses/Problem' }
+
+  /v1/harvest/ListRecords:
+    get:
+      summary: Harvest records (cursored)
+      parameters:
+        - $ref: '#/components/parameters/From'
+        - $ref: '#/components/parameters/Until'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link: { $ref: '#/components/headers/Link' }
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Artefact' }
+                  next_cursor: { type: string }
+        '400': { $ref: '#/components/responses/Problem' }
+
+  /v1/harvest/GetRecord:
+    get:
+      summary: Fetch a single record by content hash or id
+      parameters:
+        - $ref: '#/components/parameters/ContentHash'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema: { $ref: '#/components/schemas/Artefact' }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /ct/sth:
+    get:
+      summary: Latest Signed Tree Head
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp.sth+json;v=1:
+              schema: { $ref: '#/components/schemas/TransparencySTH' }
+
+  /ct/proof:
+    get:
+      summary: Inclusion proof by content hash
+      parameters:
+        - $ref: '#/components/parameters/ContentHash'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  audit_path:
+                    type: array
+                    items: { type: string, description: hex-encoded node }
+                  tree_size: { type: integer }
+                  root_hash: { type: string }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /ct/consistency:
+    get:
+      summary: Consistency proof between two STHs
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema: { type: integer, description: old tree size }
+        - name: to
+          in: query
+          required: true
+          schema: { type: integer, description: new tree size }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  proof:
+                    type: array
+                    items: { type: string, description: hex-encoded node }
+        '400': { $ref: '#/components/responses/Problem' }
+
+  /v1/ownership:
+    get:
+      summary: Ownership lookup (optional feature)
+      parameters:
+        - name: artefact_hash
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Ownership' }
+        '404': { $ref: '#/components/responses/Problem' }
+    post:
+      summary: Submit ownership object (optional feature)
+      security: [{ didSig: [] }]
+      requestBody:
+        required: true
+        content:
+          application/spp+json;v=1:
+            schema: { $ref: '#/components/schemas/Ownership' }
+      responses:
+        '202': { description: Accepted }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }

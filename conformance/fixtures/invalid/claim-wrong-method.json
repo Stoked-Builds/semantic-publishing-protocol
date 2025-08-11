@@ -1,0 +1,6 @@
+{
+  "nonce": "n-456",
+  "namespace": "publisher:example",
+  "proof": { "method": "carrier-pigeon", "record": "..." },
+  "signature": { "signer": "did:key:z6MkClaim", "sig": "base64url-placeholder" }
+}

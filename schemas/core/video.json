@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/core/video.json",
+  "$comment": "vNext ideas: multi-bitrate manifests, adaptive streaming metadata, and alternate thumbnail sets.",
   "title": "Video",
   "description": "Schema for video content type in SPS",
   "type": "object",
@@ -9,6 +10,7 @@
       "$ref": "https://spp.dev/schemas/sps-license-metadata.json"
     },
     {
+      "additionalProperties": false,
       "properties": {
         "sps_type": {
           "const": "video"
@@ -16,30 +18,36 @@
         "video_url": {
           "type": "string",
           "format": "uri",
+          "minLength": 1,
           "description": "URL to the video file or stream"
         },
         "duration": {
           "type": "string",
+          "minLength": 1,
           "description": "Video duration in ISO 8601 duration format (e.g., PT1H30M)",
           "pattern": "^PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?$"
         },
         "transcript": {
           "type": "string",
+          "minLength": 1,
           "description": "Full text transcript for accessibility"
         },
         "captions": {
           "type": "array",
+          "minItems": 1,
           "description": "Available caption tracks",
           "items": {
             "type": "object",
             "properties": {
               "language": {
                 "type": "string",
-                "pattern": "^[a-z]{2}$"
+                "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$",
+                "minLength": 1
               },
               "url": {
                 "type": "string",
-                "format": "uri"
+                "format": "uri",
+                "minLength": 1
               },
               "format": {
                 "type": "string",
@@ -51,20 +59,25 @@
           }
         },
         "chapters": {
+          "$comment": "vNext may require end_time ≥ start_time and could allow optional descriptions.",
           "type": "array",
+          "minItems": 1,
           "description": "Video chapter markers",
           "items": {
             "type": "object",
             "properties": {
               "title": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "start_time": {
                 "type": "string",
+                "minLength": 1,
                 "description": "Start time in ISO 8601 duration format"
               },
               "end_time": {
                 "type": "string",
+                "minLength": 1,
                 "description": "End time in ISO 8601 duration format"
               }
             },
@@ -75,6 +88,7 @@
         "thumbnail": {
           "type": "string",
           "format": "uri",
+          "minLength": 1,
           "description": "Video thumbnail image URL"
         },
         "resolution": {
@@ -100,6 +114,7 @@
         },
         "format": {
           "type": "string",
+          "minLength": 1,
           "description": "Video format/codec",
           "examples": ["mp4", "webm", "mov", "h264", "vp9"]
         },

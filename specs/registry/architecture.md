@@ -675,3 +675,238 @@ Additional resources:
 ---
 
 *This specification uses RFC 2119 key words. "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**", "**MAY**", and "**OPTIONAL**" have specific meanings as defined in RFC 2119.*
+
+---
+
+## Appendix C — Test Vectors (Normative)
+
+This appendix provides concrete, reproducible vectors to validate canonicalisation and hashing across implementations.
+
+### C.1 Artefact → Canonical JSON → SHA‑256
+
+**Input (artefact JSON):**
+```json
+{
+  "artefact": {
+    "id": "urn:spp:example:tv-001",
+    "type": "article",
+    "title": "Test Vector One",
+    "summary": "Minimal MVSL artefact",
+    "language": "en",
+    "authors": [ { "name": "Example Author", "url": "https://example.com/author" } ],
+    "published_at": "2025-01-10T15:30:00Z",
+    "updated_at": "2025-01-10T16:00:00Z",
+    "topics": ["Testing"],
+    "sections": [],
+    "media": [],
+    "content": { "format": "markdown", "value": "Hello **world**" },
+    "links": [ { "rel": "canonical", "href": "https://example.com/posts/tv-001" } ],
+    "provenance": {
+      "mode": "reconstructed",
+      "source_url": "https://example.com/posts/tv-001",
+      "captured_at": "2025-01-10T16:01:00Z",
+      "capture_method": "rss",
+      "reconstruction_confidence": 0.8
+    },
+    "version": 1
+  }
+}
+```
+
+**Canonical JSON (RFC 8785 + rules in Appendix A.1):**
+```
+{"artefact":{"authors":[{"name":"Example Author","url":"https://example.com/author"}],"content":{"format":"markdown","value":"Hello **world**"},"id":"urn:spp:example:tv-001","language":"en","links":[{"href":"https://example.com/posts/tv-001","rel":"canonical"}],"media":[],"published_at":"2025-01-10T15:30:00Z","sections":[],"summary":"Minimal MVSL artefact","topics":["Testing"],"provenance":{"capture_method":"rss","captured_at":"2025-01-10T16:01:00Z","mode":"reconstructed","reconstruction_confidence":0.8,"source_url":"https://example.com/posts/tv-001"},"title":"Test Vector One","type":"article","updated_at":"2025-01-10T16:00:00Z","version":1}}
+```
+
+**SHA‑256 of canonical bytes (hex):**
+```
+083c601fda9769b827547824618b000e9f42090f49aa0ebeed03d500bc527e2b
+```
+
+**Expected `provenance.content_hash`:**
+```
+sha256:083c601fda9769b827547824618b000e9f42090f49aa0ebeed03d500bc527e2b
+```
+
+> Note: Signatures are not included in this vector to keep the canonical form deterministic without key material. Implementations **MUST** be able to reproduce the canonical string and the hash exactly.
+
+### C.2 Inclusion Proof (structure only)
+
+Given the leaf hash `H_leaf = SHA-256("SPP-LOG-LEAF\0" || canonical_entry_bytes)` and a tree root `H_root`, a valid audit path MUST, when verified via Appendix A.4, reproduce `H_root`. Provide your implementation’s path and verify against the registry’s `/ct/proof` response.
+
+---
+
+## Appendix D — Sequence Diagrams (Informative)
+
+### D.1 Claim & Adopt Flow
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Pub as Publisher
+  participant Reg as Registry
+  participant DNS as DNS
+  participant Con as Consumer
+
+  Pub->>DNS: Publish _spp TXT + /.well-known/spp.json
+  Pub->>Reg: POST /v1/claims {nonce, proof}
+  Reg->>DNS: Verify TXT & well-known
+  Reg-->>Pub: 202 Accepted (claimed)
+
+  Pub->>Reg: POST /v1/adoptions {hashes|manifest}
+  Reg-->>Pub: 202 Accepted (adopted)
+  Reg->>Con: Expose in /v1/artefacts (state=adopted)
+
+  Pub->>Reg: POST /v1/artefacts (signed feed)
+  Reg-->>Pub: 202 Accepted (authoritative)
+  Con->>Reg: GET /v1/artefacts/{id}
+  Reg-->>Con: 200 + signature
+  Con->>Pub: (optional) GET /.well-known/spp.json (key confirm)
+```
+
+### D.2 Transparency Log Proof Verification
+```mermaid
+sequenceDiagram
+  participant Con as Consumer
+  participant Reg as Registry
+
+  Con->>Reg: GET /ct/sth
+  Reg-->>Con: STH {root_hash, tree_size, created_at}
+  Con->>Reg: GET /ct/proof?id=sha256:...
+  Reg-->>Con: {audit_path: [n0..nk]}
+  Con->>Con: Compute leaf hash; fold audit path; compare to root
+  Con-->>Con: Accept if equal; else reject
+```
+
+### D.3 Deletion Propagation Across Federation
+```mermaid
+sequenceDiagram
+  participant Pub as Publisher
+  participant RegA as Registry A
+  participant RegB as Registry B
+
+  Pub->>RegA: Authenticated deletion request
+  RegA-->>Pub: Signed deletion receipt
+  RegA->>RegB: WebSub/event: deletion notice with proof
+  RegB-->>RegA: 202 Accepted
+  RegB->>RegB: Remove artefact; append to deletion log
+```
+
+---
+
+## API Contract Snapshot (Informative)
+
+The authoritative API contract lives in `/openapi/registry.yml`. This snapshot aligns endpoints, media types, and error models with this spec.
+
+```yaml
+openapi: 3.1.0
+info:
+  title: SPP Registry API
+  version: 1.0.0-draft
+servers:
+  - url: https://{host}
+    variables:
+      host:
+        default: registry.example.net
+components:
+  securitySchemes:
+    didSig:
+      type: http
+      scheme: bearer
+      description: Detached DID-bound request signatures (implementation-specific)
+  responses:
+    Problem:
+      description: Problem Details
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              type: { type: string, format: uri }
+              title: { type: string }
+              status: { type: integer }
+              detail: { type: string }
+              instance: { type: string }
+paths:
+  /v1/artefacts:
+    get:
+      summary: Search artefacts
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+        - in: query
+          name: cursor
+          schema: { type: string, description: base64url cursor }
+        - in: query
+          name: limit
+          schema: { type: integer, maximum: 100, default: 50 }
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link: { description: pagination link rel=next, schema: { type: string } }
+          content:
+            application/spp+json;v=1:
+              schema: { type: object }
+        '429': { $ref: '#/components/responses/Problem' }
+    post:
+      summary: Ingest artefact
+      requestBody:
+        required: true
+        content:
+          application/spp+json;v=1:
+            schema: { $ref: '../schemas/semantic.json' }
+      responses:
+        '202': { description: Accepted }
+        '422': { $ref: '#/components/responses/Problem' }
+  /v1/artefacts/{id}:
+    get:
+      summary: Get artefact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema: { $ref: '../schemas/semantic.json' }
+        '404': { $ref: '#/components/responses/Problem' }
+  /ct/sth:
+    get:
+      summary: Latest Signed Tree Head
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp.sth+json;v=1:
+              schema: { $ref: '../schemas/transparency-sth.json' }
+  /ct/proof:
+    get:
+      summary: Inclusion proof
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema: { type: string, description: artefact content_hash }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema: { type: object }
+```
+
+---
+
+## HTTP Behaviour — Addenda (Normative)
+
+### Idempotency
+- `POST /v1/claims` **MUST** be idempotent with respect to the same `nonce`; duplicate submissions **MUST** return the original result (200/202) without side effects.
+- `POST /v1/adoptions` **SHOULD** be idempotent for identical manifests/hashes.
+
+### Payload Limits
+- Servers **MUST** reject payloads exceeding **512 KiB** for artefact JSON with `413 Payload Too Large` and a Problem Details body.
+- Arrays **SHOULD** be bounded: `authors` ≤ 32, `media` ≤ 64, `topics` ≤ 128.

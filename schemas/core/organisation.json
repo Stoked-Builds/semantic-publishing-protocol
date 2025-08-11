@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/organisation.json",
+  "title": "Organization",
+  "description": "Schema for organization profile content type in SPS",
+  "$comment": "vNext: add verified business identifiers (LEI, VAT), multiple locations, and linkage to Publisher well-known. Consider aliasing this UK spelling to /core/organization.json and deprecating in a future minor release.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://spp.dev/schemas/sps-license-metadata.json" },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sps_type": { "const": "organization" },
+        "profile": {
+          "type": "object",
+          "description": "Organization profile information",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "legal_name": { "type": "string", "minLength": 1 },
+            "description": { "type": "string", "minLength": 1 },
+            "website": { "type": "string", "format": "uri" },
+            "logo": { "type": "string", "format": "uri" },
+            "founded_on": { "type": "string", "format": "date" },
+            "employee_count": { "type": "integer", "minimum": 0 },
+            "location": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "description": "Geographic coordinates",
+                  "additionalProperties": false,
+                  "properties": {
+                    "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+                    "lng": { "type": "number", "minimum": -180, "maximum": 180 }
+                  },
+                  "required": ["lat", "lng"]
+                },
+                {
+                  "type": "object",
+                  "description": "Postal address",
+                  "additionalProperties": false,
+                  "properties": {
+                    "line1": { "type": "string", "minLength": 1 },
+                    "line2": { "type": "string" },
+                    "city": { "type": "string", "minLength": 1 },
+                    "region": { "type": "string", "minLength": 1 },
+                    "postal_code": { "type": "string", "minLength": 1 },
+                    "country": { "type": "string", "minLength": 2 }
+                  },
+                  "required": ["line1", "city", "country"]
+                }
+              ]
+            },
+            "contact": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "email": { "type": "string", "format": "email" },
+                "phone": { "type": "string", "pattern": "^\\+?[0-9 .\\-()]{7,20}$" }
+              }
+            }
+          },
+          "required": ["name"]
+        },
+        "social_links": {
+          "type": "object",
+          "description": "Social media and directory links",
+          "additionalProperties": false,
+          "properties": {
+            "twitter": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_]{1,15}$" },
+            "linkedin": { "type": "string", "format": "uri" },
+            "github": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9-]{1,39}$" },
+            "mastodon": { "type": "string", "format": "uri" },
+            "crunchbase": { "type": "string", "format": "uri" }
+          }
+        },
+        "verification": {
+          "type": "object",
+          "description": "Verification status for the organization",
+          "additionalProperties": false,
+          "properties": {
+            "level": { "type": "string", "enum": ["none", "basic", "verified", "premium"] },
+            "verified_at": { "type": "string", "format": "date-time" },
+            "verifier": { "type": "string", "minLength": 1 }
+          }
+        },
+        "links": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rel": { "type": "string", "minLength": 1 },
+              "href": { "type": "string", "format": "uri", "minLength": 1 }
+            },
+            "required": ["rel", "href"]
+          }
+        }
+      },
+      "required": ["sps_type", "profile"]
+    }
+  ]
+}

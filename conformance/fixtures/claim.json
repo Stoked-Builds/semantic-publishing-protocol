@@ -1,0 +1,12 @@
+{
+  "nonce": "abc123xyz",
+  "namespace": "publisher:example",
+  "proof": {
+    "method": "dns-txt",
+    "record": "_spp.example.com IN TXT \"did=did:key:z6MkExample; pk=ed25519:Base64Key...\""
+  },
+  "signature": {
+    "signer": "did:key:z6MkExampleClaim",
+    "sig": "base64url-placeholder"
+  }
+}
