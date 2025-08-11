@@ -12,7 +12,8 @@
     "test": "node --test && node bin/spp-conformance-smoke.js",
     "test:unit": "node --test",
     "test:conformance": "node bin/spp-conformance-smoke.js",
-    "validate": "node bin/spp-validate.js"
+    "validate": "node scripts/validate.js",
+    "validate-spp": "node bin/spp-validate.js"
   },
   "keywords": [
     "semantic",
@@ -24,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^11.0.0",
+    "glob": "^11.0.3",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0"
   },
