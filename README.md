@@ -165,6 +165,16 @@ Works cross-platform (macOS/Linux/Windows) and is suitable for CI/CD pipelines.
 
 ---
 
+## 🔗 Protocol Extensions
+
+SPP is designed to be extensible and interoperable with existing web standards and discovery mechanisms:
+
+- **[Drop Discovery](docs/discovery.md)** — How agents and crawlers discover semantic content from publishers
+- **[Registry Federation](specs/registry/federation.md)** — How SPP registries federate and share content
+- **[Semantic Sitemap](specs/publishing/semantic-sitemap.md)** — Machine-readable content indexes for discovery
+
+---
+
 ## 🤝 Join the Mission
 
 Want to help fix the future of web publishing?  
