@@ -9,7 +9,9 @@
     "spp-conformance": "./bin/spp-conformance.js"
   },
   "scripts": {
-    "test": "node --test",
+    "test": "node --test && node bin/spp-conformance-smoke.js",
+    "test:unit": "node --test",
+    "test:conformance": "node bin/spp-conformance-smoke.js",
     "validate": "node bin/spp-validate.js"
   },
   "keywords": [
@@ -24,7 +26,8 @@
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "commander": "^11.0.0",
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"

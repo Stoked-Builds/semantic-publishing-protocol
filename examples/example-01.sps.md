@@ -101,4 +101,4 @@ This document demonstrates a fully SPS-compliant publication, including all requ
 
 ---
 
-For full entity and compliance definitions, see [SPS-Core](../specs/SPS-Core.md) and [SPS-Compliance](../specs/SPS-Compliance.md).
+For full entity and compliance definitions, see [SPP-Core](../specs/SPP-Core.md) and [SPP-Compliance](../specs/SPP-Compliance.md).

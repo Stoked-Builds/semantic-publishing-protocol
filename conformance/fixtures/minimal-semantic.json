@@ -1,0 +1,8 @@
+{
+  "protocolVersion": "1.0.0",
+  "id": "conformance:minimal",
+  "title": "Minimal Conformance Test Content",
+  "author": {
+    "name": "SPP Conformance Test"
+  }
+}

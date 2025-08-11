@@ -1,0 +1,27 @@
+name: "Quick Smoke Test Plan"
+description: "Minimal conformance test to validate basic SPP functionality"
+version: "1.0.0"
+tests:
+  - name: "Schema Validation"
+    description: "Validate that semantic content validates against schema"
+    type: "schema-validation"
+    fixtures:
+      - "fixtures/minimal-semantic.json"
+  
+  - name: "Core Protocol Compliance"
+    description: "Validate basic protocol structure and required fields"
+    type: "protocol-validation"
+    fixtures:
+      - "fixtures/minimal-semantic.json"
+    
+  - name: "Extension Support"
+    description: "Validate extension declaration parsing"
+    type: "extension-validation"
+    fixtures:
+      - "fixtures/semantic-with-extensions.json"
+
+# Expected outcomes
+success_criteria:
+  - "All schemas validate against JSON Schema Draft 2020-12"
+  - "Required fields are present and valid"
+  - "Extension declarations are properly parsed"

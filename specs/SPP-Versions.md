@@ -1,19 +1,19 @@
-# SPS Versioning – Semantic Publishing Specification (SPS-Versions)
+# SPP Versioning – Semantic Publishing Protocol (SPP-Versions)
 
 **Version:** 0.2  
 **Status:** Production-Ready  
 **Date:** 2025-07-28  
-**Codename:** SPS-Versions
+**Codename:** SPP-Versions
 
 ---
 
-This document defines the versioning policy for the Semantic Publishing Specification (SPS). It covers semantic versioning rules, change classifications, and compatibility guarantees for documents, tools, and implementers.
+This document defines the versioning policy for the Semantic Publishing Protocol (SPP). It covers semantic versioning rules, change classifications, and compatibility guarantees for documents, tools, and implementers.
 
 ---
 
 ## Semantic Versioning Principles
 
-SPS uses [Semantic Versioning](https://semver.org/) in the format:
+SPP uses [Semantic Versioning](https://semver.org/) in the format:
 
     MAJOR.MINOR.PATCH
 
@@ -66,4 +66,4 @@ SPS uses [Semantic Versioning](https://semver.org/) in the format:
 
 ---
 
-_See also: [SPS-Compliance](./SPS-Compliance.md), [Changelog](../docs/changelog.md)_
+_See also: [SPP-Compliance](./SPP-Compliance.md), [Changelog](../docs/changelog.md)_
