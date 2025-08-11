@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/ownership.json",
+  "title": "SPP Ownership (off-chain, v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ownership"],
+  "properties": {
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject", "holders", "issuers", "signatures", "created_at"],
+      "properties": {
+        "id": { "type": "string" },
+        "subject": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artefact_hash"],
+          "properties": {
+            "artefact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "snapshot_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          }
+        },
+        "claims": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "role": { "type": "string", "enum": ["copyright", "license", "collectible", "fractional"] },
+            "grants": { "type": "array", "items": { "type": "string" } },
+            "territory": { "type": "string" },
+            "valid_from": { "type": "string", "format": "date-time" },
+            "valid_to": { "type": "string", "format": "date-time" }
+          }
+        },
+        "holders": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["did", "share_bp"],
+            "properties": {
+              "did": { "type": "string" },
+              "share_bp": { "type": "integer", "minimum": 0, "maximum": 10000 }
+            }
+          }
+        },
+        "issuers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["did"],
+            "properties": { "did": { "type": "string" } }
+          }
+        },
+        "signatures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["alg", "sig"],
+            "properties": {
+              "alg": { "type": "string", "enum": ["ed25519"] },
+              "kid": { "type": "string" },
+              "sig": { "type": "string" }
+            }
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rel": { "type": "string" },
+              "href": { "type": "string", "format": "uri" }
+            }
+          }
+        },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

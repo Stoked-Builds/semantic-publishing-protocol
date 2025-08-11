@@ -1,0 +1,5 @@
+{
+  "nonce": "n-123",
+  "namespace": "publisher:example",
+  "signature": { "signer": "did:key:z6MkClaim", "sig": "base64url-placeholder" }
+}

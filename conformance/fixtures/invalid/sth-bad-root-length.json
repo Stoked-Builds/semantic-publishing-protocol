@@ -1,0 +1,6 @@
+{
+  "tree_size": 10,
+  "root_hash": "abc123", 
+  "timestamp": "2025-08-11T12:00:00Z",
+  "signature": { "signer": "did:key:z6MkSTH", "sig": "base64url-placeholder" }
+}

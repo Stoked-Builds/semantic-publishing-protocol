@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/publisher.json",
+  "title": "SPP Publisher Well-known",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocolVersion", "publisher", "endpoints"],
+  "properties": {
+    "protocolVersion": { "type": "string" },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "id", "did", "uri", "publicKeyJwk"],
+      "properties": {
+        "name": { "type": "string" },
+        "id": { "type": "string" },
+        "did": { "type": "string" },
+        "uri": { "type": "string", "format": "uri" },
+        "publicKeyJwk": {
+          "type": "object",
+          "required": ["kty", "crv", "x"],
+          "properties": {
+            "kty": { "type": "string", "enum": ["OKP"] },
+            "crv": { "type": "string", "enum": ["Ed25519"] },
+            "x": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "trustModel": { "type": "string" }
+      }
+    },
+    "endpoints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sitemap", "content"],
+      "properties": {
+        "sitemap": { "type": "string", "format": "uri" },
+        "content": { "type": "string", "format": "uri" },
+        "registry": { "type": "string", "format": "uri" },
+        "harvest": { "type": "string", "format": "uri" },
+        "transparency_log": { "type": "string", "format": "uri" }
+      }
+    },
+    "policies": { "type": "object" },
+    "federation": { "type": "object" }
+  }
+}

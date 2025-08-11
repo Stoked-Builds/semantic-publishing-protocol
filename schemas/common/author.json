@@ -7,33 +7,44 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Display name of the author"
+      "description": "Display name of the author",
+      "minLength": 1
     },
     "id": {
       "type": "string",
       "description": "Unique identifier for the author (e.g., author:username)",
-      "pattern": "^author:[a-zA-Z0-9._-]+$"
+      "pattern": "^author:[a-zA-Z0-9._-]+$",
+      "minLength": 1
     },
     "ssot_id": {
       "type": "string",
       "description": "Single Source of Truth identifier",
-      "pattern": "^ssot:[a-zA-Z0-9._-]+$"
+      "pattern": "^ssot:[a-zA-Z0-9._-]+$",
+      "minLength": 1
     },
     "uri": {
       "type": "string",
       "format": "uri",
-      "description": "URI to the author's profile or page"
+      "description": "URI to the author's profile or page",
+      "minLength": 1
     },
     "publicKey": {
       "type": "string",
-      "description": "Public key for verification (DID format preferred)"
+      "description": "Public key for verification (DID format preferred)",
+      "pattern": "^did:[a-z0-9]+:[a-zA-Z0-9._:-]+$",
+      "minLength": 1
     },
     "contact": {
       "type": "string",
       "description": "Contact information (email, etc.)",
-      "format": "email"
+      "oneOf": [
+        { "format": "email" },
+        { "format": "uri" }
+      ],
+      "minLength": 1
     }
   },
   "required": ["name"],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$comment": "Note: vNext could expand 'contact' to a structured object with multiple channels. Add 'additionalProperties': false inside nested objects if any are added in the future."
 }

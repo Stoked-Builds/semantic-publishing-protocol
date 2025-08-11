@@ -1,4 +1,5 @@
 {
+  "$comment": "vNext: stricter cross-field validation (e.g., dateModified ≥ datePublished), enforce HTTPS-only URLs, link integrity checks, and schema.org type whitelisting from a controlled list.",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/meta.schema.json",
   "title": "Meta JSON-LD Schema",
@@ -15,12 +16,14 @@
     "@context": {
       "type": "string",
       "const": "https://schema.org",
-      "description": "JSON-LD context URL"
+      "description": "JSON-LD context URL",
+      "minLength": 1
     },
     "@type": {
       "type": "string",
       "description": "The type of the entity according to schema.org vocabulary",
-      "examples": ["Article", "BlogPosting", "NewsArticle", "CreativeWork"]
+      "examples": ["Article", "BlogPosting", "NewsArticle", "CreativeWork"],
+      "minLength": 1
     },
     "name": {
       "type": "string",
@@ -35,7 +38,8 @@
     "protocolVersion": {
       "type": "string",
       "description": "The version of the Semantic Publishing Protocol being used",
-      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "minLength": 1
     },
     "author": {
       "oneOf": [
@@ -47,14 +51,16 @@
               "const": "Person"
             },
             "name": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1
             },
             "url": {
               "type": "string",
               "format": "uri"
             }
           },
-          "required": ["@type", "name"]
+          "required": ["@type", "name"],
+          "additionalProperties": false
         },
         {
           "type": "object", 
@@ -64,21 +70,24 @@
               "const": "Organization"
             },
             "name": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1
             },
             "url": {
               "type": "string",
               "format": "uri"
             }
           },
-          "required": ["@type", "name"]
+          "required": ["@type", "name"],
+          "additionalProperties": false
         }
       ],
       "description": "The author of the publication"
     },
     "description": {
       "type": "string",
-      "description": "A description or summary of the publication"
+      "description": "A description or summary of the publication",
+      "minLength": 1
     },
     "url": {
       "type": "string",
@@ -98,7 +107,8 @@
           "enum": ["Person", "Organization"]
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "url": {
           "type": "string",
@@ -106,24 +116,29 @@
         }
       },
       "required": ["@type", "name"],
-      "description": "The publisher of the publication"
+      "description": "The publisher of the publication",
+      "additionalProperties": false
     },
     "keywords": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       },
-      "description": "Keywords or tags associated with the publication"
+      "description": "Keywords or tags associated with the publication",
+      "uniqueItems": true
     },
     "license": {
       "type": "string",
-      "description": "The license under which the publication is released"
+      "description": "The license under which the publication is released",
+      "minLength": 1
     },
     "inLanguage": {
       "type": "string",
       "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
-      "description": "The language of the publication (ISO 639-1 code)"
+      "description": "The language of the publication (ISO 639-1 code)",
+      "minLength": 1
     }
   },
-  "additionalProperties": true
+  "additionalProperties": false
 }

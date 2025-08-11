@@ -3,113 +3,70 @@
   "$id": "https://spp.dev/schemas/core/event.json",
   "title": "Event",
   "description": "Schema for event content type in SPS",
+  "$comment": "vNext: consider RRULE recurrence, multi-venue support, richer pricing tiers, and end_time >= start_time using a custom format-assertion.",
   "type": "object",
   "allOf": [
+    { "$ref": "https://spp.dev/schemas/sps-license-metadata.json" },
     {
-      "$ref": "https://spp.dev/schemas/sps-license-metadata.json"
-    },
-    {
+      "type": "object",
+      "additionalProperties": false,
       "properties": {
-        "sps_type": {
-          "const": "event"
-        },
+        "sps_type": { "const": "event" },
         "location": {
           "oneOf": [
             {
               "type": "object",
               "description": "Geographic coordinates",
+              "additionalProperties": false,
               "properties": {
-                "lat": {
-                  "type": "number",
-                  "minimum": -90,
-                  "maximum": 90
-                },
-                "lng": {
-                  "type": "number",
-                  "minimum": -180,
-                  "maximum": 180
-                }
+                "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+                "lng": { "type": "number", "minimum": -180, "maximum": 180 }
               },
-              "required": ["lat", "lng"],
-              "additionalProperties": false
+              "required": ["lat", "lng"]
             },
             {
               "type": "string",
+              "minLength": 1,
               "description": "Place ID or address"
             }
           ]
         },
-        "start_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Event start time"
-        },
-        "end_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Event end time"
-        },
+        "start_time": { "type": "string", "format": "date-time", "description": "Event start time" },
+        "end_time": { "type": "string", "format": "date-time", "description": "Event end time (SHOULD be >= start_time)" },
         "timezone": {
           "type": "string",
+          "minLength": 1,
           "description": "Event timezone (IANA timezone identifier)",
-          "examples": ["America/New_York", "Europe/London", "Asia/Tokyo"]
+          "examples": ["America/New_York", "Europe/London", "Asia/Tokyo"],
+          "$comment": "vNext: tighten to IANA tz database list via custom validator; JSON Schema cannot enforce the set natively."
         },
-        "rsvp_url": {
-          "type": "string",
-          "format": "uri",
-          "description": "URL for RSVP or registration"
-        },
+        "rsvp_url": { "type": "string", "format": "uri", "minLength": 1, "description": "URL for RSVP or registration" },
         "venue": {
           "type": "object",
           "description": "Event venue information",
+          "additionalProperties": false,
           "properties": {
-            "name": {
-              "type": "string"
-            },
-            "address": {
-              "type": "string"
-            },
-            "capacity": {
-              "type": "integer",
-              "minimum": 0
-            }
-          },
-          "additionalProperties": false
+            "name": { "type": "string", "minLength": 1 },
+            "address": { "type": "string", "minLength": 1 },
+            "capacity": { "type": "integer", "minimum": 0 }
+          }
         },
-        "organizer": {
-          "$ref": "https://spp.dev/schemas/common/publisher.json"
-        },
-        "attendee_count": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Current number of attendees"
-        },
-        "max_attendees": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Maximum number of attendees allowed"
-        },
+        "organizer": { "$ref": "https://spp.dev/schemas/common/publisher.json" },
+        "attendee_count": { "type": "integer", "minimum": 0, "description": "Current number of attendees" },
+        "max_attendees": { "type": "integer", "minimum": 0, "description": "Maximum number of attendees allowed" },
         "ticket_price": {
           "type": "object",
           "description": "Ticket pricing information",
+          "additionalProperties": false,
           "properties": {
-            "amount": {
-              "type": "string",
-              "pattern": "^\\d+(\\.\\d{1,2})?$"
-            },
-            "currency": {
-              "type": "string",
-              "pattern": "^[A-Z]{3}$"
-            },
-            "free": {
-              "type": "boolean",
-              "description": "Whether the event is free"
-            }
-          },
-          "additionalProperties": false
+            "amount": { "type": "string", "pattern": "^\\d+(\\.\\d{1,2})?$" },
+            "currency": { "type": "string", "pattern": "^[A-Z]{3}$", "description": "ISO 4217 code" },
+            "free": { "type": "boolean", "description": "Whether the event is free" },
+            "url": { "type": "string", "format": "uri" }
+          }
         }
       },
-      "required": ["start_time"]
+      "required": ["sps_type", "start_time"]
     }
   ]
 }

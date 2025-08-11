@@ -1,0 +1,127 @@
+
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/app.json",
+  "title": "Application",
+  "description": "Schema for application-type artefacts (mobile, web, desktop, embedded) in the Semantic Publishing Protocol",
+  "$comment": "vNext: integrate with app store APIs for validation, include SBOM metadata, support multi-platform builds, and allow dependency vulnerability status.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://spp.dev/schemas/sps-license-metadata.json" },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sps_type": { "const": "app" },
+
+        "app_metadata": {
+          "type": "object",
+          "description": "Core application metadata",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "description": { "type": "string", "minLength": 1 },
+            "category": {
+              "type": "string",
+              "enum": [
+                "productivity",
+                "games",
+                "tools",
+                "education",
+                "health",
+                "finance",
+                "lifestyle",
+                "social",
+                "entertainment",
+                "other"
+              ]
+            },
+            "platforms": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": ["ios", "android", "web", "desktop", "embedded", "other"]
+              }
+            },
+            "store_links": {
+              "type": "array",
+              "description": "Links to app store listings",
+              "items": { "type": "string", "format": "uri", "minLength": 1 },
+              "uniqueItems": true
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$",
+              "minLength": 1
+            },
+            "release_notes": { "type": "string" },
+            "license": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9.+-]+$",
+              "$comment": "SPDX-like token, e.g., MIT, Apache-2.0, CC-BY-4.0"
+            },
+            "developer": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "url": { "type": "string", "format": "uri" },
+                "email": { "type": "string", "format": "email" }
+              },
+              "required": ["name"]
+            }
+          },
+          "required": ["name", "platforms", "version"]
+        },
+
+        "screenshots": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri", "minLength": 1 },
+          "uniqueItems": true
+        },
+
+        "permissions": {
+          "type": "array",
+          "description": "Permissions requested by the app",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+
+        "dependencies": {
+          "type": "array",
+          "description": "List of core dependencies or libraries used",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "version": { "type": "string", "minLength": 1 }
+            },
+            "required": ["name"]
+          },
+          "uniqueItems": true
+        },
+
+        "security": {
+          "type": "object",
+          "description": "Security-related metadata",
+          "additionalProperties": false,
+          "properties": {
+            "audited": { "type": "boolean" },
+            "audit_date": { "type": "string", "format": "date-time" },
+            "auditor": { "type": "string", "minLength": 1 },
+            "vulnerability_status": {
+              "type": "string",
+              "enum": ["none", "low", "medium", "high", "critical"]
+            }
+          }
+        }
+      },
+      "required": ["sps_type", "app_metadata"]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "artefact": {
+    "id": "urn:spp:invalid:bad-hash-format",
+    "type": "article",
+    "title": "Bad hash",
+    "summary": "Hash uses md5 and not prefixed correctly",
+    "language": "en",
+    "authors": [{ "name": "Test" }],
+    "published_at": "2025-08-11T12:00:00Z",
+    "updated_at": "2025-08-11T12:00:00Z",
+    "topics": [],
+    "sections": [],
+    "media": [],
+    "content": { "format": "markdown", "value": "…" },
+    "links": [{ "rel": "canonical", "href": "https://example.com/posts/2" }],
+    "provenance": {
+      "mode": "reconstructed",
+      "source_url": "https://example.com/posts/2",
+      "captured_at": "2025-08-11T12:05:00Z",
+      "capture_method": "manual",
+      "content_hash": "md5:deadbeef"
+    },
+    "version": 1
+  }
+}

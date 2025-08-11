@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/transparency-log-entry.json",
+  "title": "SPP Transparency Log Entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artefact_hash", "publisher_did", "provenance_mode", "timestamp", "registry_did"],
+  "properties": {
+    "artefact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "publisher_did": { "type": "string", "minLength": 1 },
+    "provenance_mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "registry_did": { "type": "string", "minLength": 1 }
+  }
+}

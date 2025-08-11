@@ -1,0 +1,54 @@
+{
+  "artefact": {
+    "protocolVersion": "1.0.0",
+    "id": "conformance:artefact:full",
+    "type": "video",
+    "title": "Full Registry Artefact Example",
+    "summary": "A complete artefact with all optional fields for conformance testing.",
+    "language": "en",
+    "author": { "name": "Lead Author" },
+    "published_at": "2025-07-01T10:00:00Z",
+    "updated_at": "2025-08-10T08:30:00Z",
+    "topics": ["Tech", "AI"],
+    "sections": ["Innovation", "Video Features"],
+    "extensions": [
+      { "id": "spp:example", "version": "1.0.0" }
+    ],
+    "media": [
+      {
+        "role": "hero",
+        "url": "https://example.com/images/hero.jpg",
+        "credit": "John Doe",
+        "license": "CC-BY-4.0"
+      },
+      {
+        "role": "thumbnail",
+        "url": "https://example.com/images/thumb.jpg",
+        "credit": "Jane Smith",
+        "license": "CC0-1.0"
+      }
+    ],
+    "content": {
+      "format": "markdown",
+      "value": "## Overview\n\nThis is a rich artefact used to test registry conformance."
+    },
+    "links": [
+      { "rel": "canonical", "href": "https://example.com/video/full" },
+      { "rel": "alternate", "href": "https://youtube.com/watch?v=12345" }
+    ],
+    "provenance": {
+      "mode": "authoritative",
+      "source_url": "https://example.com/video/full",
+      "captured_at": "2025-08-10T08:35:00Z",
+      "capture_method": "api",
+      "reconstruction_confidence": 1.0,
+      "content_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "snapshot_uri": "wacz://full.wacz"
+    },
+    "signature": {
+      "signer": "did:key:z6MkExampleFull",
+      "sig": "base64url-placeholder"
+    },
+    "version": 3
+  }
+}
