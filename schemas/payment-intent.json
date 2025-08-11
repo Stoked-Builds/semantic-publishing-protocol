@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/payment-intent.json",
+  "$id": "https://spp.dev/schemas/payment-intent.json",
   "title": "Payment Intent",
   "description": "Schema for payment intent objects in the Semantic Publishing Protocol",
   "type": "object",

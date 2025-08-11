@@ -55,7 +55,7 @@ fs.writeFileSync(path.join(testDataDir, 'blocks.md'), blocksMarkdown);
 
 test('validateFile should validate valid JSON semantic file', async () => {
   const result = await validateFile(path.join(testDataDir, 'valid.json'), {
-    schemaDir: path.resolve(process.cwd(), 'schema')
+    schemaDir: path.resolve(process.cwd(), 'schemas')
   });
   
   strictEqual(result.errors.length, 0, 'Should have no errors');
@@ -64,7 +64,7 @@ test('validateFile should validate valid JSON semantic file', async () => {
 
 test('validateFile should catch invalid JSON semantic file', async () => {
   const result = await validateFile(path.join(testDataDir, 'invalid.json'), {
-    schemaDir: path.resolve(process.cwd(), 'schema')
+    schemaDir: path.resolve(process.cwd(), 'schemas')
   });
   
   ok(result.errors.length > 0, 'Should have errors');
@@ -73,7 +73,7 @@ test('validateFile should catch invalid JSON semantic file', async () => {
 
 test('validateFile should validate SPS markdown', async () => {
   const result = await validateFile(path.join(testDataDir, 'valid.sps.md'), {
-    schemaDir: path.resolve(process.cwd(), 'schema')
+    schemaDir: path.resolve(process.cwd(), 'schemas')
   });
   
   strictEqual(result.errors.length, 0, 'Should have no errors');
@@ -82,7 +82,7 @@ test('validateFile should validate SPS markdown', async () => {
 
 test('validateFile should parse semantic blocks', async () => {
   const result = await validateFile(path.join(testDataDir, 'blocks.md'), {
-    schemaDir: path.resolve(process.cwd(), 'schema')
+    schemaDir: path.resolve(process.cwd(), 'schemas')
   });
   
   strictEqual(result.fileType, 'Markdown with semantic blocks');
@@ -91,7 +91,7 @@ test('validateFile should parse semantic blocks', async () => {
 
 test('validateFile should skip schema validation in extensions-only mode', async () => {
   const result = await validateFile(path.join(testDataDir, 'invalid.json'), {
-    schemaDir: path.resolve(process.cwd(), 'schema'),
+    schemaDir: path.resolve(process.cwd(), 'schemas'),
     extensionsOnly: true
   });
   

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/extensions/endorsement-chains.json",
+  "$id": "https://spp.dev/schemas/extensions/endorsement-chains.json",
   "title": "Endorsement Chains Extension Schema",
   "description": "Schema for endorsement-chains extension fields in the Semantic Publishing Protocol",
   "type": "object",

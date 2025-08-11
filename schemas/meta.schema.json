@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://spec.stoked.tech/schemas/meta.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/meta.schema.json",
   "title": "Meta JSON-LD Schema",
   "description": "Schema for meta.jsonld files in each publication following JSON-LD structure",
   "type": "object",

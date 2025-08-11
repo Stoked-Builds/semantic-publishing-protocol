@@ -1,0 +1,18 @@
+{
+  "protocolVersion": "1.0.0",
+  "id": "conformance:extensions",
+  "title": "Content with Extensions",
+  "author": {
+    "name": "SPP Conformance Test"
+  },
+  "extensions": [
+    {
+      "id": "spp:trust-weighting",
+      "version": "0.3.0"
+    },
+    {
+      "id": "spp:endorsement-chains", 
+      "version": "0.3.0"
+    }
+  ]
+}

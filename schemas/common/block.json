@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/common/block.json",
+  "$id": "https://spp.dev/schemas/common/block.json",
   "title": "Semantic Block",
   "description": "Schema for semantic content block",
   "type": "object",

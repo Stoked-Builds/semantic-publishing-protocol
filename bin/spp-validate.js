@@ -15,7 +15,7 @@ program
   .description('CLI validator for Semantic Publishing Protocol files')
   .version('1.0.0')
   .argument('<file>', 'file to validate (.json, .sps.md, or .md)')
-  .option('-s, --schema-dir <dir>', 'schema directory path', resolve(__dirname, '../schema'))
+  .option('-s, --schema-dir <dir>', 'schema directory path', resolve(__dirname, '../schemas'))
   .option('-v, --verbose', 'verbose output')
   .option('--extensions-only', 'only check extensions, skip schema validation')
   .action(async (file, options) => {

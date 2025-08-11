@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/common/publisher.json",
+  "$id": "https://spp.dev/schemas/common/publisher.json",
   "title": "Publisher",
   "description": "Schema for publisher object used across SPP content types",
   "type": "object",

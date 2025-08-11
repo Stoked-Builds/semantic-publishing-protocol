@@ -1,6 +1,6 @@
 # Metadata Tag Map
 
-The Metadata Tag Map defines how SPS-compliant metadata maps to legacy web metadata formats, enabling backward compatibility and progressive enhancement. This spec allows current HTML content to be made AI-readable without redesign.
+The Metadata Tag Map defines how SPP-compliant metadata maps to legacy web metadata formats, enabling backward compatibility and progressive enhancement. This spec allows current HTML content to be made AI-readable without redesign.
 
 ## 🎯 Purpose
 

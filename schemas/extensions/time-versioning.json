@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/extensions/time-versioning.json",
+  "$id": "https://spp.dev/schemas/extensions/time-versioning.json",
   "title": "Time-Versioning Extension Schema",
   "description": "Schema for time-versioning extension fields in the Semantic Publishing Protocol",
   "type": "object",

@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/core/event.json",
+  "$id": "https://spp.dev/schemas/core/event.json",
   "title": "Event",
   "description": "Schema for event content type in SPS",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://spec.stoked.tech/schemas/sps-license-metadata.json"
+      "$ref": "https://spp.dev/schemas/sps-license-metadata.json"
     },
     {
       "properties": {
@@ -77,7 +77,7 @@
           "additionalProperties": false
         },
         "organizer": {
-          "$ref": "https://spec.stoked.tech/schemas/common/publisher.json"
+          "$ref": "https://spp.dev/schemas/common/publisher.json"
         },
         "attendee_count": {
           "type": "integer",

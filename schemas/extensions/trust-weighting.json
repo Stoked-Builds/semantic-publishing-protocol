@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/extensions/trust-weighting.json",
+  "$id": "https://spp.dev/schemas/extensions/trust-weighting.json",
   "title": "Trust Weighting Extension",
   "description": "Schema for trust weighting extension in SPP",
   "type": "object",

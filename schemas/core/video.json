@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/core/video.json",
+  "$id": "https://spp.dev/schemas/core/video.json",
   "title": "Video",
   "description": "Schema for video content type in SPS",
   "type": "object",
   "allOf": [
     {
-      "$ref": "https://spec.stoked.tech/schemas/sps-license-metadata.json"
+      "$ref": "https://spp.dev/schemas/sps-license-metadata.json"
     },
     {
       "properties": {

@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://spec.stoked.tech/schemas/site-config.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/site-config.schema.json",
   "title": "Site Configuration Schema",
   "description": "Schema for site.config.json at site root containing publisher and site configuration",
   "type": "object",

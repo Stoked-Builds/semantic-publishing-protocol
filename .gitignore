@@ -1,8 +1,8 @@
 issues/
-**/.DS_Store
 
 # OS-generated metadata files
 .DS_Store
+**/.DS_Store
 __MACOSX/
 Thumbs.db
 ehthumbs.db

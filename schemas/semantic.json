@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://spec.stoked.tech/schemas/semantic.json",
+  "$id": "https://spp.dev/schemas/semantic.json",
   "title": "Semantic Content",
   "description": "Schema for semantic content objects in the Semantic Publishing Protocol",
   "type": "object",
@@ -26,7 +26,7 @@
       "type": "array",
       "description": "Array of topic objects",
       "items": {
-        "$ref": "https://spec.stoked.tech/schemas/topic.json"
+        "$ref": "https://spp.dev/schemas/topic.json"
       }
     },
     "tags": {
@@ -56,10 +56,10 @@
       "description": "Content hash or digest for integrity verification"
     },
     "author": {
-      "$ref": "https://spec.stoked.tech/schemas/common/author.json"
+      "$ref": "https://spp.dev/schemas/common/author.json"
     },
     "publisher": {
-      "$ref": "https://spec.stoked.tech/schemas/common/publisher.json"
+      "$ref": "https://spp.dev/schemas/common/publisher.json"
     },
     "source": {
       "type": "string",
@@ -78,7 +78,7 @@
       "type": "array",
       "description": "Array of endorsements (enhanced with spp:endorsement-chains extension)",
       "items": {
-        "$ref": "https://spec.stoked.tech/schemas/extensions/endorsement-chains.json#/properties/endorsements/items"
+        "$ref": "https://spp.dev/schemas/extensions/endorsement-chains.json#/properties/endorsements/items"
       }
     },
     "archived": {
@@ -109,12 +109,12 @@
       "type": "array",
       "description": "Point-in-time snapshots (requires spp:time-versioning extension)",
       "items": {
-        "$ref": "https://spec.stoked.tech/schemas/extensions/time-versioning.json#/properties/snapshots/items"
+        "$ref": "https://spp.dev/schemas/extensions/time-versioning.json#/properties/snapshots/items"
       }
     },
     "version_history": {
       "description": "Version history metadata (requires spp:time-versioning extension)",
-      "$ref": "https://spec.stoked.tech/schemas/extensions/time-versioning.json#/properties/version_history"
+      "$ref": "https://spp.dev/schemas/extensions/time-versioning.json#/properties/version_history"
     }
   },
   "required": ["id", "title", "author", "protocolVersion"],
