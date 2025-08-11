@@ -55,6 +55,8 @@ Log entries **MUST** conform to `/schemas/transparency-log-entry.json` with the 
 
 Additional fields **MAY** include links to associated claim, adoption, or ownership records.
 
+These referenced objects **MUST** validate against their respective schemas (`/schemas/claim.json`, `/schemas/adoption.json`, `/schemas/ownership.json`) before acceptance.
+
 ### Signed Tree Head Format
 
 STH objects **MUST** conform to `/schemas/transparency-sth.json` with:
@@ -65,9 +67,13 @@ STH objects **MUST** conform to `/schemas/transparency-sth.json` with:
 - `signatures`: Array of Ed25519 signatures
 - `anchors`: Optional array reserved for future blockchain anchoring
 
+The `anchors` array is OPTIONAL in v1 but **MUST** be present in examples for forward compatibility. When present, `anchors` entries **MUST** conform to the reserved blockchain anchor object schema (to be defined in vNext).
+
 ## API Surface [Normative]
 
 Implementations **MUST** provide the following HTTP endpoints as defined in `/openapi/registry.yml`:
+
+All API responses **MUST** be schema-valid and, when applicable, content-signed according to `/schemas/common/signature.json` and `/schemas/common/did.json`.
 
 ### GET /ct/sth
 
@@ -113,7 +119,7 @@ Clients **MUST** verify:
 1. **STH signature validity** using registry's public key
 2. **Inclusion proof correctness** by recomputing Merkle path to root
 3. **Consistency proof validity** ensuring append-only property
-4. **Log entry signatures** when present in referenced objects
+4. **Log entry signatures, when present in referenced claim/adoption/ownership records, MUST be verified against `/schemas/common/signature.json` and the associated DID document.**
 
 ### Abuse Prevention
 
@@ -139,7 +145,8 @@ Implementations **MAY** populate the `anchors` array but **MUST NOT** require it
   "publisher_did": "did:web:example.com",
   "provenance_mode": "adopted",
   "timestamp": "2024-01-15T10:30:00Z",
-  "registry_did": "did:web:registry.example.net"
+  "registry_did": "did:web:registry.example.net",
+  "anchors": []
 }
 ```
 
@@ -170,7 +177,8 @@ Implementations **MAY** populate the `anchors` array but **MUST NOT** require it
     "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3"
   ],
   "tree_size": 1024,
-  "root_hash": "b47cc0f104dc3c6a9ce6e5f6b8e4a5a0a5d1c2c3c4c5c6c7c8c9cacbcccdcecf"
+  "root_hash": "b47cc0f104dc3c6a9ce6e5f6b8e4a5a0a5d1c2c3c4c5c6c7c8c9cacbcccdcecf",
+  "anchors": []
 }
 ```
 
@@ -180,7 +188,8 @@ Implementations **MAY** populate the `anchors` array but **MUST NOT** require it
 {
   "proof": [
     "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4"
-  ]
+  ],
+  "anchors": []
 }
 ```
 
