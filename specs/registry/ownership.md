@@ -1,505 +1,340 @@
-# SPP Ownership (v1.0-draft)
+# Claims & Adoption (v1.0-draft)
 
 ## Purpose [Informative]
-This specification defines how artefact ownership is represented, proven, and transferred in the Semantic Publishing Protocol (SPP) registry v1. It establishes off-chain ownership proofs using DNS, `.well-known`, and signed JSON-LD documents, with reserved fields for future blockchain/NFT integration.
+
+This specification defines how publishers claim namespaces and adopt artefacts within the Semantic Publishing Protocol (SPP) registry system. It establishes the provenance lifecycle from reconstructed content to authoritative publisher control, enabling decentralized verification of content ownership and authenticity without requiring centralized gatekeepers.
 
 ## Normative Requirements [Normative]
 
-### General Requirements
-- Implementations **MUST** support off-chain ownership proof methods as defined in this specification
-- Implementations **MUST** validate ownership proofs against the artefact content hash from `/schemas/semantic.json`
-- Implementations **SHOULD** preserve ownership records in transparency logs for auditability
-- Implementations **MUST NOT** implement on-chain anchoring in v1 (reserved for future versions)
-- Implementations **MUST** support multi-party ownership with basis point share allocation
-- Implementations **MUST** validate all ownership records against `/schemas/ownership.json`
+### Provenance States
 
-### Lifecycle Management
-- Ownership records **MUST** transition through defined states: `issued` → `active` → [`transferred` | `revoked`]
-- Active ownership records **MAY** be transferred to new holders
-- Revoked ownership records **MUST NOT** be transferable
-- Implementations **MUST** maintain complete audit trails of ownership state changes
+All SPP artefacts **MUST** maintain one of the following provenance states in their lifecycle:
 
-### Claims and Adoption Integration
-- Ownership records **MUST** reference either:
-  - An adopted artefact (where `provenance.mode` is `adopted` or `authoritative`), OR
-  - A valid claim proving publisher control over the namespace
-- Ownership issuers **MUST** be verified publishers with valid DID proof
-- Ownership of reconstructed artefacts **MAY** be established through subsequent adoption
+- **reconstructed**: Content captured from public sources without publisher verification
+- **claimed**: Publisher has proven control over the source namespace
+- **adopted**: Publisher has explicitly acknowledged ownership of specific artefacts  
+- **authoritative**: Final state combining valid claim + adoption + ongoing verification
+
+### State Transitions
+
+Implementations **MUST** enforce the following state transition rules:
+
+```
+┌─────────────┐    DNS+Well-Known    ┌─────────┐    Publisher     ┌─────────┐    Ongoing      ┌──────────────┐
+│reconstructed│ ──── Verification ──→│ claimed │ ─── Adoption ──→│ adopted │ ── Validation ──→│authoritative │
+└─────────────┘                      └─────────┘                 └─────────┘                  └──────────────┘
+      ↑                                   ↑                          ↑                             ↑
+   (crawl/                            (prove                    (acknowledge                  (maintain
+    capture)                           control)                  ownership)                    authority)
+
+States:
+• reconstructed: Content captured from public sources without publisher verification
+• claimed: Publisher has proven control over source namespace via DNS+well-known verification  
+• adopted: Publisher has explicitly acknowledged ownership of specific artefacts
+• authoritative: Final state with valid claim + adoption + ongoing verification
+```
+
+Implementations **MUST NOT** allow backward state transitions except through revocation procedures.
+
+### Claims Requirements
+
+Publishers **MUST** provide cryptographic proof of namespace control through:
+
+1. **DNS TXT verification**: `_spp` TXT records per [DNS Profile specification](./dns.md)
+2. **HTTPS well-known verification**: `.well-known/spp.json` endpoint validation
+3. **Platform-specific fallbacks**: Alternative verification methods for supported platforms
+
+All claims **MUST** include digital signatures conforming to `/schemas/common/signature.json`.
+
+### Adoption Requirements  
+
+Publishers **MUST** explicitly adopt artefacts using one of these modes:
+
+- **hash-based**: Direct acknowledgment of specific content hashes
+- **manifest-based**: Bulk adoption via manifest URLs
+- **auto-adopt**: Automated adoption with defined scope and grace period
+
+All adoptions **MUST** include digital signatures conforming to `/schemas/common/signature.json`.
 
 ## Data Model [Normative]
 
-The ownership data model is defined in `/schemas/ownership.json` with the following key components:
+### Claim Structure
 
-### Subject
-```json
-{
-  "subject": {
-    "artefact_hash": "sha256:abc123...",  // Required: links to semantic.json content_hash
-    "snapshot_hash": "sha256:def456..."   // Optional: specific version snapshot
-  }
-}
-```
-
-### Holders
-```json
-{
-  "holders": [
-    {
-      "did": "did:web:publisher.example",
-      "share_bp": 10000  // Basis points (0-10000, where 10000 = 100%)
-    }
-  ]
-}
-```
-
-### Claims Structure
-```json
-{
-  "claims": {
-    "role": "copyright",  // "copyright" | "license" | "collectible" | "fractional"
-    "grants": ["reproduce", "distribute", "display"],
-    "territory": "US",
-    "valid_from": "2024-01-01T00:00:00Z",
-    "valid_to": "2025-01-01T00:00:00Z"
-  }
-}
-```
-
-### Reserved Fields
-The following fields are reserved for future blockchain/NFT integration but **MUST NOT** be implemented in v1:
+Claims **MUST** conform to `/schemas/claim.json`:
 
 ```json
 {
-  "ownership": {
-    // ... existing fields ...
-    
-    // RESERVED FOR v2+ (MUST NOT implement in v1)
-    "anchors": [
-      {
-        "chain": "ethereum",
-        "contract": "0x1234...",
-        "token_id": "12345",
-        "block_height": 18500000,
-        "tx_hash": "0xabcd...",
-        "timestamp": "2024-01-01T00:00:00Z"
-      }
-    ],
-    "on_chain_id": "eth:0x1234:12345",
-    "smart_contract": {
-      "address": "0x1234567890abcdef",
-      "standard": "ERC-721",
-      "network": "ethereum"
-    },
-    "nft_metadata": {
-      "token_uri": "https://example.com/metadata/12345",
-      "external_url": "https://example.com/ownership/12345"
-    }
-  }
-}
-```
-
-**Important:** These fields are included in examples for forward compatibility but implementations **MUST NOT** process or validate them in v1. They are reserved for future specification versions that will define blockchain integration.
-
-## Ownership Lifecycle [Normative]
-
-The following diagram illustrates the ownership state transitions:
-
-```
-                    ┌─────────────┐
-                    │   ISSUED    │ ← Initial ownership record created
-                    └──────┬──────┘
-                           │
-                     ┌─────▼─────┐
-                     │ validate  │
-                     └─────┬─────┘
-                           │
-                    ┌──────▼──────┐
-                    │   ACTIVE    │ ← Ownership validated and recognized
-                    └──────┬──────┘
-                           │
-                  ┌────────┼────────┐
-                  │                 │
-            ┌─────▼─────┐     ┌─────▼─────┐
-            │ transfer  │     │  revoke   │
-            └─────┬─────┘     └─────┬─────┘
-                  │                 │
-          ┌───────▼───────┐   ┌─────▼─────┐
-          │ TRANSFERRED   │   │  REVOKED  │ ← Terminal states
-          └───────────────┘   └───────────┘
-                  │                 │
-                  └─────────┬───────┘
-                            │
-                     ┌──────▼──────┐
-                     │  HISTORICAL │ ← Archived for audit trail
-                     └─────────────┘
-```
-
-### State Definitions
-
-#### ISSUED
-- Initial state when ownership record is created
-- **MUST** include valid signatures from all issuers
-- **MUST** reference valid artefact hash
-- Awaiting validation and activation
-
-#### ACTIVE  
-- Ownership is validated and recognized
-- Holders **MAY** exercise ownership rights
-- Record **MAY** be transferred or revoked
-- **MUST** have valid proof chain to artefact
-
-#### TRANSFERRED
-- Ownership has been transferred to new holders
-- Previous ownership record becomes historical
-- New ownership record created in ISSUED state
-- Original record **MUST NOT** be modified
-
-#### REVOKED
-- Ownership is permanently invalidated
-- **MAY** occur due to disputes, expiration, or voluntary action
-- Record **MUST NOT** be transferred
-- Revocation reason **SHOULD** be documented
-
-## Proof Formats [Normative]
-
-### DID Signature Proof
-All ownership records **MUST** include Ed25519 signatures per `/schemas/common/signature.json`:
-
-```json
-{
-  "signatures": [
-    {
-      "alg": "ed25519",
-      "kid": "did:web:example.com#key-1", 
-      "sig": "base64url_encoded_signature"
-    }
-  ]
-}
-```
-
-### DNS TXT Proof
-For domain-based ownership claims, publishers **MUST** provide DNS TXT records:
-
-```
-_spp-ownership.domain.example TXT "v=spp1; ownership=sha256:abc123; did=did:web:domain.example"
-```
-
-### Well-Known Proof
-Publishers **MUST** serve ownership proofs at `/.well-known/spp/ownership/{artefact_hash}.json`:
-
-```json
-{
-  "artefact_hash": "sha256:abc123...",
-  "ownership_claim": {
-    "did": "did:web:publisher.example",
-    "issued_at": "2024-01-01T00:00:00Z",
-    "proof_uri": "https://publisher.example/.well-known/spp/ownership/abc123.json"
+  "nonce": "<unique_string>",
+  "namespace": "<publisher_namespace>", 
+  "proof": {
+    "method": "dns-txt|well-known|platform-relme",
+    "record": "<verification_data>"
   },
   "signature": {
-    "alg": "ed25519",
-    "sig": "base64url_encoded_signature"
-  }
+    "signer": "<did_identifier>",
+    "sig": "<base64url_signature>"
+  },
+  "anchors": []
 }
 ```
 
-## Transfer Process [Normative]
+All claims **MUST** validate against `/schemas/claim.json` before acceptance.
 
-### Initiation
-1. Current holder creates transfer proposal
-2. Proposal **MUST** specify new holders and share allocations
-3. Total share allocation **MUST** equal 10000 basis points
-4. Transfer proposal **MUST** be signed by current holders
+### Adoption Structure
 
-### Acceptance
-1. New holders **MUST** cryptographically accept transfer
-2. Acceptance signatures **MUST** use holder's DID keys
-3. Registry **MAY** require additional validation steps
-
-### Registry Update
-1. Registry validates all signatures and proofs
-2. Current ownership record transitions to TRANSFERRED state
-3. New ownership record created in ISSUED state
-4. Transparency log **MUST** record complete transfer chain
-
-## Multi-Party Ownership [Normative]
-
-### Co-ownership
-- Multiple holders **MAY** share ownership with specified basis points
-- Total allocation **MUST** equal exactly 10000 basis points
-- All holders **MUST** provide valid DID signatures
-
-### Joint Signatures
-- Transfer and revocation actions **MAY** require multiple signatures
-- Required signature threshold **SHOULD** be specified in ownership claims
-- Default threshold is simple majority by basis point allocation
+Adoptions **MUST** conform to `/schemas/adoption.json`:
 
 ```json
 {
-  "holders": [
-    {"did": "did:web:alice.example", "share_bp": 6000},
-    {"did": "did:web:bob.example", "share_bp": 4000}
-  ],
-  "transfer_requirements": {
-    "signature_threshold_bp": 6000,  // Requires 60% by share
-    "minimum_signers": 1
-  }
+  "artefact_hashes": ["sha256:..."],
+  "manifest_url": "https://...",
+  "signature": {
+    "signer": "<did_identifier>",
+    "sig": "<base64url_signature>"
+  },
+  "anchors": []
 }
 ```
 
-## Revocation and Dispute Resolution [Normative]
+All adoptions **MUST** validate against `/schemas/adoption.json` before acceptance.
 
-### Revocation Triggers
-- Voluntary revocation by current holders
-- Dispute resolution decision
-- Claim expiration (if `valid_to` specified)
-- Failed re-validation of underlying proofs
+### Publisher Metadata
 
-### Dispute Process
-1. Dispute filed with evidence against ownership record
-2. Registry **MAY** temporarily suspend ownership rights
-3. Resolution through defined arbitration or governance process
-4. Final determination results in continuation or revocation
-
-### Evidence Requirements
-- Competing ownership claims with earlier timestamps
-- Proof of fraudulent issuance
-- Publisher domain/DID compromise evidence
-- Copyright violation claims with legal documentation
-
-## API Surface [Normative]
-
-### Ownership Registration
-```
-POST /v1/ownership
-Content-Type: application/json
-
-{
-  "ownership": { /* ownership record per schema */ }
-}
-```
-
-### Ownership Query
-```
-GET /v1/ownership/{artefact_hash}
-Accept: application/json
-
-Response: {
-  "ownership": { /* current active ownership */ },
-  "history": [ /* previous ownership records */ ]
-}
-```
-
-### Transfer Initiation
-```
-POST /v1/ownership/{id}/transfer
-Content-Type: application/json
-
-{
-  "transfer": {
-    "new_holders": [ /* holder array */ ],
-    "effective_date": "2024-01-01T00:00:00Z",
-    "signatures": [ /* transfer authorization */ ]
-  }
-}
-```
+Publishers **MUST** expose metadata conforming to `/schemas/publisher.json` via `.well-known/spp.json` and this document **MUST** validate against its schema before acceptance by a registry.
 
 ## Security & Integrity [Normative]
 
-### Key Management
-- Ownership proofs **MUST** use Ed25519 cryptographic signatures
-- DID keys **MUST** be resolvable through standard DID resolution
-- Key rotation **SHOULD** be supported through DID document updates
-
 ### Verification Order
-1. Validate ownership record against JSON schema
-2. Verify artefact hash exists and is valid
-3. Validate all DID signatures using current keys
-4. Check DNS/well-known proofs if applicable
-5. Verify claims against adoption/publisher records
-6. Confirm state transition validity
 
-### Abuse Controls
-- Rate limiting on ownership registration and transfers
-- Spam detection for excessive ownership claims
-- Reputation scoring based on dispute history
-- Transparency log monitoring for suspicious patterns
+Implementations **MUST** verify publisher claims using the precedence order defined in the [DNS Profile specification](./dns.md):
+
+1. **DNSSEC + HTTPS**: If DNSSEC validation succeeds and HTTPS well-known is available and valid
+2. **HTTPS only**: If DNSSEC fails but HTTPS well-known is available and valid
+3. **TXT-only**: If HTTPS well-known is unavailable, use DNS TXT record only
+
+Implementations **MUST** ensure that the `pk` value in the DNS TXT record matches the `publicKeyJwk` in `.well-known/spp.json`.
+
+### Signature Requirements
+
+All claims and adoptions **MUST** include:
+
+- Algorithm: Ed25519 digital signatures (`alg` field REQUIRED)
+- Signer: DID identifier per `/schemas/common/did.json` (`kid` field REQUIRED)
+- Signature: Base64url-encoded signature per `/schemas/common/signature.json`
+- Created At: ISO 8601 timestamp (`created_at` field REQUIRED)
+
+### Key Management
+
+Publishers **MUST**:
+- Rotate keys with TTL ≤ 3600 seconds for DNS records
+- Update both DNS and well-known endpoints when rotating keys
+- Maintain signature verification chains during key rotation
+
+## Adoption Modes [Normative]
+
+### Hash-Based Adoption
+
+Publishers **MAY** adopt specific artefacts by content hash:
+
+```json
+{
+  "artefact_hashes": [
+    "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+  ],
+  "signature": {
+    "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
+    "sig": "base64url-encoded-signature"
+  },
+  "anchors": []
+}
+```
+
+### Manifest-Based Adoption
+
+Publishers **MAY** adopt multiple artefacts via manifest URL:
+
+```json
+{
+  "manifest_url": "https://example.com/spp/adoption-manifest.json",
+  "signature": {
+    "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe", 
+    "sig": "base64url-encoded-signature"
+  },
+  "anchors": []
+}
+```
+
+The manifest **MUST** contain a JSON array of content hashes:
+
+```json
+{
+  "artefacts": [
+    "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "sha256:b694a542120422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae9"
+  ],
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+### Auto-Adopt Mode
+
+Publishers **MAY** configure automatic adoption within defined scopes:
+
+**DNS TXT Configuration:**
+```
+_spp.example.com. TXT "did=did:key:z6Mk...; pk=ed25519:...; scopes=/,/news/*; policy=auto-adopt"
+```
+
+**Grace Period:** Publishers **MUST** specify a grace period (default 7 days) during which auto-adoption can be revoked.
+
+**Scope Patterns:** Publishers **MUST** define URL patterns for auto-adoption using glob syntax.
+
+Scope patterns **MUST** conform to the ABNF or glob syntax defined in the DNS Profile specification.
+
+## Conflict Resolution [Normative]
+
+### Competing Claims
+
+When multiple publishers claim the same namespace:
+
+1. **DNS Authority**: Publisher with valid DNSSEC chain takes precedence
+2. **Timestamp Priority**: Earlier valid claim takes precedence if DNS is unavailable
+3. **Revocation**: Claims **MAY** be revoked by publishing new DNS records
+
+Registries **MUST** record rejected claims and adoptions with reason codes for auditability and potential dispute resolution.
+
+### Grace Periods
+
+- **New Claims**: 24-48 hour grace period for challenges
+- **Auto-Adoption**: 7-day default grace period for revocation
+- **Key Rotation**: 24-hour overlap period for signature verification
+
+### Revocation Process
+
+Publishers **MAY** revoke claims or adoptions by:
+
+1. **DNS Update**: Remove or replace `_spp` TXT records
+2. **Well-Known Update**: Update `.well-known/spp.json` with revocation
+3. **Registry Notification**: Submit revocation request to registry
 
 ## Examples [Normative]
 
-### Initial Ownership Issue
+### Example 1: DNS TXT Claim
+
+**DNS Record:**
+```
+_spp.example.com. 3600 IN TXT "did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe; pk=ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo; scopes=/,/news/*; policy=manual-verify"
+```
+
+**Claim Submission:**
 ```json
 {
-  "ownership": {
-    "id": "own_abc123",
-    "subject": {
-      "artefact_hash": "sha256:d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2"
+  "nonce": "claim-nonce-2024-001",
+  "namespace": "publisher:example.com",
+  "proof": {
+    "method": "dns-txt", 
+    "record": "_spp.example.com IN TXT \"did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe; pk=ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo; scopes=/,/news/*; policy=manual-verify\""
+  },
+  "signature": {
+    "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
+    "sig": "base64url-placeholder-signature"
+  },
+  "anchors": []
+}
+```
+
+### Example 2: Hash-Based Adoption
+
+```json
+{
+  "artefact_hashes": [
+    "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ],
+  "signature": {
+    "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
+    "sig": "base64url-placeholder-adoption-signature"
+  },
+  "anchors": []
+}
+```
+
+### Example 3: Well-Known Publisher Metadata
+
+**File:** `.well-known/spp.json`
+```json
+{
+  "protocolVersion": "1.0",
+  "publisher": {
+    "name": "Example News Publisher",
+    "id": "publisher:example.com",
+    "did": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
+    "uri": "https://example.com",
+    "publicKeyJwk": {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
     },
-    "claims": {
-      "role": "copyright",
-      "grants": ["reproduce", "distribute", "display"],
-      "territory": "worldwide",
-      "valid_from": "2024-01-01T00:00:00Z"
-    },
-    "holders": [
-      {
-        "did": "did:web:publisher.example",
-        "share_bp": 10000
-      }
-    ],
-    "issuers": [
-      {
-        "did": "did:web:publisher.example"
-      }
-    ],
-    "signatures": [
-      {
-        "alg": "ed25519",
-        "kid": "did:web:publisher.example#key-1",
-        "sig": "YWJjZGVmZ2hpams"
-      }
-    ],
-    "links": [
-      {
-        "rel": "artefact",
-        "href": "https://registry.example/v1/artefacts/d2d2d2d2"
-      }
-    ],
-    "created_at": "2024-01-01T00:00:00Z"
+    "trustModel": "editorial-chain"
+  },
+  "endpoints": {
+    "sitemap": "https://example.com/spp/sitemap.json",
+    "content": "https://example.com/spp/content/",
+    "registry": "https://registry.example.net/v1"
+  },
+  "policies": {
+    "adoption": "manual-verify",
+    "autoAdoptGracePeriod": "7d"
   }
 }
 ```
 
-### Ownership Transfer
+### Example 4: Manifest-Based Adoption
+
 ```json
 {
-  "ownership": {
-    "id": "own_def456", 
-    "subject": {
-      "artefact_hash": "sha256:d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2"
-    },
-    "claims": {
-      "role": "copyright",
-      "grants": ["reproduce", "distribute"],
-      "territory": "US"
-    },
-    "holders": [
-      {
-        "did": "did:web:alice.example",
-        "share_bp": 7000
-      },
-      {
-        "did": "did:web:bob.example", 
-        "share_bp": 3000
-      }
-    ],
-    "issuers": [
-      {
-        "did": "did:web:publisher.example"
-      }
-    ],
-    "signatures": [
-      {
-        "alg": "ed25519",
-        "kid": "did:web:publisher.example#key-1",
-        "sig": "cGFyZW50X3NpZ25hdHVyZQ"
-      },
-      {
-        "alg": "ed25519", 
-        "kid": "did:web:alice.example#key-1",
-        "sig": "YWxpY2Vfc2lnbmF0dXJl"
-      },
-      {
-        "alg": "ed25519",
-        "kid": "did:web:bob.example#key-1", 
-        "sig": "Ym9iX3NpZ25hdHVyZQ"
-      }
-    ],
-    "links": [
-      {
-        "rel": "artefact",
-        "href": "https://registry.example/v1/artefacts/d2d2d2d2"
-      },
-      {
-        "rel": "previous-ownership",
-        "href": "https://registry.example/v1/ownership/own_abc123"
-      }
-    ],
-    "created_at": "2024-01-15T00:00:00Z"
-  }
+  "manifest_url": "https://example.com/spp/adoption-manifest.json",
+  "signature": {
+    "signer": "did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyDFMdBQzewrpe",
+    "sig": "base64url-placeholder-manifest-signature"
+  },
+  "anchors": []
 }
 ```
 
-### Ownership Revocation
-```json
-{
-  "ownership": {
-    "id": "own_revoked789",
-    "subject": {
-      "artefact_hash": "sha256:d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2"
-    },
-    "claims": {
-      "role": "copyright",
-      "grants": [],
-      "revocation_reason": "voluntary",
-      "revoked_at": "2024-02-01T00:00:00Z"
-    },
-    "holders": [],
-    "issuers": [
-      {
-        "did": "did:web:alice.example"
-      }
-    ],
-    "signatures": [
-      {
-        "alg": "ed25519",
-        "kid": "did:web:alice.example#key-1", 
-        "sig": "cmV2b2NhdGlvbl9zaWduYXR1cmU"
-      }
-    ],
-    "links": [
-      {
-        "rel": "artefact",
-        "href": "https://registry.example/v1/artefacts/d2d2d2d2"
-      },
-      {
-        "rel": "previous-ownership",
-        "href": "https://registry.example/v1/ownership/own_def456"
-      }
-    ],
-    "created_at": "2024-02-01T00:00:00Z"
-  }
-}
-```
+### Example 5: Conflict Resolution Scenario
+
+**Scenario:** Two publishers claim `news.example.com`
+
+**Publisher A (Valid DNSSEC):**
+- DNS: `_spp.news.example.com` with DNSSEC validation ✓
+- Timestamp: 2024-01-15T10:00:00Z
+
+**Publisher B (HTTPS only):**  
+- DNS: `_spp.news.example.com` without DNSSEC ✗
+- HTTPS: `.well-known/spp.json` valid ✓
+- Timestamp: 2024-01-15T09:00:00Z
+
+**Resolution:** Publisher A takes precedence due to valid DNSSEC chain, despite later timestamp.
 
 ## Compatibility & Versioning [Informative]
 
-### Backwards Compatibility
-- v1 ownership records will remain valid in future versions
-- Schema extensions will use the `extensions` object for new fields
-- Reserved fields (`anchors`, `on_chain_id`) will be activated in v2+
+The Claims & Adoption specification maintains forward compatibility through:
 
-### Future Extensions
-- Blockchain anchoring will use reserved `anchors` field
-- NFT integration will populate `on_chain_id` field
-- Smart contract ownership will use `smart_contract` field
-- Cross-chain ownership bridges may be added
+- **Schema Evolution**: Additional fields in schemas are ignored by v1 implementations
+- **Method Extensions**: New verification methods can be added without breaking existing flows
+- **Grace Period Adjustments**: Default grace periods may be adjusted based on operational experience
 
-### Extension Points
-- Custom claim types through extensions namespace
-- Additional proof methods in future versions
-- Enhanced dispute resolution mechanisms
-- Integration with external arbitration systems
+Extensions and experimental features **SHOULD** be prefixed with vendor namespaces to avoid conflicts.
 
 ## References [Informative]
-- [DNS Discovery](dns.md) - For DNS TXT proof requirements
-- [Claims and Adoption](claims-and-adoption.md) - For publisher verification
-- [Registry Brief](../../design/registry/brief.md) - For ownership definitions
-- [JSON Schema](../../schemas/ownership.json) - For ownership data validation
-- [Semantic Schema](../../schemas/semantic.json) - For artefact hash format
-- [Publisher Schema](../../schemas/publisher.json) - For publisher verification
-- [Claim Schema](../../schemas/claim.json) - For claim validation
-- [Adoption Schema](../../schemas/adoption.json) - For adoption process
-- [Signature Schema](../../schemas/common/signature.json) - For signature validation
-- [DID Schema](../../schemas/common/did.json) - For DID format validation
-- [W3C DID Core](https://www.w3.org/TR/did-core/) - For DID specifications
-- [RFC 2119](https://tools.ietf.org/html/rfc2119) - For normative language
+
+- [SPP Registry Brief](../../design/registry/brief.md): Core definitions and requirements
+- [DNS Profile Specification](./dns.md): DNS-based discovery and verification procedures  
+- [Publisher Schema](/schemas/publisher.json): Publisher metadata format
+- [Claim Schema](/schemas/claim.json): Claim data structure
+- [Adoption Schema](/schemas/adoption.json): Adoption data structure
+- [Ownership Schema](/schemas/ownership.json): Optional ownership records
+- [Semantic Schema](/schemas/semantic.json): Artefact provenance states
+- [Signature Schema](/schemas/common/signature.json): Digital signature format
+- [DID Schema](/schemas/common/did.json): Decentralized identifier format
+- [RFC 2119](https://tools.ietf.org/html/rfc2119): Key words for use in RFCs to Indicate Requirement Levels
