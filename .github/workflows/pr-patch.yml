@@ -18,7 +18,6 @@ jobs:
     env:
       PR_NUMBER: ${{ github.event.pull_request.number }}
       PATCH_FILE: pr-reviews/pr-${{ github.event.pull_request.number }}.patch
-      PATCH_URL: https://patch-diff.githubusercontent.com/raw/${{ github.repository }}/pull/${{ github.event.pull_request.number }}.patch
 
     steps:
       - name: Checkout default branch
@@ -31,7 +30,7 @@ jobs:
 
       - name: Download patch
         run: |
-          curl -fsSL "$PATCH_URL" -o "$PATCH_FILE"
+          curl -fsSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3.patch" "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" -o "$PATCH_FILE"
           test -s "$PATCH_FILE" || { echo "Empty patch file"; exit 1; }
 
       - name: Commit patch to default branch

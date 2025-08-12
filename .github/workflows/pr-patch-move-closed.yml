@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PR_NUMBER: ${{ github.event.pull_request.number }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout default branch
         uses: actions/checkout@v4
@@ -21,21 +22,18 @@ jobs:
       - name: Ensure closed folder exists
         run: mkdir -p pr-reviews/closed
 
-      - name: Move patch if exists
+      - name: Fetch PR patch from GitHub API
         run: |
-          PATCH_FILE="pr-reviews/pr-${PR_NUMBER}.patch"
-          if [ -f "$PATCH_FILE" ]; then
-            git mv "$PATCH_FILE" "pr-reviews/closed/"
-          else
-            echo "No patch file found for PR #$PR_NUMBER — nothing to move."
-            exit 0
-          fi
+          curl -H "Accept: application/vnd.github.v3.patch" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -o pr-reviews/closed/pr-${PR_NUMBER}.patch \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}"
 
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pr-reviews/closed/ || true
+          git add pr-reviews/closed/pr-${PR_NUMBER}.patch
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
