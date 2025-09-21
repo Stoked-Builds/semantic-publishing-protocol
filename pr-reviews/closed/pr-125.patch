@@ -1,0 +1,456 @@
+From 0dcf6a4d66382a48fcf72f844729ce5c0af2bb04 Mon Sep 17 00:00:00 2001
+From: Copilot <198982749+Copilot@users.noreply.github.com>
+Date: Mon, 11 Aug 2025 23:12:06 +0000
+Subject: [PATCH 1/2] Initial plan
+
+
+From 130d2268457744ba153b7eade66acdfee7b522bf Mon Sep 17 00:00:00 2001
+From: "copilot-swe-agent[bot]" <198982749+Copilot@users.noreply.github.com>
+Date: Mon, 11 Aug 2025 23:17:28 +0000
+Subject: [PATCH 2/2] Implement drop discovery mechanism with
+ .well-known/drop-site.json format
+
+Co-authored-by: MarkStokes-outlook <17313109+MarkStokes-outlook@users.noreply.github.com>
+---
+ README.md         |  10 ++
+ docs/discovery.md | 409 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 419 insertions(+)
+ create mode 100644 docs/discovery.md
+
+diff --git a/README.md b/README.md
+index acca6f1..3c8f8ac 100644
+--- a/README.md
++++ b/README.md
+@@ -165,6 +165,16 @@ Works cross-platform (macOS/Linux/Windows) and is suitable for CI/CD pipelines.
+ 
+ ---
+ 
++## 🔗 Protocol Extensions
++
++SPP is designed to be extensible and interoperable with existing web standards and discovery mechanisms:
++
++- **[Drop Discovery](docs/discovery.md)** — How agents and crawlers discover semantic content from publishers
++- **[Registry Federation](specs/registry/federation.md)** — How SPP registries federate and share content
++- **[Semantic Sitemap](specs/publishing/semantic-sitemap.md)** — Machine-readable content indexes for discovery
++
++---
++
+ ## 🤝 Join the Mission
+ 
+ Want to help fix the future of web publishing?  
+diff --git a/docs/discovery.md b/docs/discovery.md
+new file mode 100644
+index 0000000..75fd5d2
+--- /dev/null
++++ b/docs/discovery.md
+@@ -0,0 +1,409 @@
++# Drop Discovery Mechanism
++
++**Version:** 1.0  
++**Status:** Draft  
++**Date:** 2025-01-28  
++
++---
++
++## 📍 Purpose
++
++The SPP Drop Discovery Mechanism enables seekers (agents, crawlers, and other automated systems) to discover semantic drops and content from publishers in a standardized, decentralized way. This specification defines how content discovery works at the individual site level, complementing the existing registry federation mechanisms.
++
++Unlike registry-to-registry federation, drop discovery focuses on how individual agents and crawlers can find and index semantic content directly from publisher websites.
++
++---
++
++## 🔍 Discovery Mechanisms
++
++### 1. `.well-known/drop-site.json` Discovery
++
++Each SPP-compliant website **SHOULD** expose a drop site discovery manifest at:
++
++```
++https://example.com/.well-known/drop-site.json
++```
++
++This file provides essential metadata about the site's semantic content capabilities, discovery endpoints, and publisher information.
++
++#### Complete Example
++
++```json
++{
++  "protocolVersion": "1.0.0",
++  "site": {
++    "id": "site:example.com",
++    "name": "Example Publishing Site",
++    "description": "A semantic publishing site with quality journalism and analysis",
++    "url": "https://example.com",
++    "language": "en",
++    "topics": ["technology", "science", "journalism"]
++  },
++  "publisher": {
++    "id": "publisher:example-media",
++    "name": "Example Media Corporation",
++    "url": "https://example.com/about",
++    "contact": "editorial@example.com",
++    "did": "did:key:z6MkExample123Publisher456"
++  },
++  "discovery": {
++    "siteConfig": "https://example.com/site.config.json",
++    "semanticSitemap": "https://example.com/.well-known/semantic-sitemap.json",
++    "feeds": {
++      "recent": "https://example.com/feeds/recent.json",
++      "topics": "https://example.com/feeds/topics.json",
++      "rss": "https://example.com/feeds/rss.xml"
++    },
++    "search": "https://example.com/api/search"
++  },
++  "content": {
++    "totalDrops": 42,
++    "lastUpdated": "2025-01-28T10:30:00Z",
++    "contentTypes": ["article", "analysis", "interview"],
++    "mediaSupport": ["image", "video", "audio"],
++    "formats": ["markdown", "html", "json-ld"]
++  },
++  "federation": {
++    "allowCrawling": true,
++    "allowHarvesting": true,
++    "crawlDelay": 2,
++    "robotsPolicy": "https://example.com/robots.txt",
++    "termsOfUse": "https://example.com/terms-of-use"
++  },
++  "signature": {
++    "signer": "did:key:z6MkExample123Publisher456",
++    "created": "2025-01-28T10:30:00Z",
++    "signature": "base64url-encoded-signature"
++  }
++}
++```
++
++#### Field Definitions
++
++| Field | Type | Required | Description |
++|-------|------|----------|-------------|
++| `protocolVersion` | string | ✅ | SPP protocol version (e.g., "1.0.0") |
++| `site` | object | ✅ | Basic site metadata and identification |
++| `publisher` | object | ✅ | Publisher information and identity |
++| `discovery` | object | ✅ | Discovery endpoints and resources |
++| `content` | object | ✅ | Content statistics and capabilities |
++| `federation` | object | ✅ | Federation policies and preferences |
++| `signature` | object | ❌ | Optional cryptographic signature for verification |
++
++---
++
++### 2. Site Configuration Integration
++
++The `site.config.json` file referenced in the drop-site manifest provides the complete index of available semantic content:
++
++```json
++{
++  "protocolVersion": "1.0.0",
++  "version": "0.2",
++  "publisher": {
++    "id": "publisher:example-media",
++    "name": "Example Media Corporation",
++    "uri": "https://example.com"
++  },
++  "updated": "2025-01-28T10:30:00Z",
++  "stories": [
++    {
++      "id": "ai-regulation-analysis",
++      "title": "Understanding New AI Regulation Framework",
++      "lang": "en",
++      "semantic": "./pubs/ai-regulation/meta.jsonld",
++      "canonical": "https://example.com/articles/ai-regulation-analysis/"
++    },
++    {
++      "id": "quantum-computing-breakthrough",
++      "title": "Quantum Computing Reaches New Milestone",
++      "lang": "en", 
++      "semantic": "./pubs/quantum-breakthrough/meta.jsonld",
++      "canonical": "https://example.com/articles/quantum-computing-breakthrough/"
++    }
++  ],
++  "topics": "https://example.com/topics.json"
++}
++```
++
++---
++
++### 3. Optional Sitemap Integration
++
++Publishers **MAY** provide additional sitemap information for enhanced discovery:
++
++#### XML Sitemap Extension
++
++Standard `sitemap.xml` files can include SPP-specific metadata:
++
++```xml
++<?xml version="1.0" encoding="UTF-8"?>
++<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
++        xmlns:spp="https://semanticpublishing.org/schemas/sitemap/1.0">
++  <url>
++    <loc>https://example.com/articles/ai-regulation-analysis/</loc>
++    <lastmod>2025-01-28T10:30:00Z</lastmod>
++    <spp:semantic>https://example.com/pubs/ai-regulation/meta.jsonld</spp:semantic>
++    <spp:content-type>article</spp:content-type>
++    <spp:topics>ai,regulation,technology</spp:topics>
++  </url>
++</urlset>
++```
++
++#### JSON Sitemap
++
++```json
++{
++  "protocolVersion": "1.0.0",
++  "sitemap": {
++    "lastModified": "2025-01-28T10:30:00Z",
++    "urls": [
++      {
++        "loc": "https://example.com/articles/ai-regulation-analysis/",
++        "lastmod": "2025-01-28T10:30:00Z",
++        "semantic": "https://example.com/pubs/ai-regulation/meta.jsonld",
++        "contentType": "article",
++        "topics": ["ai", "regulation", "technology"]
++      }
++    ]
++  }
++}
++```
++
++---
++
++## 🤖 Discovery Flows
++
++### Manual Discovery Flow
++
++1. **Site Discovery**: Agent discovers site through various means (referrals, directories, social mentions)
++2. **Drop-Site Manifest**: Agent requests `/.well-known/drop-site.json`
++3. **Capability Assessment**: Agent evaluates site capabilities and federation policies
++4. **Content Index**: Agent requests `site.config.json` for complete content inventory
++5. **Selective Harvesting**: Agent selects and fetches specific semantic content based on interests
++
++### Automated Discovery Flow
++
++1. **DNS/Domain Enumeration**: Crawler discovers domains through various sources
++2. **Well-Known Probe**: Automated request to `/.well-known/drop-site.json`
++3. **Robots Compliance**: Check `robotsPolicy` and respect `crawlDelay` settings
++4. **Batch Discovery**: Process multiple discovery endpoints efficiently
++5. **Incremental Updates**: Use `lastUpdated` timestamps for efficient re-crawling
++6. **Federation Respect**: Honor `allowCrawling` and `allowHarvesting` flags
++
++### Real-Time Discovery Flow
++
++For sites supporting real-time updates:
++
++1. **Initial Discovery**: Standard discovery flow as above
++2. **Feed Subscription**: Subscribe to real-time feeds if available
++3. **WebSub Integration**: Use WebSub for push notifications when supported
++4. **Incremental Sync**: Receive only new/updated content
++
++---
++
++## 🔗 Integration with Existing Standards
++
++### IndieWeb Compatibility
++
++The drop discovery mechanism aligns with IndieWeb principles:
++
++- **`.well-known` patterns**: Following established web standards
++- **Microformats compatibility**: Semantic markup can include microformats
++- **WebMention support**: Sites can expose WebMention endpoints
++
++### ActivityPub Discovery
++
++Sites **MAY** also expose ActivityPub-compatible discovery:
++
++```json
++{
++  "discovery": {
++    "activitypub": {
++      "actor": "https://example.com/actors/main",
++      "inbox": "https://example.com/inbox",
++      "outbox": "https://example.com/outbox"
++    }
++  }
++}
++```
++
++### RSS/Atom Bridge
++
++Traditional feed readers can discover semantic content:
++
++```json
++{
++  "discovery": {
++    "feeds": {
++      "rss": "https://example.com/feeds/rss.xml",
++      "atom": "https://example.com/feeds/atom.xml",
++      "semantic": "https://example.com/feeds/semantic.json"
++    }
++  }
++}
++```
++
++---
++
++## 🔐 Security and Trust
++
++### Signature Verification
++
++Publishers **SHOULD** sign their drop-site manifests:
++
++```json
++{
++  "signature": {
++    "signer": "did:key:z6MkExample123Publisher456",
++    "created": "2025-01-28T10:30:00Z",
++    "signature": "base64url-encoded-ed25519-signature",
++    "algorithm": "EdDSA"
++  }
++}
++```
++
++### Trust Establishment
++
++Seekers can establish trust through:
++
++- **DID Verification**: Verify publisher DIDs against known trust networks
++- **Historical Consistency**: Check consistency of publisher information over time
++- **Cross-Reference**: Validate against other discovery mechanisms and directories
++- **Community Signals**: Use endorsements and reputation systems
++
++### Privacy Protection
++
++The discovery mechanism respects privacy:
++
++- **Opt-in Federation**: Publishers explicitly declare `allowCrawling` preferences
++- **Rate Limiting**: Respect `crawlDelay` to prevent overloading sites
++- **Terms Compliance**: Honor `termsOfUse` and `robotsPolicy` declarations
++
++---
++
++## 🚀 Implementation Examples
++
++### Minimal Drop Site
++
++```json
++{
++  "protocolVersion": "1.0.0",
++  "site": {
++    "id": "site:minimal-blog.example",
++    "name": "My Personal Blog",
++    "url": "https://minimal-blog.example",
++    "language": "en"
++  },
++  "publisher": {
++    "id": "publisher:jane-doe",
++    "name": "Jane Doe"
++  },
++  "discovery": {
++    "siteConfig": "https://minimal-blog.example/site.config.json"
++  },
++  "content": {
++    "totalDrops": 5,
++    "lastUpdated": "2025-01-28T10:30:00Z",
++    "contentTypes": ["blog-post"]
++  },
++  "federation": {
++    "allowCrawling": true,
++    "allowHarvesting": true,
++    "crawlDelay": 5
++  }
++}
++```
++
++### Enterprise Publishing Site
++
++```json
++{
++  "protocolVersion": "1.0.0",
++  "site": {
++    "id": "site:enterprise-news.example",
++    "name": "Enterprise News Network",
++    "description": "Professional journalism and business analysis",
++    "url": "https://enterprise-news.example",
++    "language": "en",
++    "topics": ["business", "technology", "finance", "policy"]
++  },
++  "publisher": {
++    "id": "publisher:enterprise-media-corp",
++    "name": "Enterprise Media Corporation",
++    "url": "https://enterprise-news.example/about",
++    "contact": "newsroom@enterprise-news.example",
++    "did": "did:key:z6MkEnterprise789Publisher123"
++  },
++  "discovery": {
++    "siteConfig": "https://enterprise-news.example/site.config.json",
++    "semanticSitemap": "https://enterprise-news.example/.well-known/semantic-sitemap.json",
++    "feeds": {
++      "recent": "https://enterprise-news.example/api/feeds/recent",
++      "topics": "https://enterprise-news.example/api/feeds/by-topic",
++      "breaking": "https://enterprise-news.example/api/feeds/breaking",
++      "rss": "https://enterprise-news.example/feeds/rss.xml"
++    },
++    "search": "https://enterprise-news.example/api/search",
++    "websub": "https://enterprise-news.example/websub/hub"
++  },
++  "content": {
++    "totalDrops": 1547,
++    "lastUpdated": "2025-01-28T10:30:00Z",
++    "contentTypes": ["article", "analysis", "interview", "opinion"],
++    "mediaSupport": ["image", "video", "audio", "interactive"],
++    "formats": ["markdown", "html", "json-ld", "amp"]
++  },
++  "federation": {
++    "allowCrawling": true,
++    "allowHarvesting": true,
++    "crawlDelay": 1,
++    "robotsPolicy": "https://enterprise-news.example/robots.txt",
++    "termsOfUse": "https://enterprise-news.example/api-terms",
++    "rateLimit": "1000/hour"
++  },
++  "signature": {
++    "signer": "did:key:z6MkEnterprise789Publisher123",
++    "created": "2025-01-28T10:30:00Z",
++    "signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9..."
++  }
++}
++```
++
++---
++
++## 🔄 Relationship to Registry Federation
++
++This drop discovery mechanism complements but differs from the existing registry federation:
++
++| Aspect | Drop Discovery | Registry Federation |
++|--------|----------------|-------------------|
++| **Scope** | Individual websites/publishers | Registry-to-registry |
++| **Audience** | Agents, crawlers, individuals | Other registries |
++| **Protocol** | HTTP + well-known | OAI-PMH + harvest API |
++| **Discovery** | `.well-known/drop-site.json` | `.well-known/spp/registry.json` |
++| **Content** | Direct from publisher | Federated/replicated |
++| **Scale** | Site-level | Network-level |
++
++Both mechanisms work together to create a comprehensive discovery ecosystem for semantic content.
++
++---
++
++## 🛠️ Future Extensions
++
++- **Decentralized Discovery**: Integration with IPFS, ENS, and other decentralized systems
++- **AI-Native Queries**: Support for semantic queries in natural language
++- **Dynamic Discovery**: Real-time capability negotiation and discovery
++- **Cross-Protocol Bridges**: Integration with Mastodon, RSS, and other content networks
++- **Performance Optimization**: Caching strategies and CDN integration
++
++---
++
++## 📚 References
++
++- [SPP Registry Federation](../specs/registry/federation.md)
++- [Semantic Sitemap Specification](../specs/publishing/semantic-sitemap.md)
++- [IndieWeb .well-known](https://indieweb.org/well-known)
++- [ActivityPub Discovery](https://www.w3.org/TR/activitypub/#discovery)
++- [RFC 8615: Well-Known URIs](https://tools.ietf.org/html/rfc8615)
++- [WebSub Specification](https://www.w3.org/TR/websub/)
+\ No newline at end of file
