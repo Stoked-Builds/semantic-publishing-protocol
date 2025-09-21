@@ -1,0 +1,35 @@
+{
+  "$id": "https://spp.dev/schemas/task-result.json",
+  "type": "object",
+  "required": ["offer_id", "items", "ts", "sig"],
+  "properties": {
+    "offer_id": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cid", "delta", "provenance"],
+        "properties": {
+          "cid": { "type": "string" },
+          "delta": { "type": "object" },
+          "provenance": {
+            "type": "object",
+            "required": ["model", "model_version", "container_digest", "inHash", "outHash", "ts"],
+            "properties": {
+              "model": { "type": "string" },
+              "model_version": { "type": "string" },
+              "container_digest": { "type": "string" },
+              "inHash": { "type": "string" },
+              "outHash": { "type": "string" },
+              "ts": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "replay_of": { "type": "string" },
+    "ts": { "type": "string", "format": "date-time" },
+    "sig": { "type": "string" }
+  },
+  "additionalProperties": false
+}
