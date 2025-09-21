@@ -6,6 +6,8 @@
 - **Normative:** Yes
 - **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
 
+This module is additive to SPP v0.1 federation and does not break existing federation implementations (semver: MINOR).
+
 ---
 
 ## 1. Introduction
@@ -126,7 +128,104 @@ Transparency event: `USAGE_RECORDED`.
 
 ---
 
-## 9. Transparency Integration
+## 9. Canonical JSON & Signing
+
+**Canonicalisation.** All signed JSON payloads MUST use RFC 8785 JSON Canonicalization Scheme (JCS).
+
+**HTTP Signatures.** Peers MUST sign requests using HTTP Signatures with `ed25519`. The covered components MUST include: `(request-target)`, `date`, `digest`, `x-idempotency-key`, `x-nonce`. Clocks MAY drift by ±120s; requests outside this window MUST be rejected.
+
+**Detached JWS.** JSON bodies that are persisted (PeerDescriptor, TaskOffer, TaskAgreement, TaskResult, UsageRecord) MUST carry a detached JWS over their JCS form.
+
+---
+
+## 10. Identity & Keys
+
+`peer_id` MUST be either:
+- `did:web:<host>...` (RECOMMENDED), or
+- `tls-pubkey:sha256:<lowercase-hex>` (SHA-256 of the peer’s TLS leaf public key).
+
+Peers MUST expose a rotating JWKS at `/.well-known/spp/jwks.json`. Old keys MUST remain valid for ≥7 days after rotation.
+
+---
+
+## 11. Error Model
+
+| HTTP | Code                        | Meaning                          | Client Action             |
+|-----:|-----------------------------|----------------------------------|---------------------------|
+| 400  | SPP_SCHEMA_INVALID          | Fails JSON Schema validation     | Fix payload               |
+| 401  | SPP_AUTH_REQUIRED           | Missing/invalid signature/token  | Re-auth/sign              |
+| 403  | SPP_POLICY_DENY             | Violates policy/caps             | Do not retry              |
+| 409  | SPP_IDEMPOTENT_REPLAY       | Reused idempotency key           | Change key                |
+| 413  | SPP_OBJECT_TOO_LARGE        | Too big                          | Reduce size               |
+| 415  | SPP_UNSUPPORTED_MIME        | MIME rejected                    | Change MIME               |
+| 429  | SPP_RATE_LIMIT              | Quota exceeded                   | Honor `Retry-After`       |
+| 503  | SPP_BACKPRESSURE            | Temporary capacity issue         | Honor `Retry-After`       |
+
+---
+
+## 12. Headers
+
+Clients MUST send:
+- `Date`
+- `Digest: SHA-256=<base64>` for non-empty bodies
+- `X-Idempotency-Key` (UUID v4)
+- `X-Nonce` (128-bit random, single-use within 10 min)
+
+Servers MUST return `Retry-After` on 429/503.
+
+---
+
+## 13. Content Addressing
+
+Artifact identifiers MUST be `sha256:<64-lowercase-hex>`. The digest is over the **raw bytes** of the artifact.  
+For signed JSON payloads (offers/results/usage), hashes are over the **JCS-canonical JSON**.
+
+---
+
+## 14. Usage Records Pagination
+
+`GET /api/usage/records?since=<rfc3339>&limit=<1..1000>`  
+Response MUST include `next_since` if more records exist. `counter` MUST be strictly monotonic per `(issuer, peer_id)`.
+
+---
+
+## 15. Task DAG & Determinism
+
+`depends_on` expresses a partial order; providers MUST execute in topological order.  
+On failure, default behavior is **fail-fast** (subsequent nodes not executed).  
+`replay_of` MUST reference a prior `TaskResult.offer_id` when rerunning with identical inputs/params.
+
+---
+
+## 16. Remote Fetch Rules (SSRF
+
+When `source_url` is provided, fetchers MUST:
+- allow only `https`,
+- enforce `max_size_mb` policy (default 512 MB),
+- follow 0 redirects,
+- resolve DNS once and pin IP for the connection,
+- time out connects in ≤5s and total transfer in ≤300s,
+- apply MIME allowlist before storing.
+
+---
+
+## 17. Erasure Semantics
+
+`DELETE /api/artifacts/:cid` MUST:
+- write an immutable tombstone transparency entry `{ event: "ARTIFACT_ERASED", cid, reason?, ts }`,
+- attempt byte erasure on all storage peers where `erase_supported=true`,
+- return `{ status: "tombstoned", tombstone_id, erase_attempted: true|false }`.
+
+---
+
+## 18. Transparency Log Details
+
+Transparency logs MUST be Merkle-tree based. Servers MUST publish Signed Tree Heads (STH) with: `size`, `root_hash`, `timestamp`, `signature`.  
+On request, servers SHOULD provide inclusion proofs for entries and MAY batch proofs (one proof per ≤100 entries).
+
+---
+
+## 19. Transparency Integration
 
 - Peering events MUST be logged:
   - `PEER_HANDSHAKE`
@@ -141,7 +240,7 @@ Transparency event: `USAGE_RECORDED`.
 
 ---
 
-## 10. Interoperability
+## 20. Interoperability
 
 - Peering is OPTIONAL.  
 - Harvest remains baseline (SPP-Federation).  
