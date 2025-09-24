@@ -252,8 +252,8 @@ program
       console.log(`\nNext steps:`);
       console.log(`  cd ${sitename}`);
       console.log(`  # Edit site.config.json and pubs/first/meta.jsonld as needed`);
-      console.log(`  # Validate your changes with: npx spp-validate site.config.json`);
-      console.log(`  # Validate your changes with: npx spp-validate pubs/first/meta.jsonld`);
+      console.log(`  # Validate your changes with: node scripts/validate.js site.config.json pubs/first/meta.jsonld`);
+      console.log(`  # (Run from the repository root directory)`);
       
     } catch (error) {
       console.error(`❌ Error: ${error.message}`);
