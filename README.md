@@ -141,6 +141,28 @@ All SPP metadata includes a `protocolVersion` field that indicates which version
 
 ## 🛠️ Developer Tools
 
+### Drop Scaffold Generator
+
+Create new drop sites with schema-compliant metadata using the `dope-drop` CLI:
+
+```bash
+# Create a new blog site
+dope-drop init mysite --type blog
+
+# Create a new zine site  
+dope-drop init myzine --type zine
+
+# Create a new recipes site
+dope-drop init myrecipes --type recipes
+```
+
+This will create:
+- `<sitename>/site.config.json` with valid site metadata
+- `<sitename>/pubs/first/meta.jsonld` with schema-compliant publication metadata
+- Directory structure ready for content publishing
+
+The generated files pass validation and include starter content appropriate for each site type.
+
 ### Validation CLI
 
 Use the built-in validation tool to check your drop metadata files against their JSON Schemas:
