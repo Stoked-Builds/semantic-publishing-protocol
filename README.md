@@ -139,6 +139,64 @@ All SPP metadata includes a `protocolVersion` field that indicates which version
 
 ---
 
+## 📦 Installation
+
+Install the Dope Drop Protocol CLI globally to get started:
+
+```bash
+npm install -g dope-drop-protocol
+```
+
+This will give you access to the `dope-drop` command from anywhere on your system.
+
+### Quick Start
+
+1. **Initialize a new semantic project:**
+   ```bash
+   dope-drop init
+   ```
+   This creates a `semantic.json` template file with all required fields.
+
+2. **Edit your content:**
+   Open `semantic.json` and customize it with your content details, author information, and content body.
+
+3. **Validate your semantic file:**
+   ```bash
+   dope-drop validate semantic.json
+   ```
+   Or validate all semantic files in the current directory:
+   ```bash
+   dope-drop validate
+   ```
+
+### Commands
+
+- **`dope-drop init [options]`** - Initialize a new semantic publishing project
+  - `-o, --output <file>` - Output file name (default: semantic.json)
+
+- **`dope-drop validate [files...]`** - Validate semantic publishing protocol files
+  - `-s, --schema-dir <dir>` - Custom schema directory path
+  - `-v, --verbose` - Verbose output with detailed validation reports
+  - `--extensions-only` - Only check extensions, skip schema validation
+
+### Examples
+
+```bash
+# Create a new semantic content file
+dope-drop init -o my-article.json
+
+# Validate specific files
+dope-drop validate article1.json article2.json
+
+# Validate with verbose output
+dope-drop validate semantic.json --verbose
+
+# Validate all common semantic files in current directory
+dope-drop validate
+```
+
+---
+
 ## 🛠️ Developer Tools
 
 ### Validation CLI
