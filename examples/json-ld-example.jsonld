@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "name": "AI Agents and the Future of Web Content Discovery",
+  "description": "A comprehensive analysis of how AI agents will transform content discovery and consumption through semantic protocols like SPP.",
+  "datePublished": "2025-01-28T14:30:00Z",
+  "dateModified": "2025-01-28T15:45:00Z",
+  "protocolVersion": "1.0.0",
+  "author": {
+    "@type": "Person",
+    "name": "Dr. Sarah Chen",
+    "url": "https://techethics.example.com/authors/sarah-chen"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Tech Ethics Journal",
+    "url": "https://techethics.example.com"
+  },
+  "keywords": ["AI", "agents", "semantic web", "content discovery", "web protocols"],
+  "license": "CC-BY-4.0",
+  "url": "https://techethics.example.com/articles/ai-agents-content-discovery",
+  "inLanguage": "en-US"
+}
