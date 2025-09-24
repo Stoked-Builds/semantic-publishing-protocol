@@ -27,7 +27,7 @@ const fixturesDir = path.join(repoRoot, 'conformance', 'fixtures');
 const invalidDir = path.join(fixturesDir, 'invalid');
 
 const SEMANTIC_ID = 'https://spp.dev/schemas/semantic.json';
-const ARTEFACT_ALIAS_ID = 'https://spp.dev/schemas/artefact.json';
+const ARTEIACT_ALIAS_ID = 'https://spp.dev/schemas/artifact.json';
 
 /**
  * Utility: read all .json files recursively under a directory.
@@ -88,10 +88,10 @@ function loadSchemas(ajv, dir) {
  * known to Ajv and resolve returns the actual data to validate.
  */
 function selectSchemaForFixture(obj, filePath) {
-  // --- Artefacts ---
-  // MVSL wrapper shape: { artefact: { ... } } → validate the inner object against semantic.json
-  if (obj && typeof obj === 'object' && obj.artefact && typeof obj.artefact === 'object') {
-    return { schemaKey: SEMANTIC_ID, resolve: (o) => o.artefact };
+  // --- Artifacts ---
+  // MVSL wrapper shape: { artifact: { ... } } → validate the inner object against semantic.json
+  if (obj && typeof obj === 'object' && obj.artifact && typeof obj.artifact === 'object') {
+    return { schemaKey: SEMANTIC_ID, resolve: (o) => o.artifact };
   }
   // Legacy flat shape (current semantic.json): look for protocolVersion/title/author
   if (obj && typeof obj === 'object' && (obj.protocolVersion || obj.title || obj.author)) {

@@ -5,7 +5,7 @@
 
 ---
 
-> [🚀 Get Started](docs/QUICKSTART.md) — Build your first semantic artefact  
+> [🚀 Get Started](docs/QUICKSTART.md) — Build your first semantic artifact  
 > [⚡ Read the Manifesto](MANIFESTO.md) — Why we're building this
 
 ---
@@ -22,7 +22,7 @@ It lets content be discovered, reconstructed, trusted, and *understood* — by b
 
 ## 🧠 What It Actually Does
 
-SPP is a decentralised, AI-native content protocol that turns passive web pages into active, intelligent, and self-defending artefacts. It makes your content:
+SPP is a decentralised, AI-native content protocol that turns passive web pages into active, intelligent, and self-defending artifacts. It makes your content:
 
 - 🧠 **Machine-readable** — ready to be reconstructed and reused by any AI, without guessing
 - 🔐 **Owner-verifiable** — no more scraping, no more theft; attribution is built in
