@@ -7,7 +7,8 @@
   "bin": {
     "dope-drop": "./bin/dope-drop.js",
     "spp-validate": "./bin/spp-validate.js",
-    "spp-conformance": "./bin/spp-conformance.js"
+    "spp-conformance": "./bin/spp-conformance.js",
+    "dope-drop": "./bin/dope-drop.js"
   },
   "files": [
     "schemas/",
