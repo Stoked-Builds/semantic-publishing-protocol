@@ -94,7 +94,8 @@ Or we can teach the web to speak for itself — semantically, contextually, and 
 - 📚 **Visual Docs & Diagrams** – `/docs`
 
 Start here: [QUICKSTART.md](docs/QUICKSTART.md)  
-Browse all specs: [spec-index.md](docs/spec-index.md)
+Browse all specs: [spec-index.md](docs/spec-index.md)  
+AI Agent Guide: [agent.md](docs/agent.md)
 
 ---
 

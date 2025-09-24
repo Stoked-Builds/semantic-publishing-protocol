@@ -37,6 +37,8 @@ examples/
 │   └── author-did.json
 ├── semantic-blocks/
 │   └── story-with-semantic-blocks.md
+├── agent-demo.js
+├── json-ld-example.jsonld
 └── validate.nfo
 ```
 
@@ -54,6 +56,8 @@ examples/
 | `publisher/` | Publisher metadata including trust model and supported topics. |
 | `identity/` | Author DID document showing how identities can be decentralised. |
 | `semantic-blocks/` | Annotated markdown using semantic blocks for structured AI extraction. |
+| `agent-demo.js` | **Runnable demonstration** of AI agent parsing and processing SPP metadata. |
+| `json-ld-example.jsonld` | **JSON-LD compliant** metadata example following schema.org structure. |
 
 ---
 
@@ -64,6 +68,7 @@ examples/
 3. ✅ Simulate endorsements or editorial workflows using `endorsement.json` and `review-chain.json`.
 4. ✅ Validate identities and resolve metadata via DID-style resolution.
 5. ✅ Train or evaluate agent models to consume structured markdown with semantic blocks.
+6. ✅ **Run the AI agent demo**: `node examples/agent-demo.js` to see how agents parse and process SPP metadata.
 
 ---
 
