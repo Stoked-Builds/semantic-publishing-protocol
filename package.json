@@ -43,6 +43,7 @@
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^12.0.0",
     "@types/node": "^20.0.0",
     "speccy": "^0.11.0"
   },

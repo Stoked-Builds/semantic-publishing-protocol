@@ -1,0 +1,1233 @@
+openapi: 3.0.3
+info:
+  title: SPP Registry API
+  version: 1.0.0-draft
+  description: |
+    Semantic Publishing Protocol Registry API for discovery, claims, adoption, 
+    federation, transparency logs, and ownership management.
+    
+    This is a HTTP/DNS-native registry (no blockchain) that stores and serves 
+    SPP artefacts with provenance states: reconstructed → claimed → adopted → authoritative.
+  contact:
+    name: SPP Registry API Support
+    url: https://spp.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://{host}
+    description: Registry server
+    variables:
+      host:
+        default: registry.example.net
+        description: Registry hostname
+
+security:
+  - ApiKeyAuth: []
+  - OAuth2: []
+  - {}
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for registry access
+    
+    OAuth2:
+      type: oauth2
+      description: OAuth2 authentication (optional)
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.net/oauth/token
+          scopes:
+            registry:read: Read access to registry
+            registry:write: Write access to registry
+            registry:claim: Submit namespace claims
+            registry:adopt: Adopt artefacts
+    
+    HMACWebSub:
+      type: http
+      scheme: bearer
+      description: HMAC signatures for WebSub notifications
+  
+  responses:
+    Problem:
+      description: Problem Details for HTTP APIs (RFC 7807)
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+          examples:
+            ValidationError:
+              summary: Validation error example
+              value:
+                type: "https://spp.dev/problems/validation-error"
+                title: "Validation Error"
+                status: 400
+                detail: "The submitted artefact is missing required fields"
+                instance: "/v1/artefacts"
+            NotFound:
+              summary: Resource not found
+              value:
+                type: "https://spp.dev/problems/not-found"
+                title: "Not Found"
+                status: 404
+                detail: "The requested artefact was not found"
+                instance: "/v1/artefacts/unknown-id"
+  
+  schemas:
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI reference that identifies the problem type
+          default: about:blank
+        title:
+          type: string
+          description: Short, human-readable summary of the problem type
+        status:
+          type: integer
+          description: HTTP status code
+          minimum: 100
+          maximum: 999
+        detail:
+          type: string
+          description: human-readable explanation specific to this occurrence
+        instance:
+          type: string
+          format: uri
+          description: URI reference that identifies the specific occurrence
+      additionalProperties: true
+    
+    Artefact:
+      type: object
+      description: SPP Artefact schema placeholder - references semantic.json
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        language:
+          type: string
+        version:
+          type: string
+      required:
+        - id
+        - type
+        - title
+        - language
+        - version
+      additionalProperties: true
+    
+    Claim:
+      type: object
+      description: SPP Claim schema placeholder - references claim.json
+      properties:
+        nonce:
+          type: string
+        namespace:
+          type: string
+        proof:
+          type: object
+        signature:
+          type: object
+      required:
+        - nonce
+        - namespace
+        - proof
+        - signature
+      additionalProperties: true
+    
+    Adoption:
+      type: object
+      description: SPP Adoption schema placeholder - references adoption.json
+      properties:
+        artefact_hashes:
+          type: array
+          items:
+            type: string
+            pattern: "^sha256:[0-9a-f]{64}$"
+        manifest_url:
+          type: string
+          format: uri
+        signature:
+          type: object
+      required:
+        - signature
+      additionalProperties: true
+    
+    Ownership:
+      type: object
+      description: SPP Ownership schema placeholder - references ownership.json
+      properties:
+        ownership:
+          type: object
+      required:
+        - ownership
+      additionalProperties: true
+    
+    TransparencySTH:
+      type: object
+      description: SPP Transparency STH schema placeholder - references transparency-sth.json
+      properties:
+        tree_size:
+          type: integer
+          minimum: 0
+        root_hash:
+          type: string
+          pattern: "^[0-9a-f]{64}$"
+        created_at:
+          type: string
+          format: date-time
+        signatures:
+          type: array
+          items:
+            type: object
+      required:
+        - tree_size
+        - root_hash
+        - created_at
+        - signatures
+      additionalProperties: true
+    
+    TransparencyLogEntry:
+      type: object
+      description: SPP Transparency Log Entry schema placeholder - references transparency-log-entry.json
+      properties:
+        artefact_hash:
+          type: string
+          pattern: "^sha256:[0-9a-f]{64}$"
+        publisher_did:
+          type: string
+        provenance_mode:
+          type: string
+          enum: [reconstructed, claimed, adopted, authoritative]
+        timestamp:
+          type: string
+          format: date-time
+        registry_did:
+          type: string
+      required:
+        - artefact_hash
+        - publisher_did
+        - provenance_mode
+        - timestamp
+        - registry_did
+      additionalProperties: true
+    
+    Publisher:
+      type: object
+      description: SPP Publisher schema placeholder - references publisher.json
+      properties:
+        protocolVersion:
+          type: string
+        publisher:
+          type: object
+        endpoints:
+          type: object
+      required:
+        - protocolVersion
+        - publisher
+        - endpoints
+      additionalProperties: true
+    
+    ArtefactList:
+      type: object
+      properties:
+        artefacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Artefact"
+        pagination:
+          type: object
+          properties:
+            offset:
+              type: integer
+              minimum: 0
+            limit:
+              type: integer
+              minimum: 1
+              maximum: 100
+            total:
+              type: integer
+              minimum: 0
+            has_more:
+              type: boolean
+      required:
+        - artefacts
+        - pagination
+    
+    HarvestIdentifier:
+      type: object
+      properties:
+        identifier:
+          type: string
+          description: Unique identifier for the record
+        datestamp:
+          type: string
+          format: date-time
+          description: Last modification timestamp
+        deleted:
+          type: boolean
+          description: Whether the record has been deleted
+      required:
+        - identifier
+        - datestamp
+    
+    HarvestRecord:
+      type: object
+      properties:
+        header:
+          $ref: "#/components/schemas/HarvestIdentifier"
+        metadata:
+          $ref: "#/components/schemas/Artefact"
+      required:
+        - header
+        - metadata
+    
+    InclusionProof:
+      type: object
+      properties:
+        audit_path:
+          type: array
+          items:
+            type: string
+            pattern: "^[0-9a-f]{64}$"
+          description: Merkle tree audit path
+        tree_size:
+          type: integer
+          minimum: 1
+          description: Size of the tree when proof was generated
+        leaf_index:
+          type: integer
+          minimum: 0
+          description: Index of the leaf in the tree
+      required:
+        - audit_path
+        - tree_size
+        - leaf_index
+
+paths:
+  # Discovery and Search Endpoints
+  /v1/artefacts:
+    get:
+      summary: Search and browse artefacts
+      description: |
+        Search for artefacts in the registry with optional filtering by various criteria.
+        Returns paginated results with metadata about each artefact.
+      operationId: listArtefacts
+      tags:
+        - Discovery
+      parameters:
+        - name: q
+          in: query
+          description: Search query string
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Filter by artefact type
+          schema:
+            type: string
+        - name: topic
+          in: query
+          description: Filter by topic
+          schema:
+            type: string
+        - name: publisher
+          in: query
+          description: Filter by publisher DID
+          schema:
+            type: string
+        - name: provenance
+          in: query
+          description: Filter by provenance state
+          schema:
+            type: string
+            enum: [reconstructed, claimed, adopted, authoritative]
+        - name: offset
+          in: query
+          description: Number of results to skip
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          description: Number of results to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of artefacts matching the search criteria
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtefactList"
+              examples:
+                BasicSearch:
+                  summary: Basic search results
+                  value:
+                    artefacts:
+                      - id: "article-123"
+                        type: "article"
+                        title: "Understanding SPP"
+                        language: "en"
+                        authors:
+                          - name: "Jane Doe"
+                            url: "https://example.com/authors/jane"
+                        published_at: "2024-01-15T10:30:00Z"
+                        topics: ["spp", "protocols"]
+                        content:
+                          blocks: []
+                        links:
+                          canonical: "https://example.com/articles/understanding-spp"
+                        provenance:
+                          state: "claimed"
+                          publisher_did: "did:web:example.com"
+                        version: "1.0"
+                    pagination:
+                      offset: 0
+                      limit: 20
+                      total: 1
+                      has_more: false
+        '400':
+          $ref: "#/components/responses/Problem"
+        '500':
+          $ref: "#/components/responses/Problem"
+    
+    post:
+      summary: Ingest artefact
+      description: |
+        Submit a new artefact to the registry. The artefact must be signed and
+        will be validated before being accepted into the registry.
+      operationId: ingestArtefact
+      tags:
+        - Ingest
+      security:
+        - ApiKeyAuth: []
+        - OAuth2: [registry:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Artefact"
+            examples:
+              ArticleIngest:
+                summary: Article artefact submission
+                value:
+                  id: "article-456"
+                  type: "article"
+                  title: "Advanced SPP Techniques"
+                  language: "en"
+                  authors:
+                    - name: "John Smith"
+                      url: "https://publisher.example/authors/john"
+                  published_at: "2024-01-20T14:00:00Z"
+                  topics: ["spp", "advanced"]
+                  content:
+                    blocks: []
+                  links:
+                    canonical: "https://publisher.example/articles/advanced-spp"
+                  provenance:
+                    state: "reconstructed"
+                    source: "crawl"
+                  version: "1.0"
+      responses:
+        '201':
+          description: Artefact successfully ingested
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Registry-assigned artefact ID
+                  hash:
+                    type: string
+                    pattern: "^sha256:[0-9a-f]{64}$"
+                    description: Content hash of the artefact
+                  status:
+                    type: string
+                    enum: [accepted, pending_validation]
+                  timestamp:
+                    type: string
+                    format: date-time
+                required:
+                  - id
+                  - hash
+                  - status
+                  - timestamp
+              examples:
+                Success:
+                  summary: Successful ingestion
+                  value:
+                    id: "article-456"
+                    hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                    status: "accepted"
+                    timestamp: "2024-01-20T14:05:00Z"
+        '400':
+          $ref: "#/components/responses/Problem"
+        '401':
+          $ref: "#/components/responses/Problem"
+        '409':
+          description: Artefact already exists
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                Conflict:
+                  summary: Artefact already exists
+                  value:
+                    type: "https://spp.dev/problems/conflict"
+                    title: "Conflict"
+                    status: 409
+                    detail: "An artefact with this hash already exists"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  /v1/artefacts/{id}:
+    get:
+      summary: Retrieve artefact by ID
+      description: |
+        Get a specific artefact from the registry by its identifier.
+        Returns the full artefact metadata and content.
+      operationId: getArtefact
+      tags:
+        - Discovery
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the artefact
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Artefact details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Artefact"
+              examples:
+                ArticleDetail:
+                  summary: Complete article artefact
+                  value:
+                    id: "article-123"
+                    type: "article"
+                    title: "Understanding SPP"
+                    language: "en"
+                    authors:
+                      - name: "Jane Doe"
+                        url: "https://example.com/authors/jane"
+                    published_at: "2024-01-15T10:30:00Z"
+                    topics: ["spp", "protocols"]
+                    content:
+                      blocks: []
+                    links:
+                      canonical: "https://example.com/articles/understanding-spp"
+                    provenance:
+                      state: "claimed"
+                      publisher_did: "did:web:example.com"
+                    version: "1.0"
+        '404':
+          $ref: "#/components/responses/Problem"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  # Claims Endpoint
+  /v1/claims:
+    post:
+      summary: Submit namespace claim proof
+      description: |
+        Submit proof that a publisher controls a specific namespace (domain).
+        This allows the publisher to later adopt artefacts from that namespace.
+      operationId: submitClaim
+      tags:
+        - Claims
+      security:
+        - ApiKeyAuth: []
+        - OAuth2: [registry:claim]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Claim"
+            examples:
+              DnsClaim:
+                summary: DNS TXT record claim
+                value:
+                  nonce: "claim-20240120-001"
+                  namespace: "example.com"
+                  proof:
+                    method: "dns-txt"
+                    record: "_spp.example.com TXT \"spp-claim:claim-20240120-001:did:web:example.com\""
+                  signature:
+                    signer: "did:web:example.com#key-1"
+                    sig: "base64url-encoded-signature"
+              WellKnownClaim:
+                summary: Well-known endpoint claim
+                value:
+                  nonce: "claim-20240120-002"
+                  namespace: "publisher.example"
+                  proof:
+                    method: "well-known"
+                    record: "https://publisher.example/.well-known/spp/claim.txt"
+                  signature:
+                    signer: "did:web:publisher.example#key-1"
+                    sig: "base64url-encoded-signature"
+      responses:
+        '201':
+          description: Claim successfully processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  claim_id:
+                    type: string
+                    description: Unique identifier for this claim
+                  status:
+                    type: string
+                    enum: [verified, pending_verification, rejected]
+                  verification_details:
+                    type: object
+                    properties:
+                      method:
+                        type: string
+                      verified_at:
+                        type: string
+                        format: date-time
+                  expires_at:
+                    type: string
+                    format: date-time
+                    description: When this claim expires
+                required:
+                  - claim_id
+                  - status
+              examples:
+                VerifiedClaim:
+                  summary: Successfully verified claim
+                  value:
+                    claim_id: "claim-123"
+                    status: "verified"
+                    verification_details:
+                      method: "dns-txt"
+                      verified_at: "2024-01-20T15:00:00Z"
+                    expires_at: "2025-01-20T15:00:00Z"
+        '400':
+          $ref: "#/components/responses/Problem"
+        '401':
+          $ref: "#/components/responses/Problem"
+        '422':
+          description: Claim verification failed
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                VerificationFailed:
+                  summary: DNS verification failed
+                  value:
+                    type: "https://spp.dev/problems/verification-failed"
+                    title: "Verification Failed"
+                    status: 422
+                    detail: "DNS TXT record not found or incorrect"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  # Adoption Endpoint
+  /v1/adoptions:
+    post:
+      summary: Adopt artefacts by hash or manifest
+      description: |
+        Publisher acknowledges ownership/authorship of artefacts by providing
+        their content hashes or a manifest URL. This transitions artefacts from
+        'claimed' to 'adopted' or 'authoritative' provenance state.
+      operationId: adoptArtefacts
+      tags:
+        - Adoption
+      security:
+        - ApiKeyAuth: []
+        - OAuth2: [registry:adopt]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Adoption"
+            examples:
+              HashAdoption:
+                summary: Adopt by content hashes
+                value:
+                  artefact_hashes:
+                    - "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                    - "sha256:b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3"
+                  signature:
+                    signer: "did:web:example.com#key-1"
+                    sig: "base64url-encoded-signature"
+              ManifestAdoption:
+                summary: Adopt by manifest URL
+                value:
+                  manifest_url: "https://example.com/.well-known/spp/manifest.json"
+                  signature:
+                    signer: "did:web:example.com#key-1"
+                    sig: "base64url-encoded-signature"
+      responses:
+        '201':
+          description: Adoption successfully processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  adoption_id:
+                    type: string
+                    description: Unique identifier for this adoption
+                  adopted_artefacts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        hash:
+                          type: string
+                          pattern: "^sha256:[0-9a-f]{64}$"
+                        previous_state:
+                          type: string
+                          enum: [reconstructed, claimed, adopted]
+                        new_state:
+                          type: string
+                          enum: [adopted, authoritative]
+                      required:
+                        - hash
+                        - previous_state
+                        - new_state
+                  timestamp:
+                    type: string
+                    format: date-time
+                required:
+                  - adoption_id
+                  - adopted_artefacts
+                  - timestamp
+              examples:
+                SuccessfulAdoption:
+                  summary: Artefacts successfully adopted
+                  value:
+                    adoption_id: "adoption-456"
+                    adopted_artefacts:
+                      - hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                        previous_state: "claimed"
+                        new_state: "adopted"
+                    timestamp: "2024-01-20T16:00:00Z"
+        '400':
+          $ref: "#/components/responses/Problem"
+        '401':
+          $ref: "#/components/responses/Problem"
+        '403':
+          description: Not authorized to adopt these artefacts
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                NotAuthorized:
+                  summary: Adoption not authorized
+                  value:
+                    type: "https://spp.dev/problems/not-authorized"
+                    title: "Not Authorized"
+                    status: 403
+                    detail: "Publisher does not have verified claims for the namespace of these artefacts"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  # Federation/Harvest Endpoints (OAI-PMH style)
+  /v1/harvest/ListIdentifiers:
+    get:
+      summary: Harvest identifiers (cursored)
+      description: |
+        List identifiers of artefacts available for harvesting.
+        Implements OAI-PMH ListIdentifiers verb with cursor-based pagination.
+      operationId: harvestListIdentifiers
+      tags:
+        - Federation
+      parameters:
+        - name: from
+          in: query
+          description: Harvest records modified after this date
+          schema:
+            type: string
+            format: date-time
+        - name: until
+          in: query
+          description: Harvest records modified before this date
+          schema:
+            type: string
+            format: date-time
+        - name: cursor
+          in: query
+          description: Pagination cursor for continuation
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of identifiers to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+      responses:
+        '200':
+          description: List of identifiers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identifiers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/HarvestIdentifier"
+                  cursor:
+                    type: string
+                    description: Cursor for next page of results
+                  has_more:
+                    type: boolean
+                    description: Whether more results are available
+                required:
+                  - identifiers
+                  - has_more
+              examples:
+                IdentifierList:
+                  summary: List of identifiers for harvesting
+                  value:
+                    identifiers:
+                      - identifier: "article-123"
+                        datestamp: "2024-01-15T10:30:00Z"
+                        deleted: false
+                      - identifier: "article-456"
+                        datestamp: "2024-01-20T14:00:00Z"
+                        deleted: false
+                    cursor: "cursor-abc123"
+                    has_more: true
+        '400':
+          $ref: "#/components/responses/Problem"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  /v1/harvest/ListRecords:
+    get:
+      summary: Harvest records (cursored)
+      description: |
+        List complete artefact records available for harvesting.
+        Implements OAI-PMH ListRecords verb with cursor-based pagination.
+      operationId: harvestListRecords
+      tags:
+        - Federation
+      parameters:
+        - name: from
+          in: query
+          description: Harvest records modified after this date
+          schema:
+            type: string
+            format: date-time
+        - name: until
+          in: query
+          description: Harvest records modified before this date
+          schema:
+            type: string
+            format: date-time
+        - name: cursor
+          in: query
+          description: Pagination cursor for continuation
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of records to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of complete records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  records:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/HarvestRecord"
+                  cursor:
+                    type: string
+                    description: Cursor for next page of results
+                  has_more:
+                    type: boolean
+                    description: Whether more results are available
+                required:
+                  - records
+                  - has_more
+              examples:
+                RecordList:
+                  summary: List of records for harvesting
+                  value:
+                    records:
+                      - header:
+                          identifier: "article-123"
+                          datestamp: "2024-01-15T10:30:00Z"
+                          deleted: false
+                        metadata:
+                          id: "article-123"
+                          type: "article"
+                          title: "Understanding SPP"
+                          language: "en"
+                          authors:
+                            - name: "Jane Doe"
+                          published_at: "2024-01-15T10:30:00Z"
+                          topics: ["spp"]
+                          content:
+                            blocks: []
+                          links:
+                            canonical: "https://example.com/articles/understanding-spp"
+                          provenance:
+                            state: "claimed"
+                          version: "1.0"
+                    cursor: "cursor-def456"
+                    has_more: false
+        '400':
+          $ref: "#/components/responses/Problem"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  /v1/harvest/GetRecord:
+    get:
+      summary: Fetch a single record
+      description: |
+        Retrieve a single artefact record by identifier.
+        Implements OAI-PMH GetRecord verb.
+      operationId: harvestGetRecord
+      tags:
+        - Federation
+      parameters:
+        - name: identifier
+          in: query
+          required: true
+          description: Unique identifier of the record to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Single record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HarvestRecord"
+              examples:
+                SingleRecord:
+                  summary: Single harvested record
+                  value:
+                    header:
+                      identifier: "article-123"
+                      datestamp: "2024-01-15T10:30:00Z"
+                      deleted: false
+                    metadata:
+                      id: "article-123"
+                      type: "article"
+                      title: "Understanding SPP"
+                      language: "en"
+                      authors:
+                        - name: "Jane Doe"
+                      published_at: "2024-01-15T10:30:00Z"
+                      topics: ["spp"]
+                      content:
+                        blocks: []
+                      links:
+                        canonical: "https://example.com/articles/understanding-spp"
+                      provenance:
+                        state: "claimed"
+                      version: "1.0"
+        '404':
+          $ref: "#/components/responses/Problem"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  # Transparency Log Endpoints
+  /ct/sth:
+    get:
+      summary: Latest Signed Tree Head
+      description: |
+        Get the latest Signed Tree Head (STH) from the transparency log.
+        This provides the current state of the Merkle tree with cryptographic proof.
+      operationId: getSignedTreeHead
+      tags:
+        - Transparency
+      responses:
+        '200':
+          description: Latest Signed Tree Head
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransparencySTH"
+              examples:
+                LatestSTH:
+                  summary: Current Signed Tree Head
+                  value:
+                    tree_size: 1024
+                    root_hash: "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                    created_at: "2024-01-20T16:30:00Z"
+                    anchors: []
+                    signatures:
+                      - alg: "ed25519"
+                        kid: "registry-key-1"
+                        sig: "base64url-encoded-signature"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  /ct/proof:
+    get:
+      summary: Inclusion proof
+      description: |
+        Get an inclusion proof for a specific artefact in the transparency log.
+        Proves that an artefact with the given hash is included in the Merkle tree.
+      operationId: getInclusionProof
+      tags:
+        - Transparency
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Artefact hash to get proof for
+          schema:
+            type: string
+            pattern: "^sha256:[0-9a-f]{64}$"
+      responses:
+        '200':
+          description: Inclusion proof for the specified artefact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InclusionProof"
+              examples:
+                InclusionProof:
+                  summary: Merkle tree inclusion proof
+                  value:
+                    audit_path:
+                      - "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3"
+                      - "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4"
+                    tree_size: 1024
+                    leaf_index: 42
+        '400':
+          $ref: "#/components/responses/Problem"
+        '404':
+          description: Artefact not found in transparency log
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                NotInLog:
+                  summary: Artefact not in transparency log
+                  value:
+                    type: "https://spp.dev/problems/not-in-log"
+                    title: "Not In Log"
+                    status: 404
+                    detail: "The specified artefact hash is not present in the transparency log"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+  # Ownership Endpoints (Optional, feature-flagged)
+  /v1/ownership:
+    get:
+      summary: Ownership lookup
+      description: |
+        Look up ownership records for artefacts by hash.
+        This is an optional feature that may be feature-flagged.
+      operationId: lookupOwnership
+      tags:
+        - Ownership
+      parameters:
+        - name: hash
+          in: query
+          required: true
+          description: Artefact hash to look up ownership for
+          schema:
+            type: string
+            pattern: "^sha256:[0-9a-f]{64}$"
+      responses:
+        '200':
+          description: Ownership record for the artefact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ownership"
+              examples:
+                OwnershipRecord:
+                  summary: Ownership information
+                  value:
+                    ownership:
+                      id: "ownership-123"
+                      subject:
+                        artefact_hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                      claims:
+                        role: "copyright"
+                        grants: ["distribute", "modify"]
+                        territory: "worldwide"
+                      holders:
+                        - did: "did:web:example.com"
+                          share_bp: 10000
+                      issuers:
+                        - did: "did:web:registry.example.net"
+                      signatures:
+                        - alg: "ed25519"
+                          sig: "base64url-encoded-signature"
+                      created_at: "2024-01-20T10:00:00Z"
+        '404':
+          description: No ownership record found for this artefact
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                NoOwnership:
+                  summary: No ownership record
+                  value:
+                    type: "https://spp.dev/problems/no-ownership"
+                    title: "No Ownership Record"
+                    status: 404
+                    detail: "No ownership record exists for the specified artefact hash"
+        '501':
+          description: Ownership feature not implemented
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                NotImplemented:
+                  summary: Feature not enabled
+                  value:
+                    type: "https://spp.dev/problems/not-implemented"
+                    title: "Not Implemented"
+                    status: 501
+                    detail: "Ownership feature is not enabled on this registry"
+        '500':
+          $ref: "#/components/responses/Problem"
+    
+    post:
+      summary: Submit ownership object
+      description: |
+        Submit an ownership record for an artefact.
+        This is an optional feature that may be feature-flagged.
+      operationId: submitOwnership
+      tags:
+        - Ownership
+      security:
+        - ApiKeyAuth: []
+        - OAuth2: [registry:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Ownership"
+            examples:
+              OwnershipSubmission:
+                summary: Submit ownership record
+                value:
+                  ownership:
+                    subject:
+                      artefact_hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                    claims:
+                      role: "copyright"
+                      grants: ["distribute"]
+                      territory: "worldwide"
+                    holders:
+                      - did: "did:web:example.com"
+                        share_bp: 10000
+                    issuers:
+                      - did: "did:web:example.com"
+                    signatures:
+                      - alg: "ed25519"
+                        sig: "base64url-encoded-signature"
+                    created_at: "2024-01-20T10:00:00Z"
+      responses:
+        '201':
+          description: Ownership record successfully submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ownership_id:
+                    type: string
+                    description: Unique identifier for the ownership record
+                  status:
+                    type: string
+                    enum: [accepted, pending_verification]
+                  timestamp:
+                    type: string
+                    format: date-time
+                required:
+                  - ownership_id
+                  - status
+                  - timestamp
+              examples:
+                OwnershipAccepted:
+                  summary: Ownership record accepted
+                  value:
+                    ownership_id: "ownership-789"
+                    status: "accepted"
+                    timestamp: "2024-01-20T17:00:00Z"
+        '400':
+          $ref: "#/components/responses/Problem"
+        '401':
+          $ref: "#/components/responses/Problem"
+        '501':
+          description: Ownership feature not implemented
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                NotImplemented:
+                  summary: Feature not enabled
+                  value:
+                    type: "https://spp.dev/problems/not-implemented"
+                    title: "Not Implemented"
+                    status: 501
+                    detail: "Ownership feature is not enabled on this registry"
+        '500':
+          $ref: "#/components/responses/Problem"
+
+tags:
+  - name: Adoption
+    description: Publisher adoption of artefacts
+  - name: Claims
+    description: Namespace claim verification and management
+  - name: Discovery
+    description: Search and browse artefacts in the registry
+  - name: Federation
+    description: Inter-registry harvesting and federation
+  - name: Ingest
+    description: Submit new artefacts to the registry
+  - name: Ownership
+    description: Optional ownership record management
+  - name: Transparency
+    description: Transparency log and cryptographic proofs
