@@ -1,0 +1,25 @@
+{
+  "$id": "https://spp.dev/schemas/peer-descriptor.json",
+  "type": "object",
+  "required": ["peer_id", "version", "capabilities", "endpoints", "policy", "sig"],
+  "properties": {
+    "peer_id": { "type": "string" },
+    "version": { "type": "string" },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "crawl": { "type": "object", "properties": { "feeds_per_min": { "type": "integer" } } },
+        "enrich": { "type": "object", "properties": { "models": { "type": "array", "items": { "type": "string" } } } },
+        "store": { "type": "object", "properties": { "tiers": { "type": "array", "items": { "enum": ["warm", "cold"] } } } },
+        "index": { "type": "object" },
+        "gateway": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "endpoints": { "type": "object", "additionalProperties": { "type": "string", "format": "uri" } },
+    "policy": { "type": "object" },
+    "cost_hints": { "type": "object" },
+    "sig": { "type": "string" }
+  },
+  "additionalProperties": false
+}
