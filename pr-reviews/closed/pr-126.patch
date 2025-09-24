@@ -1,0 +1,516 @@
+From de0765910bfeaaf4ef66609ea34b9881fd8c2509 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:07:41 +0100
+Subject: [PATCH 1/8] Add Registry Peering specification document
+
+This document defines the registry-to-registry peering module within the Semantic Publishing Protocol (SPP), detailing its capabilities, handshake process, task offloading, usage records, artifact exchange, security measures, and transparency integration.
+---
+ specs/registry/peering.md | 152 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 152 insertions(+)
+ create mode 100644 specs/registry/peering.md
+
+diff --git a/specs/registry/peering.md b/specs/registry/peering.md
+new file mode 100644
+index 0000000..179c8c1
+--- /dev/null
++++ b/specs/registry/peering.md
+@@ -0,0 +1,152 @@
++# Semantic Publishing Protocol — Registry Peering (v0.2-draft)
++
++## Status
++- **Version:** 0.2-draft
++- **Stage:** Draft (subject to change)
++- **Normative:** Yes
++- **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
++
++---
++
++## 1. Introduction
++
++This module defines **registry-to-registry peering** within SPP.  
++Peering enables registries to:
++- exchange capabilities (crawl, enrich, store, index, gateway),
++- offload tasks to each other,
++- reconcile usage records,
++- and propagate transparency proofs.
++
++Harvesting (OAI-PMH style) remains the baseline for interoperability.  
++Peering is **optional** and complements federation.
++
++---
++
++## 2. Peer Descriptor
++
++Each registry MUST expose a signed **PeerDescriptor** object.  
++It declares identity, capabilities, endpoints, policies, and optional cost hints.
++
++- Descriptor MUST be served at `/.well-known/spp/registry.json`.
++- Descriptor MUST be signed with a detached JWS over canonical JSON.
++- Descriptor MUST include a `version` string and `peer_id` (DID or TLS-bound identifier).
++
++Schema: [`peer-descriptor.json`](../schemas/peer-descriptor.json).
++
++---
++
++## 3. Peering Handshake
++
++### 3.1 Endpoint
++- `POST /.well-known/spp/handshake`
++
++### 3.2 Request
++- Payload: signed `PeerDescriptor`.
++- MUST include `nonce`, `ts`, and `idempotency_key`.
++
++### 3.3 Response
++- Own signed `PeerDescriptor`.
++- A scoped `peer_token` (JWT or DPoP).
++- Optional `retry_after` header if capacity is limited.
++
++### 3.4 Validation
++- Registries MUST reject if:
++  - Signature invalid,
++  - Timestamp outside ±120s,
++  - Nonce previously seen.
++
++Transparency event: `PEER_HANDSHAKE`.
++
++---
++
++## 4. Task Offload
++
++### 4.1 Offers
++- `POST /api/peering/offers`  
++- Payload: `TaskOffer` (see [`task-offer.json`](../schemas/task-offer.json)).  
++- Task kinds: `crawl`, `enrich`, `store`.
++
++### 4.2 Agreements
++- `POST /api/peering/agreements/:id/accept`  
++- Payload: `TaskAgreement` (see [`task-agreement.json`](../schemas/task-agreement.json)).
++
++### 4.3 Results
++- `POST /api/tasks/:id/callback`  
++- Payload: `TaskResult` (see [`task-result.json`](../schemas/task-result.json)).  
++- MUST include model/container attestation for enrichments.  
++- MUST include hashes of inputs and outputs.  
++- MUST be logged in transparency log.
++
++### 4.4 Determinism
++- Tasks SHOULD include `depends_on` (minimal DAG).  
++- Results MUST include `replay_of` if re-running prior task.  
++
++Transparency events: `TASK_OFFERED`, `TASK_ACCEPTED`, `TASK_RESULTED`.
++
++---
++
++## 5. Usage Records
++
++- `GET /api/usage/records?since=<ts>`  
++- Payload: array of `UsageRecord` (see [`usage-record.json`](../schemas/usage-record.json)).  
++- MUST be signed.  
++- MUST include monotonic counters.  
++- Retention: minimum 90 days.
++
++Transparency event: `USAGE_RECORDED`.
++
++---
++
++## 6. Artifact Exchange
++
++- All artifacts MUST be content-addressed (`sha256:<digest>`).  
++- Push: `POST /api/push/artifacts` (header + bytes or `source_url`).  
++- Pull: `GET /api/artifacts/:cid` with Range support.  
++- Peers MAY redirect to storage tier.  
++- Fetchers MUST validate MIME and size, and reject unknown schemes.
++
++---
++
++## 7. Erasure
++
++- `DELETE /api/artifacts/:cid` MUST create a tombstone transparency event.  
++- Bytes SHOULD be erased where feasible.  
++- Tombstones MUST be immutable.
++
++---
++
++## 8. Security
++
++- All inter-peer requests MUST use HTTPS.  
++- All payloads MUST be signed with HTTP Signatures and detached JWS.  
++- Payloads MUST include `nonce`, `ts`, and `idempotency_key`.  
++- Registries MUST implement anti-replay caches.  
++- Registries MUST enforce per-peer quotas and return 429 + Retry-After.  
++- Registries MUST validate remote fetches to prevent SSRF.
++
++---
++
++## 9. Transparency Integration
++
++- Peering events MUST be logged:
++  - `PEER_HANDSHAKE`
++  - `TASK_OFFERED`
++  - `TASK_ACCEPTED`
++  - `TASK_RESULTED`
++  - `USAGE_RECORDED`
++  - `ARTIFACT_ERASED`
++
++- Logs MUST be append-only Merkle trees.  
++- Inclusion proofs SHOULD be provided on request.  
++
++---
++
++## 10. Interoperability
++
++- Peering is OPTIONAL.  
++- Harvest remains baseline (SPP-Federation).  
++- PeerDescriptors MAY include `retrieval_hints` (e.g., `ipfs_cid`).  
++- Identity MAY be DID or TLS pin.  
++- ActivityPub / IPFS integration MAY be provided in informative appendices.
++
++---
+
+From 85e6adb12da6ddd5c0c6adab34b4b52a9e9d14b8 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:10:42 +0100
+Subject: [PATCH 2/8] Add peer descriptor schema in JSON format
+
+---
+ schemas/peer-descriptor.json | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 schemas/peer-descriptor.json
+
+diff --git a/schemas/peer-descriptor.json b/schemas/peer-descriptor.json
+new file mode 100644
+index 0000000..3f58e2a
+--- /dev/null
++++ b/schemas/peer-descriptor.json
+@@ -0,0 +1,25 @@
++{
++  "$id": "https://spp.dev/schemas/peer-descriptor.json",
++  "type": "object",
++  "required": ["peer_id", "version", "capabilities", "endpoints", "policy", "sig"],
++  "properties": {
++    "peer_id": { "type": "string" },
++    "version": { "type": "string" },
++    "capabilities": {
++      "type": "object",
++      "properties": {
++        "crawl": { "type": "object", "properties": { "feeds_per_min": { "type": "integer" } } },
++        "enrich": { "type": "object", "properties": { "models": { "type": "array", "items": { "type": "string" } } } },
++        "store": { "type": "object", "properties": { "tiers": { "type": "array", "items": { "enum": ["warm", "cold"] } } } },
++        "index": { "type": "object" },
++        "gateway": { "type": "object" }
++      },
++      "additionalProperties": false
++    },
++    "endpoints": { "type": "object", "additionalProperties": { "type": "string", "format": "uri" } },
++    "policy": { "type": "object" },
++    "cost_hints": { "type": "object" },
++    "sig": { "type": "string" }
++  },
++  "additionalProperties": false
++}
+
+From db23f8f207eaf595cc111bc51e92a53069ce1457 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:11:22 +0100
+Subject: [PATCH 3/8] Add JSON schema for task offer
+
+---
+ schemas/task-offer.json | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 schemas/task-offer.json
+
+diff --git a/schemas/task-offer.json b/schemas/task-offer.json
+new file mode 100644
+index 0000000..4094582
+--- /dev/null
++++ b/schemas/task-offer.json
+@@ -0,0 +1,18 @@
++{
++  "$id": "https://spp.dev/schemas/task-offer.json",
++  "type": "object",
++  "required": ["id", "kind", "inputs", "outputs", "callback_url", "ts", "sig"],
++  "properties": {
++    "id": { "type": "string" },
++    "kind": { "enum": ["enrich", "crawl", "store"] },
++    "inputs": { "type": "object" },
++    "outputs": { "type": "object", "properties": { "schema": { "type": "string" } } },
++    "limits": { "type": "object" },
++    "depends_on": { "type": "array", "items": { "type": "string" } },
++    "callback_url": { "type": "string", "format": "uri" },
++    "ts": { "type": "string", "format": "date-time" },
++    "idempotency_key": { "type": "string" },
++    "sig": { "type": "string" }
++  },
++  "additionalProperties": false
++}
+
+From a11dc28b22fdc20a07050e75d186133dacc4aff3 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:12:07 +0100
+Subject: [PATCH 4/8] Add task agreement schema definition
+
+---
+ schemas/task-agreement.md | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 schemas/task-agreement.md
+
+diff --git a/schemas/task-agreement.md b/schemas/task-agreement.md
+new file mode 100644
+index 0000000..9698c4d
+--- /dev/null
++++ b/schemas/task-agreement.md
+@@ -0,0 +1,14 @@
++{
++  "$id": "https://spp.dev/schemas/task-agreement.json",
++  "type": "object",
++  "required": ["offer_id", "accepted", "limits", "ts", "sig"],
++  "properties": {
++    "offer_id": { "type": "string" },
++    "accepted": { "type": "boolean" },
++    "limits": { "type": "object" },
++    "retry_after": { "type": "integer" },
++    "ts": { "type": "string", "format": "date-time" },
++    "sig": { "type": "string" }
++  },
++  "additionalProperties": false
++}
+
+From ac36f73c485294a8a62abdf0a7d9ac444893d3d0 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:16:35 +0100
+Subject: [PATCH 5/8] Rename task-agreement.md to task-agreement.json
+
+---
+ schemas/{task-agreement.md => task-agreement.json} | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename schemas/{task-agreement.md => task-agreement.json} (100%)
+
+diff --git a/schemas/task-agreement.md b/schemas/task-agreement.json
+similarity index 100%
+rename from schemas/task-agreement.md
+rename to schemas/task-agreement.json
+
+From 27edd8b3595dcbec031b3551c84a2e73e50708d1 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:17:30 +0100
+Subject: [PATCH 6/8] Add JSON schema for task result validation
+
+---
+ schemas/task-result.json | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 schemas/task-result.json
+
+diff --git a/schemas/task-result.json b/schemas/task-result.json
+new file mode 100644
+index 0000000..d637330
+--- /dev/null
++++ b/schemas/task-result.json
+@@ -0,0 +1,35 @@
++{
++  "$id": "https://spp.dev/schemas/task-result.json",
++  "type": "object",
++  "required": ["offer_id", "items", "ts", "sig"],
++  "properties": {
++    "offer_id": { "type": "string" },
++    "items": {
++      "type": "array",
++      "items": {
++        "type": "object",
++        "required": ["cid", "delta", "provenance"],
++        "properties": {
++          "cid": { "type": "string" },
++          "delta": { "type": "object" },
++          "provenance": {
++            "type": "object",
++            "required": ["model", "model_version", "container_digest", "inHash", "outHash", "ts"],
++            "properties": {
++              "model": { "type": "string" },
++              "model_version": { "type": "string" },
++              "container_digest": { "type": "string" },
++              "inHash": { "type": "string" },
++              "outHash": { "type": "string" },
++              "ts": { "type": "string", "format": "date-time" }
++            }
++          }
++        }
++      }
++    },
++    "replay_of": { "type": "string" },
++    "ts": { "type": "string", "format": "date-time" },
++    "sig": { "type": "string" }
++  },
++  "additionalProperties": false
++}
+
+From f96bce89f84b98b261bfe596a0eee346b7ebde89 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:18:09 +0100
+Subject: [PATCH 7/8] Add usage record schema definition
+
+---
+ schemas/usage-record.json | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 schemas/usage-record.json
+
+diff --git a/schemas/usage-record.json b/schemas/usage-record.json
+new file mode 100644
+index 0000000..2390d84
+--- /dev/null
++++ b/schemas/usage-record.json
+@@ -0,0 +1,16 @@
++{
++  "$id": "https://spp.dev/schemas/usage-record.json",
++  "type": "object",
++  "required": ["peer_id", "counter", "bytes", "tasks", "qps", "ts", "sig"],
++  "properties": {
++    "peer_id": { "type": "string" },
++    "counter": { "type": "integer" },
++    "bytes": { "type": "integer" },
++    "tasks": { "type": "integer" },
++    "qps": { "type": "integer" },
++    "cost": { "type": "number" },
++    "ts": { "type": "string", "format": "date-time" },
++    "sig": { "type": "string" }
++  },
++  "additionalProperties": false
++}
+
+From de7f0f80dad9078481bcc3ceedb91cedaa92554a Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sun, 21 Sep 2025 08:42:46 +0100
+Subject: [PATCH 8/8] Revise peering.md with new specifications and rules
+
+Updated the peering specification to include new sections on canonical JSON, signing, identity, error models, headers, content addressing, usage records pagination, task DAG, remote fetch rules, erasure semantics, transparency log details, and interoperability.
+---
+ specs/registry/peering.md | 103 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 101 insertions(+), 2 deletions(-)
+
+diff --git a/specs/registry/peering.md b/specs/registry/peering.md
+index 179c8c1..1c254aa 100644
+--- a/specs/registry/peering.md
++++ b/specs/registry/peering.md
+@@ -6,6 +6,8 @@
+ - **Normative:** Yes
+ - **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
+ 
++This module is additive to SPP v0.1 federation and does not break existing federation implementations (semver: MINOR).
++
+ ---
+ 
+ ## 1. Introduction
+@@ -126,7 +128,104 @@ Transparency event: `USAGE_RECORDED`.
+ 
+ ---
+ 
+-## 9. Transparency Integration
++## 9. Canonical JSON & Signing
++
++**Canonicalisation.** All signed JSON payloads MUST use RFC 8785 JSON Canonicalization Scheme (JCS).
++
++**HTTP Signatures.** Peers MUST sign requests using HTTP Signatures with `ed25519`. The covered components MUST include: `(request-target)`, `date`, `digest`, `x-idempotency-key`, `x-nonce`. Clocks MAY drift by ±120s; requests outside this window MUST be rejected.
++
++**Detached JWS.** JSON bodies that are persisted (PeerDescriptor, TaskOffer, TaskAgreement, TaskResult, UsageRecord) MUST carry a detached JWS over their JCS form.
++
++---
++
++## 10. Identity & Keys
++
++`peer_id` MUST be either:
++- `did:web:<host>...` (RECOMMENDED), or
++- `tls-pubkey:sha256:<lowercase-hex>` (SHA-256 of the peer’s TLS leaf public key).
++
++Peers MUST expose a rotating JWKS at `/.well-known/spp/jwks.json`. Old keys MUST remain valid for ≥7 days after rotation.
++
++---
++
++## 11. Error Model
++
++| HTTP | Code                        | Meaning                          | Client Action             |
++|-----:|-----------------------------|----------------------------------|---------------------------|
++| 400  | SPP_SCHEMA_INVALID          | Fails JSON Schema validation     | Fix payload               |
++| 401  | SPP_AUTH_REQUIRED           | Missing/invalid signature/token  | Re-auth/sign              |
++| 403  | SPP_POLICY_DENY             | Violates policy/caps             | Do not retry              |
++| 409  | SPP_IDEMPOTENT_REPLAY       | Reused idempotency key           | Change key                |
++| 413  | SPP_OBJECT_TOO_LARGE        | Too big                          | Reduce size               |
++| 415  | SPP_UNSUPPORTED_MIME        | MIME rejected                    | Change MIME               |
++| 429  | SPP_RATE_LIMIT              | Quota exceeded                   | Honor `Retry-After`       |
++| 503  | SPP_BACKPRESSURE            | Temporary capacity issue         | Honor `Retry-After`       |
++
++---
++
++## 12. Headers
++
++Clients MUST send:
++- `Date`
++- `Digest: SHA-256=<base64>` for non-empty bodies
++- `X-Idempotency-Key` (UUID v4)
++- `X-Nonce` (128-bit random, single-use within 10 min)
++
++Servers MUST return `Retry-After` on 429/503.
++
++---
++
++## 13. Content Addressing
++
++Artifact identifiers MUST be `sha256:<64-lowercase-hex>`. The digest is over the **raw bytes** of the artifact.  
++For signed JSON payloads (offers/results/usage), hashes are over the **JCS-canonical JSON**.
++
++---
++
++## 14. Usage Records Pagination
++
++`GET /api/usage/records?since=<rfc3339>&limit=<1..1000>`  
++Response MUST include `next_since` if more records exist. `counter` MUST be strictly monotonic per `(issuer, peer_id)`.
++
++---
++
++## 15. Task DAG & Determinism
++
++`depends_on` expresses a partial order; providers MUST execute in topological order.  
++On failure, default behavior is **fail-fast** (subsequent nodes not executed).  
++`replay_of` MUST reference a prior `TaskResult.offer_id` when rerunning with identical inputs/params.
++
++---
++
++## 16. Remote Fetch Rules (SSRF
++
++When `source_url` is provided, fetchers MUST:
++- allow only `https`,
++- enforce `max_size_mb` policy (default 512 MB),
++- follow 0 redirects,
++- resolve DNS once and pin IP for the connection,
++- time out connects in ≤5s and total transfer in ≤300s,
++- apply MIME allowlist before storing.
++
++---
++
++## 17. Erasure Semantics
++
++`DELETE /api/artifacts/:cid` MUST:
++- write an immutable tombstone transparency entry `{ event: "ARTIFACT_ERASED", cid, reason?, ts }`,
++- attempt byte erasure on all storage peers where `erase_supported=true`,
++- return `{ status: "tombstoned", tombstone_id, erase_attempted: true|false }`.
++
++---
++
++## 18. Transparency Log Details
++
++Transparency logs MUST be Merkle-tree based. Servers MUST publish Signed Tree Heads (STH) with: `size`, `root_hash`, `timestamp`, `signature`.  
++On request, servers SHOULD provide inclusion proofs for entries and MAY batch proofs (one proof per ≤100 entries).
++
++---
++
++## 19. Transparency Integration
+ 
+ - Peering events MUST be logged:
+   - `PEER_HANDSHAKE`
+@@ -141,7 +240,7 @@ Transparency event: `USAGE_RECORDED`.
+ 
+ ---
+ 
+-## 10. Interoperability
++## 20. Interoperability
+ 
+ - Peering is OPTIONAL.  
+ - Harvest remains baseline (SPP-Federation).  
