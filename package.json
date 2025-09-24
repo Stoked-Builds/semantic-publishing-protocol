@@ -1,14 +1,25 @@
 {
-  "name": "semantic-publishing-protocol",
+  "name": "dope-drop-protocol",
   "version": "1.0.0",
   "description": "Semantic Publishing Protocol CLI tools and validation",
   "type": "module",
   "main": "index.js",
   "bin": {
+    "dope-drop": "./bin/dope-drop.js",
     "spp-validate": "./bin/spp-validate.js",
     "spp-conformance": "./bin/spp-conformance.js",
     "dope-drop": "./bin/dope-drop.js"
   },
+  "files": [
+    "schemas/",
+    "scripts/validate.js",
+    "bin/dope-drop.js",
+    "bin/spp-validate.js",
+    "bin/spp-conformance.js",
+    "lib/",
+    "README.md",
+    "LICENSE.md"
+  ],
   "scripts": {
     "test": "node --test && node bin/spp-conformance-smoke.js",
     "test:unit": "node --test",
@@ -28,12 +39,12 @@
     "commander": "^11.0.0",
     "glob": "^11.0.3",
     "gray-matter": "^4.0.3",
-    "js-yaml": "^4.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
+    "js-yaml": "^4.1.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
   },
   "engines": {
     "node": ">=18.0.0"

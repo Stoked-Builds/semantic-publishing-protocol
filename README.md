@@ -5,7 +5,7 @@
 
 ---
 
-> [🚀 Get Started](docs/QUICKSTART.md) — Build your first semantic artefact  
+> [🚀 Get Started](docs/QUICKSTART.md) — Build your first semantic artifact  
 > [⚡ Read the Manifesto](MANIFESTO.md) — Why we're building this
 
 ---
@@ -22,7 +22,7 @@ It lets content be discovered, reconstructed, trusted, and *understood* — by b
 
 ## 🧠 What It Actually Does
 
-SPP is a decentralised, AI-native content protocol that turns passive web pages into active, intelligent, and self-defending artefacts. It makes your content:
+SPP is a decentralised, AI-native content protocol that turns passive web pages into active, intelligent, and self-defending artifacts. It makes your content:
 
 - 🧠 **Machine-readable** — ready to be reconstructed and reused by any AI, without guessing
 - 🔐 **Owner-verifiable** — no more scraping, no more theft; attribution is built in
@@ -136,6 +136,64 @@ All SPP metadata includes a `protocolVersion` field that indicates which version
 - Content published with protocol version `1.x.x` will remain compatible within the `1.x` series
 - Agents and validators should gracefully handle minor version differences
 - Major version changes may require content migration or updates
+
+---
+
+## 📦 Installation
+
+Install the Dope Drop Protocol CLI globally to get started:
+
+```bash
+npm install -g dope-drop-protocol
+```
+
+This will give you access to the `dope-drop` command from anywhere on your system.
+
+### Quick Start
+
+1. **Initialize a new semantic project:**
+   ```bash
+   dope-drop init
+   ```
+   This creates a `semantic.json` template file with all required fields.
+
+2. **Edit your content:**
+   Open `semantic.json` and customize it with your content details, author information, and content body.
+
+3. **Validate your semantic file:**
+   ```bash
+   dope-drop validate semantic.json
+   ```
+   Or validate all semantic files in the current directory:
+   ```bash
+   dope-drop validate
+   ```
+
+### Commands
+
+- **`dope-drop init [options]`** - Initialize a new semantic publishing project
+  - `-o, --output <file>` - Output file name (default: semantic.json)
+
+- **`dope-drop validate [files...]`** - Validate semantic publishing protocol files
+  - `-s, --schema-dir <dir>` - Custom schema directory path
+  - `-v, --verbose` - Verbose output with detailed validation reports
+  - `--extensions-only` - Only check extensions, skip schema validation
+
+### Examples
+
+```bash
+# Create a new semantic content file
+dope-drop init -o my-article.json
+
+# Validate specific files
+dope-drop validate article1.json article2.json
+
+# Validate with verbose output
+dope-drop validate semantic.json --verbose
+
+# Validate all common semantic files in current directory
+dope-drop validate
+```
 
 ---
 
