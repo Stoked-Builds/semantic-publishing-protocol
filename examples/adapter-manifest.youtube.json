@@ -1,0 +1,23 @@
+{
+  "id": "youtube.core",
+  "version": "1.0.0",
+  "sdk": "0.4",
+  "displayName": "YouTube Adapter",
+  "networkDomains": ["www.youtube.com", "youtube.googleapis.com"],
+  "needsSecrets": ["YOUTUBE_API_KEY"],
+  "permissions": {
+    "fs": "none",
+    "net": { "dns": "system" },
+    "time": true
+  },
+  "capabilities": {
+    "modes": ["poll"],
+    "media": ["video"],
+    "sources": ["channel", "playlist", "user"],
+    "rateHint": { "rpm": 60, "burst": 10 }
+  },
+  "image": "registry.local/spp-adapters/youtube:1.0.0",
+  "cpuLimit": 1,
+  "memoryLimitMB": 512,
+  "timeoutMs": 30000
+}
