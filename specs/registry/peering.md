@@ -109,6 +109,31 @@ Transparency event: `USAGE_RECORDED`.
 
 ---
 
+## 6a. Artifact Corroboration (v0.4)
+
+Registries MUST implement a corroboration endpoint to verify artifact hashes observed by independent peers.
+
+### Endpoint
+- `GET /api/peer/lookup?artifact_hash=<sha256>`
+
+### Response
+```json
+{
+  "artifact_hash": "sha256:...",
+  "registry_id": "example.org",
+  "observed_at": "2025-09-27T10:00:00Z",
+  "sig": "base64..."
+}
+```
+
+### Rules
+- Peers with trust score ≥70 MAY accept artifacts without corroboration.
+- Peers with trust score 30–70 MUST require corroboration from ≥2 distinct trusted registries.
+- Peers with trust score <30 MUST quarantine or reject artifacts.
+- Registries SHOULD log corroboration lookups and responses for audit.
+
+---
+
 ## 7. Erasure
 
 - `DELETE /api/artifacts/:cid` MUST create a tombstone transparency event.  
@@ -197,7 +222,7 @@ On failure, default behavior is **fail-fast** (subsequent nodes not executed).
 
 ---
 
-## 16. Remote Fetch Rules (SSRF
+## 16. Remote Fetch Rules (SSRF)
 
 When `source_url` is provided, fetchers MUST:
 - allow only `https`,

@@ -2,36 +2,31 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/common/signature.json",
   "title": "Digital Signature",
-  "description": "Reusable schema for representing a digital signature in SPS artefacts",
-  "$comment": "vNext: add support for compact JWS strings, multiple signature suites (Ed25519, Secp256k1, Secp256r1), and linked data proofs for verifiable credentials.",
+  "description": "Reusable schema for digital signatures in SPP artifacts",
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "alg": {
+    "signer": {
       "type": "string",
-      "description": "Signing algorithm identifier (JOSE/JWA or suite-specific)",
+      "description": "Registry domain (registry_id) or key identifier",
       "minLength": 1
     },
-    "kid": {
+    "key_id": {
       "type": "string",
-      "description": "Key identifier (can be a DID URL or key fingerprint)",
-      "minLength": 1
+      "description": "Identifier for the public key (DNS TXT name or .well-known path)"
     },
     "sig": {
       "type": "string",
-      "description": "Base64url-encoded signature value",
+      "description": "Base64url-encoded signature over JCS payload {content_hash, registry_id, collected_at}",
       "pattern": "^[A-Za-z0-9_-]+$",
-      "minLength": 16
+      "minLength": 16,
+      "maxLength": 1024
     },
-    "signer": {
-      "$ref": "https://spp.dev/schemas/common/did.json",
-      "description": "DID of the signer"
-    },
-    "created_at": {
+    "signedAt": {
       "type": "string",
       "format": "date-time",
       "description": "When the signature was created"
     }
   },
-  "required": ["alg", "sig"]
+  "required": ["signer","sig"]
 }

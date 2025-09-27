@@ -18,7 +18,7 @@ SPP supports both centralised and decentralised discovery mechanisms — priorit
 
 ### 1. `.well-known/spp.json` (recommended for traditional websites)
 
-Each SPS-compliant website **MAY** expose:
+Each SPP-compliant website **MAY** expose:
 
 ```
 https://example.com/.well-known/spp.json
@@ -26,7 +26,7 @@ https://example.com/.well-known/spp.json
 
 This file describes:
 - Registry metadata
-- Available SPS documents
+- Available SPP documents
 - Content types and delivery methods
 - Publisher identity (linked to SSOT or DID)
 
@@ -88,7 +88,7 @@ These can be searched or shared (with consent) to **bootstrap trust and speed up
 
 ## 📜 Content Type Metadata
 
-Every published SPS content document **SHOULD** expose a minimal metadata block:
+Every published SPP content document **SHOULD** expose a minimal metadata block:
 
 ```json
 {
@@ -112,6 +112,15 @@ This allows agents to:
 - Publishers **SHOULD** sign `.well-known/spp.json` using their SSOT key
 - Registry updates **MUST** not leak private identity info
 - Agents may verify registry provenance via DIDs or trust anchors
+
+---
+
+## 🔐 Peering Security (v0.4)
+
+- **Inbound validation (MUST):** Enforce schema + provenance + signature checks on all artifacts received via peering.
+- **Trust scoring:** Apply probation for new peers, asymmetric decay, and daily caps; weight endorsements from long-trusted registries.
+- **Corroboration:** For intermediate-trust peers, require corroboration (≥2 trusted registries) via `/peer/lookup?artifact_hash=...` before re-sharing.
+- **Identity:** `registry_id` is a domain with DNS/.well-known proof of key.
 
 ---
 
