@@ -33,7 +33,7 @@ It declares identity, capabilities, endpoints, policies, and optional cost hints
 - Descriptor MUST be signed with a detached JWS over canonical JSON.
 - Descriptor MUST include a `version` string and `peer_id` (DID or TLS-bound identifier).
 
-Schema: [`peer-descriptor.json`](../schemas/peer-descriptor.json).
+Schema: [`peer-descriptor.json`](../../schemas/peer-descriptor.json).
 
 ---
 
@@ -126,6 +126,11 @@ Registries MUST implement a corroboration endpoint to verify artifact hashes obs
 }
 ```
 
+#### Errors
+- `404 SPP_ARTIFACT_UNKNOWN` — peer has no record of the artifact hash.
+- `409 SPP_HASH_MISMATCH` — peer has a conflicting record for this artifact (hash differs from its known record).
+- `429 SPP_RATE_LIMIT` — caller exceeded lookup rate limits; respect `Retry-After`.
+
 ### Rules
 - Peers with trust score ≥70 MAY accept artifacts without corroboration.
 - Peers with trust score 30–70 MUST require corroboration from ≥2 distinct trusted registries.
@@ -197,6 +202,7 @@ Clients MUST send:
 - `X-Nonce` (128-bit random, single-use within 10 min)
 
 Servers MUST return `Retry-After` on 429/503.
+Servers MAY also include `X-RateLimit-Remaining` and related headers for client backoff heuristics.
 
 ---
 
