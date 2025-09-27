@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/semantic.json",
-  "title": "SPP Artefact (MVSL)",
+  "title": "SPP Artifact (MVSL)",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "type", "title", "language", "content", "links", "provenance", "version", "signatures"],
@@ -70,7 +70,7 @@
     "provenance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "source_url", "content_hash", "registry_id", "adapter_id", "collected_at"],
+      "required": ["mode", "content_hash", "registry_id", "adapter_id", "collected_at"],
       "properties": {
         "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
         "publisher_did": { "type": "string", "pattern": "^did:[a-z0-9]+:.*$" },
@@ -84,7 +84,14 @@
         "collected_at": { "type": "string", "format": "date-time" },
         "registry_id": { "type": "string", "format": "hostname" },
         "adapter_id": { "type": "string", "minLength": 1 }
-      }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "authoritative" } }, "required": ["mode"] },
+          "then": {},
+          "else": { "required": ["source_url"] }
+        }
+      ]
     },
     "signatures": {
       "type": "array",
@@ -94,13 +101,28 @@
         "additionalProperties": false,
         "required": ["signer", "sig"],
         "properties": {
-          "signer": { "type": "string", "minLength": 1 },
-          "key_id": { "type": "string" },
+          "signer": { "type": "string", "minLength": 1, "description": "Registry domain (registry_id) or key identifier" },
+          "key_id": { "type": "string", "description": "Identifier for the public key (e.g., DNS TXT name or .well-known path)" },
           "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "minLength": 16, "maxLength": 1024 },
           "signedAt": { "type": "string", "format": "date-time" }
         }
       },
       "description": "One or more signatures; the first MUST be the origin registry"
+    },
+    "endorsements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["artifact_hash", "endorser_id", "observed_at", "sig"],
+        "properties": {
+          "artifact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "endorser_id": { "type": "string", "minLength": 1, "format": "hostname", "description": "Endorser registry domain" },
+          "observed_at": { "type": "string", "format": "date-time" },
+          "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "minLength": 16, "maxLength": 1024 }
+        }
+      },
+      "description": "Inline endorsements; optional in v0.4"
     },
     "version": { "type": "integer", "minimum": 1 },
     "extensions": { "type": "object", "description": "Vendor/experimental fields keyed by namespace" }

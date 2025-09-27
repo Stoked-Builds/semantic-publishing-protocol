@@ -3,6 +3,7 @@
 This document defines mandatory guardrails for accepting artifacts from other registries.
 
 ## 1) Inbound Validation (MUST)
+- Validate against the SPP Artifact schema.
 - Validate `provenance`: `registry_id` (domain), `adapter_id`, `collected_at`, `content_hash` (`sha256:...`), and at least one valid signature.
 - Signature payload (JCS): `{content_hash, registry_id, collected_at}`. Algorithm: Ed25519 (recommended).
 - Reject on any failure; do not store or re-share.

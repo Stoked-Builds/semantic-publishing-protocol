@@ -1,7 +1,7 @@
 # Semantic Publishing Protocol — Registry Peering (v0.4)
 
 ## Status
-- **Version:** 0.2-draft
+- **Version:** 0.4-draft
 - **Stage:** Draft (subject to change)
 - **Normative:** Yes
 - **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
@@ -264,6 +264,7 @@ On request, servers SHOULD provide inclusion proofs for entries and MAY batch pr
   - `TASK_ACCEPTED`
   - `TASK_RESULTED`
   - `USAGE_RECORDED`
+  - `PEER_CORROBORATION`
   - `ARTIFACT_ERASED`
 
 - Logs MUST be append-only Merkle trees.  

@@ -6,6 +6,11 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "alg": {
+      "type": "string",
+      "description": "Signing algorithm (see docs/security/signing.md)",
+      "enum": ["ed25519", "ES256"]
+    },
     "signer": {
       "type": "string",
       "description": "Registry domain (registry_id) or key identifier",
@@ -17,7 +22,7 @@
     },
     "sig": {
       "type": "string",
-      "description": "Base64url-encoded signature over JCS payload {content_hash, registry_id, collected_at}",
+      "description": "Base64url-encoded signature over JCS payload of {content_hash, registry_id, collected_at}",
       "pattern": "^[A-Za-z0-9_-]+$",
       "minLength": 16,
       "maxLength": 1024
@@ -28,5 +33,14 @@
       "description": "When the signature was created"
     }
   },
-  "required": ["signer","sig"]
+  "required": ["signer","sig"],
+  "examples": [
+    {
+      "signer": "registry.example.org",
+      "key_id": "ed25519-2025-09",
+      "alg": "ed25519",
+      "sig": "YWFhYmJiY2Nj...",
+      "signedAt": "2025-09-27T12:35:00Z"
+    }
+  ]
 }

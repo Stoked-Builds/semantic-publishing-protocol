@@ -37,3 +37,5 @@ alg = "ed25519"
 ```
 
 Registry verifiers MUST reject signatures over non-canonicalised payloads.
+
+**Schema reference:** see [`schemas/common/signature.json`](../../schemas/common/signature.json) for field constraints.

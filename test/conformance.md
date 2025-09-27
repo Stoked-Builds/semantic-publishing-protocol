@@ -2,8 +2,7 @@
 
 This document defines the minimum conformance requirements for a registry implementing SPP v0.4.
 
-## Artifact Validation
-- MUST validate artifacts against `schemas/extensions/registry/semantic.json`.
+- MUST validate artifacts against `schemas/semantic.json`.
 - MUST verify `signatures[]` using JCS/Ed25519; first signature MUST be the origin registry.
 - MUST enforce required `provenance.*` fields.
 
