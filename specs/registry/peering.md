@@ -1,4 +1,4 @@
-# Semantic Publishing Protocol — Registry Peering (v0.2-draft)
+# Semantic Publishing Protocol — Registry Peering (v0.4)
 
 ## Status
 - **Version:** 0.2-draft
@@ -6,7 +6,7 @@
 - **Normative:** Yes
 - **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
 
-This module is additive to SPP v0.1 federation and does not break existing federation implementations (semver: MINOR).
+This module is additive to SPP v0.3 federation and does not break existing federation implementations (semver: MINOR).
 
 ---
 
@@ -65,16 +65,16 @@ Transparency event: `PEER_HANDSHAKE`.
 
 ### 4.1 Offers
 - `POST /api/peering/offers`  
-- Payload: `TaskOffer` (see [`task-offer.json`](../schemas/task-offer.json)).  
+- Payload: `TaskOffer` (see [`task-offer.json`](../../schemas/task-offer.json)).  
 - Task kinds: `crawl`, `enrich`, `store`.
 
 ### 4.2 Agreements
 - `POST /api/peering/agreements/:id/accept`  
-- Payload: `TaskAgreement` (see [`task-agreement.json`](../schemas/task-agreement.json)).
+- Payload: `TaskAgreement` (see [`task-agreement.json`](../../schemas/task-agreement.json)).
 
 ### 4.3 Results
 - `POST /api/tasks/:id/callback`  
-- Payload: `TaskResult` (see [`task-result.json`](../schemas/task-result.json)).  
+- Payload: `TaskResult` (see [`task-result.json`](../../schemas/task-result.json)).  
 - MUST include model/container attestation for enrichments.  
 - MUST include hashes of inputs and outputs.  
 - MUST be logged in transparency log.
@@ -90,7 +90,7 @@ Transparency events: `TASK_OFFERED`, `TASK_ACCEPTED`, `TASK_RESULTED`.
 ## 5. Usage Records
 
 - `GET /api/usage/records?since=<ts>`  
-- Payload: array of `UsageRecord` (see [`usage-record.json`](../schemas/usage-record.json)).  
+- Payload: array of `UsageRecord` (see [`usage-record.json`](../../schemas/usage-record.json)).  
 - MUST be signed.  
 - MUST include monotonic counters.  
 - Retention: minimum 90 days.
@@ -109,7 +109,7 @@ Transparency event: `USAGE_RECORDED`.
 
 ---
 
-## 6a. Artifact Corroboration (v0.4)
+## 6a. Artifact Corroboration
 
 Registries MUST implement a corroboration endpoint to verify artifact hashes observed by independent peers.
 

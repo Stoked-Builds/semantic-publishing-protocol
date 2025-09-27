@@ -99,12 +99,14 @@ AI Agent Guide: [agent.md](docs/agent.md)
 
 ---
 
-## 🚀 Version: `v0.2.2`
+## 🚀 Version: `v0.4.0`
 
 - JSON Schemas
 - Consent & trust models
 - Agent reconstruction logic
 - End-to-end publishing flows
+
+**What’s new:** See [v0.4.0 Release Notes](docs/releases/v0.4.0.md) · [Migration Guide](docs/releases/v0.4.0-migration.md)
 
 Full changelog: [CHANGELOG.md](docs/changelog.md)
 
@@ -120,7 +122,7 @@ All SPP metadata includes a `protocolVersion` field that indicates which version
 
 ```json
 {
-  "protocolVersion": "1.0.0",
+  "protocolVersion": "1",
   "id": "example-content",
   "title": "Example Content"
 }

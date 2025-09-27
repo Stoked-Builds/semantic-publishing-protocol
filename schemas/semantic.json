@@ -4,7 +4,7 @@
   "title": "SPP Artefact (MVSL)",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "type", "title", "language", "content", "links", "provenance", "version"],
+  "required": ["id", "type", "title", "language", "content", "links", "provenance", "version", "signatures"],
   "properties": {
     "id": { "type": "string", "minLength": 1 },
     "type": { "type": "string", "minLength": 1 },
@@ -70,28 +70,37 @@
     "provenance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "source_url", "content_hash"],
+      "required": ["mode", "source_url", "content_hash", "registry_id", "adapter_id", "collected_at"],
       "properties": {
         "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
-        "publisher_did": { "type": "string" },
+        "publisher_did": { "type": "string", "pattern": "^did:[a-z0-9]+:.*$" },
         "adoption": { "type": "object" },
         "source_url": { "type": "string", "format": "uri" },
         "capture_method": { "type": "string" },
         "captured_at": { "type": "string", "format": "date-time" },
         "reconstruction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
         "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-        "snapshot_uri": { "type": "string" }
+        "snapshot_uri": { "type": "string", "format": "uri" },
+        "collected_at": { "type": "string", "format": "date-time" },
+        "registry_id": { "type": "string", "format": "hostname" },
+        "adapter_id": { "type": "string", "minLength": 1 }
       }
     },
-    "signature": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["signer", "sig"],
-      "properties": {
-        "signer": { "type": "string", "minLength": 1 },
-        "sig": { "type": "string", "minLength": 1 },
-        "signedAt": { "type": "string", "format": "date-time" }
-      }
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signer", "sig"],
+        "properties": {
+          "signer": { "type": "string", "minLength": 1 },
+          "key_id": { "type": "string" },
+          "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "minLength": 16, "maxLength": 1024 },
+          "signedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "description": "One or more signatures; the first MUST be the origin registry"
     },
     "version": { "type": "integer", "minimum": 1 },
     "extensions": { "type": "object", "description": "Vendor/experimental fields keyed by namespace" }

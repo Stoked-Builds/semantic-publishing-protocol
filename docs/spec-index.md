@@ -10,10 +10,10 @@ This index provides a structured overview and navigation map for all major SPP s
 ---
 
 - [Glossary](./glossary.md)
-- [Semantic Publishing Specification](../specs/sps/semantic-publishing-specification.md)
-- [Metadata Tag Map](../specs/sps/metadata-tag-map.md)
-- [SPS HTML Guide](../specs/sps/sps-html-bootstrap-guide.md)
-- [SPS JSON Manifest](../specs/sps/sps-json-manifest.md)
+- [Semantic Publishing Specification](../specs/spp/semantic-publishing-specification.md)
+- [Metadata Tag Map](../specs/spp/metadata-tag-map.md)
+- [SPS HTML Guide](../specs/spp/sps-html-bootstrap-guide.md)
+- [SPS JSON Manifest](../specs/spp/sps-json-manifest.md)
 - [SSOT ID](../specs/identity/ssot-id.md)
 
 ## Publishing
@@ -46,7 +46,7 @@ This index provides a structured overview and navigation map for all major SPP s
 - [Ad Auction Engine](../specs/ads/ad-auction-engine.md)
 - [Ad Ranking Engine](../specs/ads/ad-ranking-engine.md)
 - [Ad Compliance](../specs/ads/ad-compliance.md)
-- [Ad Token Schema](../schema/ad-token.json)
+- [Ad Token Schema](../schemas/ad-token.json)
 - [Saturation Penalty](../specs/ads/saturation-penalty.md)
 - [FARS Split](../specs/ads/fars-split.md)
 
@@ -59,6 +59,7 @@ This index provides a structured overview and navigation map for all major SPP s
 
 ## Registry & Discovery
 - [Registry and Discovery](../specs/spp/registry-and-discovery.md)
+- [Registry Peering](../specs/registry/peering.md)
 - [Publishing Registry](../specs/spp/publishing-registry.md)
 - [Search Index Snapshot](../specs/spp/search-index-snapshot.md)
 - [Semantic Inventory](../specs/spp/semantic-inventory.md)
