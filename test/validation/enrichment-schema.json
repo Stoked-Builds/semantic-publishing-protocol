@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/enrichment.schema.json",
+  "title": "SPP Enrichment v0.4",
+  "type": "object",
+  "required": ["id", "type", "canonical", "metadata", "version", "provenance"],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string" },
+    "canonical": { "type": "string", "format": "uri" },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "byline": { "type": "string" },
+        "language": { "type": "string" },
+        "published": { "type": "string", "format": "date-time" },
+        "updated": { "type": "string", "format": "date-time" },
+        "contentType": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "raw": {
+          "type": "object",
+          "required": ["sha256", "storage"],
+          "properties": {
+            "sha256": { "type": "string" },
+            "storage": {
+              "type": "object",
+              "required": ["href"],
+              "properties": {
+                "href": { "type": "string" },
+                "bytes": { "type": "integer", "minimum": 0 },
+                "encoding": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "clean": {
+          "type": "object",
+          "required": ["sha256", "storage"],
+          "properties": {
+            "sha256": { "type": "string" },
+            "storage": {
+              "type": "object",
+              "required": ["href"],
+              "properties": {
+                "href": { "type": "string" },
+                "encoding": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "chunks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tokenCount", "storage"],
+            "properties": {
+              "id": { "type": "string" },
+              "tokenCount": { "type": "integer", "minimum": 1 },
+              "storage": {
+                "type": "object",
+                "required": ["href"],
+                "properties": {
+                  "href": { "type": "string" }
+                },
+                "additionalProperties": false
+              },
+              "embedding": {
+                "type": "object",
+                "properties": {
+                  "href": { "type": "string" },
+                  "model": { "type": "string" },
+                  "dims": { "type": "integer", "minimum": 1 }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "version": {
+      "type": "object",
+      "required": ["number", "createdAt"],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1 },
+        "previous": { "type": "integer", "minimum": 1 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "diff": {
+          "type": "object",
+          "properties": {
+            "href": { "type": "string" },
+            "format": { "type": "string", "enum": ["json-patch", "unified"] },
+            "changeStats": {
+              "type": "object",
+              "properties": {
+                "inserted": { "type": "integer", "minimum": 0 },
+                "deleted": { "type": "integer", "minimum": 0 },
+                "pct": { "type": "number", "minimum": 0 }
+              },
+              "required": ["inserted", "deleted", "pct"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["href", "format"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["firstSeen", "lastSeen", "rawHash"],
+      "properties": {
+        "firstSeen": { "type": "string", "format": "date-time" },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "crawler": { "type": "string" },
+        "etag": { "type": "string" },
+        "lastModified": { "type": "string" },
+        "rawHash": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

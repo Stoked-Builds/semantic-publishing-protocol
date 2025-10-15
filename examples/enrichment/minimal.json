@@ -1,0 +1,32 @@
+
+
+{
+  "id": "urn:spp:artifact:example-minimal",
+  "type": "article",
+  "canonical": "https://example.com/post/ai-treaty",
+  "metadata": {
+    "title": "AI firms to need licences under new global treaty",
+    "language": "en",
+    "published": "2025-07-12T10:00:00Z"
+  },
+  "content": {
+    "raw": {
+      "sha256": "sha256:123abc...",
+      "storage": { "href": "s3://spp-raw/example.com/2025/07/12/123abc.html.gz" }
+    },
+    "clean": {
+      "sha256": "sha256:456def...",
+      "storage": { "href": "s3://spp-clean/example-minimal/1.txt.gz" }
+    }
+  },
+  "version": {
+    "number": 1,
+    "createdAt": "2025-07-12T10:05:00Z"
+  },
+  "provenance": {
+    "firstSeen": "2025-07-12T10:00:00Z",
+    "lastSeen": "2025-07-12T10:00:00Z",
+    "crawler": "PunkForge-Crawler/1.0",
+    "rawHash": "sha256:123abc..."
+  }
+}

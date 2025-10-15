@@ -1,0 +1,74 @@
+{
+  "id": "urn:spp:artifact:1f1a1e20-2b6c-4a7a-9a4f-3f7a9f0b9e10",
+  "type": "article",
+  "canonical": "https://anchor.news/technology/ai-licence-treaty",
+  "metadata": {
+    "title": "AI firms to need licences under new global treaty",
+    "byline": "Jane Doe",
+    "language": "en",
+    "published": "2025-07-12T10:00:00Z",
+    "updated": "2025-07-12T12:30:00Z",
+    "contentType": "text/html"
+  },
+  "content": {
+    "raw": {
+      "sha256": "sha256:5d41402abc4b2a76b9719d911017c592",
+      "storage": {
+        "href": "s3://spp-raw/anchor.news/2025/07/12/5d41402abc4b2a76b9719d911017c592.html.gz",
+        "bytes": 132459,
+        "encoding": "gzip"
+      }
+    },
+    "clean": {
+      "sha256": "sha256:2b1a7c2b6f8d41b19b0f4a6a84a8d1f1",
+      "storage": {
+        "href": "s3://spp-clean/clean/1f1a1e20-2b6c-4a7a-9a4f-3f7a9f0b9e10/4.txt.gz",
+        "encoding": "gzip"
+      }
+    },
+    "chunks": [
+      {
+        "id": "chunk-0001",
+        "tokenCount": 914,
+        "storage": {
+          "href": "s3://spp-chunks/chunks/1f1a1e20-2b6c-4a7a-9a4f-3f7a9f0b9e10/4/chunk-0001.txt.gz"
+        },
+        "embedding": {
+          "href": "s3://spp-embeddings/emb/1f1a1e20-2b6c-4a7a-9a4f-3f7a9f0b9e10/4/chunk-0001.bin",
+          "model": "text-embedding-3-large",
+          "dims": 3072
+        }
+      },
+      {
+        "id": "chunk-0002",
+        "tokenCount": 877,
+        "storage": {
+          "href": "s3://spp-chunks/chunks/1f1a1e20-2b6c-4a7a-9a4f-3f7a9f0b9e10/4/chunk-0002.txt.gz"
+        },
+        "embedding": {
+          "href": "s3://spp-embeddings/emb/1f1a1e20-2b6c-4a7a-9a4f-3f7a9f0b9e10/4/chunk-0002.bin",
+          "model": "text-embedding-3-large",
+          "dims": 3072
+        }
+      }
+    ]
+  },
+  "version": {
+    "number": 4,
+    "previous": 3,
+    "createdAt": "2025-07-12T12:35:00Z",
+    "diff": {
+      "href": "s3://spp-diffs/diffs/1f1a1e20-2b6c-4a7a-9a4f-3f7a9f0b9e10/4.json.gz",
+      "format": "json-patch",
+      "changeStats": { "inserted": 120, "deleted": 42, "pct": 1.8 }
+    }
+  },
+  "provenance": {
+    "firstSeen": "2025-07-12T10:00:00Z",
+    "lastSeen": "2025-07-12T12:35:00Z",
+    "crawler": "PunkForge-Crawler/1.0",
+    "etag": "\"W/abc123\"",
+    "lastModified": "Sat, 12 Jul 2025 12:30:00 GMT",
+    "rawHash": "sha256:5d41402abc4b2a76b9719d911017c592"
+  }
+}
