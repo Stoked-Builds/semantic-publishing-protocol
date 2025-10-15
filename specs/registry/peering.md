@@ -1,12 +1,12 @@
-# Semantic Publishing Protocol — Registry Peering (v0.2-draft)
+# Semantic Publishing Protocol — Registry Peering (v0.4)
 
 ## Status
-- **Version:** 0.2-draft
+- **Version:** 0.4-draft
 - **Stage:** Draft (subject to change)
 - **Normative:** Yes
 - **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
 
-This module is additive to SPP v0.1 federation and does not break existing federation implementations (semver: MINOR).
+This module is additive to SPP v0.3 federation and does not break existing federation implementations (semver: MINOR).
 
 ---
 
@@ -33,7 +33,7 @@ It declares identity, capabilities, endpoints, policies, and optional cost hints
 - Descriptor MUST be signed with a detached JWS over canonical JSON.
 - Descriptor MUST include a `version` string and `peer_id` (DID or TLS-bound identifier).
 
-Schema: [`peer-descriptor.json`](../schemas/peer-descriptor.json).
+Schema: [`peer-descriptor.json`](../../schemas/peer-descriptor.json).
 
 ---
 
@@ -65,16 +65,16 @@ Transparency event: `PEER_HANDSHAKE`.
 
 ### 4.1 Offers
 - `POST /api/peering/offers`  
-- Payload: `TaskOffer` (see [`task-offer.json`](../schemas/task-offer.json)).  
+- Payload: `TaskOffer` (see [`task-offer.json`](../../schemas/task-offer.json)).  
 - Task kinds: `crawl`, `enrich`, `store`.
 
 ### 4.2 Agreements
 - `POST /api/peering/agreements/:id/accept`  
-- Payload: `TaskAgreement` (see [`task-agreement.json`](../schemas/task-agreement.json)).
+- Payload: `TaskAgreement` (see [`task-agreement.json`](../../schemas/task-agreement.json)).
 
 ### 4.3 Results
 - `POST /api/tasks/:id/callback`  
-- Payload: `TaskResult` (see [`task-result.json`](../schemas/task-result.json)).  
+- Payload: `TaskResult` (see [`task-result.json`](../../schemas/task-result.json)).  
 - MUST include model/container attestation for enrichments.  
 - MUST include hashes of inputs and outputs.  
 - MUST be logged in transparency log.
@@ -90,7 +90,7 @@ Transparency events: `TASK_OFFERED`, `TASK_ACCEPTED`, `TASK_RESULTED`.
 ## 5. Usage Records
 
 - `GET /api/usage/records?since=<ts>`  
-- Payload: array of `UsageRecord` (see [`usage-record.json`](../schemas/usage-record.json)).  
+- Payload: array of `UsageRecord` (see [`usage-record.json`](../../schemas/usage-record.json)).  
 - MUST be signed.  
 - MUST include monotonic counters.  
 - Retention: minimum 90 days.
@@ -106,6 +106,36 @@ Transparency event: `USAGE_RECORDED`.
 - Pull: `GET /api/artifacts/:cid` with Range support.  
 - Peers MAY redirect to storage tier.  
 - Fetchers MUST validate MIME and size, and reject unknown schemes.
+
+---
+
+## 6a. Artifact Corroboration
+
+Registries MUST implement a corroboration endpoint to verify artifact hashes observed by independent peers.
+
+### Endpoint
+- `GET /api/peer/lookup?artifact_hash=<sha256>`
+
+### Response
+```json
+{
+  "artifact_hash": "sha256:...",
+  "registry_id": "example.org",
+  "observed_at": "2025-09-27T10:00:00Z",
+  "sig": "base64..."
+}
+```
+
+#### Errors
+- `404 SPP_ARTIFACT_UNKNOWN` — peer has no record of the artifact hash.
+- `409 SPP_HASH_MISMATCH` — peer has a conflicting record for this artifact (hash differs from its known record).
+- `429 SPP_RATE_LIMIT` — caller exceeded lookup rate limits; respect `Retry-After`.
+
+### Rules
+- Peers with trust score ≥70 MAY accept artifacts without corroboration.
+- Peers with trust score 30–70 MUST require corroboration from ≥2 distinct trusted registries.
+- Peers with trust score <30 MUST quarantine or reject artifacts.
+- Registries SHOULD log corroboration lookups and responses for audit.
 
 ---
 
@@ -172,6 +202,7 @@ Clients MUST send:
 - `X-Nonce` (128-bit random, single-use within 10 min)
 
 Servers MUST return `Retry-After` on 429/503.
+Servers MAY also include `X-RateLimit-Remaining` and related headers for client backoff heuristics.
 
 ---
 
@@ -197,7 +228,7 @@ On failure, default behavior is **fail-fast** (subsequent nodes not executed).
 
 ---
 
-## 16. Remote Fetch Rules (SSRF
+## 16. Remote Fetch Rules (SSRF)
 
 When `source_url` is provided, fetchers MUST:
 - allow only `https`,
@@ -233,6 +264,7 @@ On request, servers SHOULD provide inclusion proofs for entries and MAY batch pr
   - `TASK_ACCEPTED`
   - `TASK_RESULTED`
   - `USAGE_RECORDED`
+  - `PEER_CORROBORATION`
   - `ARTIFACT_ERASED`
 
 - Logs MUST be append-only Merkle trees.  

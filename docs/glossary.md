@@ -65,4 +65,15 @@ This glossary defines key terms, acronyms, and concepts used throughout the SPP 
 
 ---
 
+
+## E
+
+- **Embedding**: A numeric vector representation of a text chunk used for semantic search and retrieval. Model-agnostic in SPP; referenced via a storage pointer.
+- **Enrichment Layer**: Optional extension that adds raw snapshots, clean text, chunks, embeddings, diffs, provenance, and versioning to artefacts.
+
+## V
+
+- **Version (Content Version)**: Monotonic integer indicating a new state of content created only when the raw snapshot hash changes.
+- **Version Manifest**: The per-version pointer map that references raw, clean, chunks, diffs, and provenance for a specific content version.
+
 _This glossary is a living document. Please propose additions or clarifications as the protocol evolves._

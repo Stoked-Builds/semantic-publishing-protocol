@@ -1,7 +1,7 @@
 # 📁 Examples
 
 Canonical artefact examples for the Semantic Publishing Protocol.  
-These are fully structured content folders and documents that demonstrate compliance with v0.2 core specs.
+These are fully structured content folders and documents that demonstrate compliance with v0.4 core specs.
 
 ---
 

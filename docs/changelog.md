@@ -4,6 +4,23 @@ This changelog documents major changes, improvements, and fixes between protocol
 
 ---
 
+## [v0.4.0] – 2025-09-27
+
+### 🔐 Integrity & Peering
+- **NEW:** Mandatory provenance and signatures (`signatures[]`, JCS/Ed25519)
+- **NEW:** Peering corroboration endpoint (`/api/peer/lookup`) with trust thresholds
+- **NEW:** Plugin isolation (containerised adapters, egress allowlists)
+- **NEW:** Registry identity proofs (DNS TXT / `.well-known` + JWKS)
+
+### 📚 Docs & Tests
+- **NEW:** Release notes and migration guide for v0.4.0
+- **NEW:** Peering & plugin security docs, signing guide
+- **NEW:** Conformance checklist and working examples
+
+_Details:_ [Release Notes v0.4.0](./releases/v0.4.0.md) · [Migration](./releases/v0.4.0-migration.md)
+
+---
+
 ## [v0.3.0] – 2025-08-05
 
 ### 🧩 Extensions System

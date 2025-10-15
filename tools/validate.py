@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 """
-validate.py – SPS v0.2 .sps.md Validator
+validate.py – SPP v0.4 .spp.md Validator
 
-Validates SPS Markdown files for required frontmatter fields, claim/reference formatting, and outputs summary results.
+Validates SPP Markdown files for required frontmatter fields, claim/reference formatting, and outputs summary results.
 
 Usage:
-    python tools/validate.py <path-to-file.sps.md>
+    python tools/validate.py <path-to-file.spp.md>
 
 Requirements:
     - Python 3.7+
     - PyYAML (for frontmatter parsing)
-
-Install dependencies:
-    pip install pyyaml
+    - spp_compliance_level
 """
 import sys
 import re
@@ -53,7 +51,7 @@ def check_claims_and_refs(frontmatter):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python tools/validate.py <path-to-file.sps.md>")
+        print("Usage: python tools/validate.py <path-to-file.spp.md>")
         sys.exit(1)
     file_path = Path(sys.argv[1])
     if not file_path.exists():
@@ -66,7 +64,7 @@ def main():
         sys.exit(1)
     required_fields = [
         'document_id', 'title', 'authors', 'created_at',
-        'claims', 'references', 'timeline', 'signatures', 'sps_compliance_level'
+        'claims', 'references', 'timeline', 'signatures', 'spp_compliance_level'
     ]
     missing = check_required_fields(frontmatter, required_fields)
     errors = check_claims_and_refs(frontmatter)
@@ -77,7 +75,7 @@ def main():
         for e in errors:
             print(f"  - {e}")
     if not missing and not errors:
-        print("PASS: File is SPS-compliant.")
+        print("PASS: File is SPP-compliant.")
     else:
         sys.exit(1)
 

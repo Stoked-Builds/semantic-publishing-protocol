@@ -18,7 +18,7 @@ SPP supports both centralised and decentralised discovery mechanisms — priorit
 
 ### 1. `.well-known/spp.json` (recommended for traditional websites)
 
-Each SPS-compliant website **MAY** expose:
+Each SPP-compliant website **MAY** expose:
 
 ```
 https://example.com/.well-known/spp.json
@@ -26,7 +26,7 @@ https://example.com/.well-known/spp.json
 
 This file describes:
 - Registry metadata
-- Available SPS documents
+- Available SPP documents
 - Content types and delivery methods
 - Publisher identity (linked to SSOT or DID)
 
@@ -88,7 +88,7 @@ These can be searched or shared (with consent) to **bootstrap trust and speed up
 
 ## 📜 Content Type Metadata
 
-Every published SPS content document **SHOULD** expose a minimal metadata block:
+Every published SPP content document **SHOULD** expose a minimal metadata block:
 
 ```json
 {
@@ -115,6 +115,15 @@ This allows agents to:
 
 ---
 
+## 🔐 Peering Security (v0.4)
+
+- **Inbound validation (MUST):** Enforce schema + provenance + signature checks on all artifacts received via peering.
+- **Trust scoring:** Apply probation for new peers, asymmetric decay, and daily caps; weight endorsements from long-trusted registries.
+- **Corroboration:** For intermediate-trust peers, require corroboration (≥2 trusted registries) via `/peer/lookup?artifact_hash=...` before re-sharing.
+- **Identity:** `registry_id` is a domain with DNS/.well-known proof of key.
+
+---
+
 ## 🛠 Roadmap
 
 - AI-native registry query format (e.g. “find all recent AI articles by reputable sources in English”)
@@ -127,4 +136,26 @@ This allows agents to:
 
 SPP discovery is modular, decentralised, and designed for agents—not crawlers.  
 No scraping. No clickbait. Just structured, trusted, user-consented knowledge exchange.
+
+
+## 📦 Versioned Artefacts (v0.4)
+
+SPP registries MAY expose **version-aware discovery** for enriched artefacts (see `specs/spp/enrichment-and-versioning.md`). This allows agents to fetch historical states, diffs, and chunk manifests.
+
+### Registry requirements (SHOULD)
+- Persist `content.raw.sha256` per artefact version and use it for idempotency.
+- Expose a versions listing for each artefact.
+- Expose a **per-version manifest** that points to `raw`, `clean`, `chunks`, optional `diff`, and `provenance`.
+
+### API surface
+Implementations SHOULD provide the following endpoints (path shapes are normative; details in OpenAPI):
+- `GET /v1/artefacts/{id}/versions` → `[ { version, created_at } ]`
+- `GET /v1/artefacts/{id}/versions/{version}/manifest` → pointer map (storage `href`s + hashes)
+
+### Client behaviour
+- Prefer the **latest** unless a specific version is requested.
+- Use `etag`/`lastModified` for cheap revalidation.
+- Cache manifests aggressively; the raw snapshot is immutable per `sha256`.
+
+---
 

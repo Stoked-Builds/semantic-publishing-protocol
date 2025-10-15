@@ -1,8 +1,8 @@
 # SPP Versioning – Semantic Publishing Protocol (SPP-Versions)
 
-**Version:** 0.2  
+**Version:** 0.4  
 **Status:** Production-Ready  
-**Date:** 2025-07-28  
+**Date:** 2025-09-27  
 **Codename:** SPP-Versions
 
 ---
@@ -23,7 +23,7 @@ SPP uses [Semantic Versioning](https://semver.org/) in the format:
 
 **Example:**
 - `v0.1.0` – Initial public draft
-- `v0.2.0` – Adds new fields, clarifies compliance, no breaking changes
+- `v0.4.0` – Adds provenance, mandatory signatures, peering corroboration, plugin isolation
 - `v1.0.0` – First stable release, may include breaking changes
 
 ---
@@ -40,10 +40,10 @@ SPP uses [Semantic Versioning](https://semver.org/) in the format:
 
 ## Compatibility Matrix
 
-| SPS Document Version | Can be read by v0.1 Processor | Can be read by v0.2 Processor | Can be read by v1.0 Processor |
+| SPS Document Version | Can be read by v0.1 Processor | Can be read by v0.4 Processor | Can be read by v1.0 Processor |
 |---------------------|-------------------------------|-------------------------------|-------------------------------|
 | v0.1                | Yes                           | Yes                           | Yes (if v1.0 is backward compatible) |
-| v0.2                | No (if new required fields)    | Yes                           | Yes (if v1.0 is backward compatible) |
+| v0.4                | No (if new required fields)   | Yes                           | Yes (if v1.0 is backward compatible) |
 | v1.0                | No (if breaking changes)       | No (if breaking changes)       | Yes                           |
 
 - **Backward Compatibility:** Minor and patch releases are always backward compatible. Major releases may break compatibility.
@@ -61,7 +61,7 @@ SPP uses [Semantic Versioning](https://semver.org/) in the format:
 
 ## Version Declaration
 
-- Every SPS document must declare its compliance version in the frontmatter (e.g., `sps_compliance_level: 2` and `sps_version: 0.2`).
+- Every SPS document must declare its compliance version in the frontmatter (e.g., `spp_compliance_level: 2` and `spp_version: 0.4`).
 - Tools and processors must check the declared version and handle unsupported versions gracefully.
 
 ---
