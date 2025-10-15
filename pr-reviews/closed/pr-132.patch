@@ -1,0 +1,2592 @@
+From 340eb46ccbeff519ca62a74d1bb4de0c0df81725 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sat, 27 Sep 2025 14:50:08 +0100
+Subject: [PATCH 1/7] Added plugins and peering updates for v0.4 release
+
+---
+ docs/peering/identity.md                  | 65 ++++++++++++++++++++++
+ docs/releases/v0.4.0.md                   | 40 ++++++++++++++
+ docs/security/peering.md                  | 33 ++++++++++++
+ docs/security/plugins.md                  | 51 ++++++++++++++++++
+ schemas/common/signature.json             | 25 ++++-----
+ schemas/extensions/registry/item.json     |  6 ++-
+ schemas/extensions/registry/semantic.json | 53 +++++++++++++-----
+ specs/registry/peering.md                 | 27 +++++++++-
+ specs/spp/registry-and-discovery.md       | 15 ++++--
+ specs/spp/security-model.md               | 66 +++++++++++------------
+ 10 files changed, 316 insertions(+), 65 deletions(-)
+ create mode 100644 docs/peering/identity.md
+ create mode 100644 docs/releases/v0.4.0.md
+ create mode 100644 docs/security/peering.md
+ create mode 100644 docs/security/plugins.md
+
+diff --git a/docs/peering/identity.md b/docs/peering/identity.md
+new file mode 100644
+index 0000000..73e9d4b
+--- /dev/null
++++ b/docs/peering/identity.md
+@@ -0,0 +1,65 @@
++# Registry Identity & Key Proof (v0.4)
++
++This document defines how registries prove their identity and bind public keys.
++
++## 1. Registry ID
++
++- Every registry has a `registry_id` which MUST be a valid domain name.
++
++## 2. Proof of Control
++
++Registries MUST prove control of their domain by one of:
++
++- DNS TXT record:  
++  ```
++  spp-key=<public-key-fingerprint>
++  ```
++  Example:  
++  ```
++  _spp._tcp.example.org. 300 IN TXT "spp-key=ed25519:7b9f...c2a1"
++  ```
++- HTTPS well-known file:  
++  ```
++  https://<registry-domain>/.well-known/spp/key.json
++  ```
++  Example JSON:  
++  ```
++  {
++    "registry_id": "example.org",
++    "public_keys": [
++      {"kty":"OKP","crv":"Ed25519","x":"base64url-...","kid":"ed25519-2025-09"}
++    ]
++  }
++  ```
++
++## 3. Public Keys
++
++- Registries MUST expose a JWKS at:
++  ```
++  https://<registry-domain>/.well-known/spp/jwks.json
++  ```
++- Keys MUST remain valid for ≥7 days after rotation.
++- Excessive key rotations reduce trust.
++
++Example JWKS:  
++```
++{
++  "keys": [
++    {"kty":"OKP","crv":"Ed25519","x":"base64url-...","kid":"ed25519-2025-09"}
++  ]
++}
++```
++
++## 4. Key Rotation
++
++- Registries SHOULD rotate keys periodically (90–180 days).
++- MUST support overlapping validity during rotation.
++
++## 5. Rationale
++
++Domain binding ensures Sybil resistance and prevents impersonation.
++
++## 6. Caching & TLS
++
++- `/.well-known/spp/*` SHOULD set `Cache-Control: max-age=300`.
++- Endpoints MUST be served over HTTPS with HSTS enabled.
+\ No newline at end of file
+diff --git a/docs/releases/v0.4.0.md b/docs/releases/v0.4.0.md
+new file mode 100644
+index 0000000..7d4afa1
+--- /dev/null
++++ b/docs/releases/v0.4.0.md
+@@ -0,0 +1,40 @@
++# Release Notes — SPP v0.4.0
++
++## Overview
++
++This release introduces **mandatory provenance, signatures, plugin isolation, and peering guardrails**. It strengthens the integrity of artifacts and the resilience of the peering network.
++
++## Key Changes
++
++- **Provenance & Signatures**
++  - Every Artifact includes `registry_id`, `adapter_id`, `collected_at`, `content_hash`, and `signatures[]`.
++  - JCS canonicalisation required; Ed25519 signatures recommended.
++  - Inline endorsements supported.
++
++- **Trust Scoring**
++  - Weighted, asymmetric decay with probation for new peers.
++  - Daily movement caps; endorsements from long-trusted registries carry higher weight.
++
++- **Cross-Peer Corroboration**
++  - New `/api/peer/lookup` endpoint.
++  - Peers below threshold require corroboration from ≥2 trusted registries.
++
++- **Plugin Security**
++  - Mandatory containerisation, egress allowlists, and least-privilege design.
++  - Plugins emit only `ArtifactDraft`.
++
++- **Registry Identity**
++  - `registry_id` must be a valid domain with DNS TXT or `.well-known` key proof.
++  - JWKS exposure and rotation rules defined.
++
++## Migration
++
++- Update artifacts to use `signatures[]` instead of `signature`.
++- Add provenance fields (`registry_id`, `adapter_id`, `collected_at`).
++- Enforce plugin isolation for all adapters.
++- Implement trust scoring and corroboration before re-sharing artifacts.
++
++## Version
++
++- **Spec Version:** v0.4.0
++- **Date:** 2025-09-27
+\ No newline at end of file
+diff --git a/docs/security/peering.md b/docs/security/peering.md
+new file mode 100644
+index 0000000..04719e2
+--- /dev/null
++++ b/docs/security/peering.md
+@@ -0,0 +1,33 @@
++# Peering Security (v0.4)
++
++This document defines mandatory guardrails for accepting artifacts from other registries.
++
++## 1) Inbound Validation (MUST)
++- Validate `provenance`: `registry_id` (domain), `adapter_id`, `collected_at`, `content_hash` (`sha256:...`), and at least one valid signature.
++- Signature payload (JCS): `{content_hash, registry_id, collected_at}`. Algorithm: Ed25519 (recommended).
++- Reject on any failure; do not store or re-share.
++
++## 2) Trust Scoring
++- Baseline score = 10; probation = 14 days with throughput caps (e.g., 20 artifacts/day).
++- Asymmetric decay: bad events half-life 60d; good 7d; daily movement cap ±15.
++- Consecutive bad events increase penalties exponentially (capped).
++- Endorsements from trusted registries carry higher weight.
++
++## 3) Corroboration & Thresholds
++- **Corroboration:** For intermediate-trust peers, require corroboration (≥2 trusted registries) via `/peer/lookup?artifact_hash=...` before re-sharing.
++- If peer score ≥70 → accept immediately.
++- If 30 ≤ score &lt; 70 → require corroboration by ≥2 trusted peers via `/peer/lookup?artifact_hash=...`.
++- If score &lt; 30 → quarantine or reject.
++- Maintain audit logs for rejected/quarantined artifacts.
++
++## 4) Gossip & Rehabilitation
++- Share aggregate misbehaviour stats with peers (optional).
++- Scores decay back toward neutral over time to allow recovery after fixes.
++
++## 5) Registry Identity
++- `registry_id` MUST be a valid domain name with DNS TXT or `.well-known/spp` proof of the public key.
++- Excessive key rotations decrease trust.
++
++## 6) Endorsements (v0.4)
++- Inline endorsements MAY be included and MUST be independently verifiable (signed objects over `artifact_hash`).
++- Future versions will add endorsement logs and gossip protocols.
+diff --git a/docs/security/plugins.md b/docs/security/plugins.md
+new file mode 100644
+index 0000000..6a94f55
+--- /dev/null
++++ b/docs/security/plugins.md
+@@ -0,0 +1,51 @@
++# Plugin & Adapter Security (v0.4)
++
++This document specifies mandatory security requirements for adapter plugins in the Semantic Publishing Protocol (SPP).
++
++## 1. Isolation
++
++- **MUST** run in isolated containers or sandboxes.
++- **MUST NOT** run with root privileges.
++- **MUST** use a read-only filesystem with an ephemeral `/tmp`.
++- **MUST** apply CPU, memory, and execution time limits.
++- **SHOULD** enforce seccomp/AppArmor (or equivalent) and drop all Linux capabilities.
++
++## 2. Egress Control
++
++- Plugins **MUST declare** required outbound domains in their manifest (`networkDomains`).
++- Registries **MUST enforce** an egress proxy that blocks all other outbound connections.
++- Prevents data exfiltration, spam, and SSRF.
++
++## 3. Secrets & Credentials
++
++- Plugins **MUST NOT** be given direct database or object store credentials.
++- Only limited scoped API tokens may be provided, if necessary.
++- Central ingest service is responsible for fetching, deduplication, and scanning.
++
++## 4. Output Requirements
++
++- Plugins emit only `ArtifactDraft` objects.
++- No direct writes to registry storage or databases.
++- All outputs MUST conform to Artifact schema before ingestion.
++
++## 5. Adapter Manifest (MUST)
++
++Adapters MUST declare:
++- `id`, `version`, `sdk`
++- `networkDomains`: explicit egress allowlist
++- `needsSecrets`: names of required secrets
++- `permissions`: minimal capabilities requested
++
++## 6. Observability & Failure
++
++- **MUST** emit health/metrics (jobs, errors, CPU/mem).
++- **MUST** fail-fast on schema violations and return no output.
++- **MAY** include structured logs; secrets must be redacted.
++
++## 7. Rationale
++
++Treat plugins as **untrusted code**. Isolation, allowlists, and least privilege protect against:
++- Remote code execution
++- Lateral movement inside registries
++- Credential theft
++- Resource abuse
+\ No newline at end of file
+diff --git a/schemas/common/signature.json b/schemas/common/signature.json
+index 8e3c3cd..4a052c0 100644
+--- a/schemas/common/signature.json
++++ b/schemas/common/signature.json
+@@ -2,36 +2,31 @@
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://spp.dev/schemas/common/signature.json",
+   "title": "Digital Signature",
+-  "description": "Reusable schema for representing a digital signature in SPS artefacts",
+-  "$comment": "vNext: add support for compact JWS strings, multiple signature suites (Ed25519, Secp256k1, Secp256r1), and linked data proofs for verifiable credentials.",
++  "description": "Reusable schema for digital signatures in SPP artifacts",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+-    "alg": {
++    "signer": {
+       "type": "string",
+-      "description": "Signing algorithm identifier (JOSE/JWA or suite-specific)",
++      "description": "Registry domain (registry_id) or key identifier",
+       "minLength": 1
+     },
+-    "kid": {
++    "key_id": {
+       "type": "string",
+-      "description": "Key identifier (can be a DID URL or key fingerprint)",
+-      "minLength": 1
++      "description": "Identifier for the public key (DNS TXT name or .well-known path)"
+     },
+     "sig": {
+       "type": "string",
+-      "description": "Base64url-encoded signature value",
++      "description": "Base64url-encoded signature over JCS payload {content_hash, registry_id, collected_at}",
+       "pattern": "^[A-Za-z0-9_-]+$",
+-      "minLength": 16
+-    },
+-    "signer": {
+-      "$ref": "https://spp.dev/schemas/common/did.json",
+-      "description": "DID of the signer"
++      "minLength": 16,
++      "maxLength": 1024
+     },
+-    "created_at": {
++    "signedAt": {
+       "type": "string",
+       "format": "date-time",
+       "description": "When the signature was created"
+     }
+   },
+-  "required": ["alg", "sig"]
++  "required": ["signer","sig"]
+ }
+\ No newline at end of file
+diff --git a/schemas/extensions/registry/item.json b/schemas/extensions/registry/item.json
+index 4ab7b94..6e3c43e 100644
+--- a/schemas/extensions/registry/item.json
++++ b/schemas/extensions/registry/item.json
+@@ -15,6 +15,10 @@
+     "authors": { "type": "array", "items": { "type": "string" } },
+     "publishedAt": { "type": "string", "format": "date-time" },
+     "createdAt": { "type": "string", "format": "date-time" },
+-    "updatedAt": { "type": "string", "format": "date-time" }
++    "updatedAt": { "type": "string", "format": "date-time" },
++    "artifactHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
++    "originRegistryId": { "type": "string" },
++    "adapterId": { "type": "string" },
++    "collectedAt": { "type": "string", "format": "date-time" }
+   }
+ }
+\ No newline at end of file
+diff --git a/schemas/extensions/registry/semantic.json b/schemas/extensions/registry/semantic.json
+index 3a2fa0b..327d94b 100644
+--- a/schemas/extensions/registry/semantic.json
++++ b/schemas/extensions/registry/semantic.json
+@@ -4,7 +4,7 @@
+   "title": "SPP Artifact (MVSL)",
+   "type": "object",
+   "additionalProperties": false,
+-  "required": ["id", "type", "title", "language", "content", "links", "provenance", "version"],
++  "required": ["id", "type", "title", "language", "content", "links", "provenance", "version", "signatures"],
+   "properties": {
+     "id": { "type": "string", "minLength": 1 },
+     "type": { "type": "string", "minLength": 1 },
+@@ -70,7 +70,7 @@
+     "provenance": {
+       "type": "object",
+       "additionalProperties": false,
+-      "required": ["mode", "source_url", "content_hash"],
++      "required": ["mode", "source_url", "content_hash", "registry_id", "adapter_id", "collected_at"],
+       "properties": {
+         "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
+         "publisher_did": { "type": "string" },
+@@ -78,22 +78,51 @@
+         "source_url": { "type": "string", "format": "uri" },
+         "capture_method": { "type": "string" },
+         "captured_at": { "type": "string", "format": "date-time" },
++        "collected_at": { "type": "string", "format": "date-time", "description": "When this artifact was ingested by the registry" },
++        "registry_id": {
++          "type": "string",
++          "minLength": 1,
++          "format": "hostname",
++          "description": "Domain identifier of the signing registry (must be a valid hostname)"
++        },
++        "adapter_id": { "type": "string", "minLength": 1, "description": "Identifier of the adapter/plugin that produced this artifact" },
+         "reconstruction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+         "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+-        "snapshot_uri": { "type": "string" }
++        "snapshot_uri": { "type": "string", "format": "uri" }
+       }
+     },
+-    "signature": {
+-      "type": "object",
+-      "additionalProperties": false,
+-      "required": ["signer", "sig"],
+-      "properties": {
+-        "signer": { "type": "string", "minLength": 1 },
+-        "sig": { "type": "string", "minLength": 1 },
+-        "signedAt": { "type": "string", "format": "date-time" }
+-      }
++    "signatures": {
++      "type": "array",
++      "minItems": 1,
++      "items": {
++        "type": "object",
++        "additionalProperties": false,
++        "required": ["signer", "sig"],
++        "properties": {
++          "signer": { "type": "string", "minLength": 1, "description": "Registry domain (registry_id) or key identifier" },
++          "key_id": { "type": "string", "description": "Identifier for the public key (e.g., DNS TXT name or .well-known path)" },
++          "sig": { "type": "string", "minLength": 1, "description": "Base64/URL-safe signature over JCS payload {content_hash, registry_id, collected_at}" },
++          "signedAt": { "type": "string", "format": "date-time" }
++        }
++      },
++      "description": "One or more signatures; the first MUST be the origin registry"
+     },
+     "version": { "type": "integer", "minimum": 1 },
++    "endorsements": {
++      "type": "array",
++      "items": {
++        "type": "object",
++        "additionalProperties": false,
++        "required": ["artifact_hash", "endorser_id", "observed_at", "sig"],
++        "properties": {
++          "artifact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
++          "endorser_id": { "type": "string", "minLength": 1 },
++          "observed_at": { "type": "string", "format": "date-time" },
++          "sig": { "type": "string", "minLength": 1 }
++        }
++      },
++      "description": "Inline endorsements; optional in v0.4"
++    },
+     "extensions": { "type": "object", "description": "Vendor/experimental fields keyed by namespace" }
+   }
+ }
+\ No newline at end of file
+diff --git a/specs/registry/peering.md b/specs/registry/peering.md
+index 1c254aa..4d299de 100644
+--- a/specs/registry/peering.md
++++ b/specs/registry/peering.md
+@@ -109,6 +109,31 @@ Transparency event: `USAGE_RECORDED`.
+ 
+ ---
+ 
++## 6a. Artifact Corroboration (v0.4)
++
++Registries MUST implement a corroboration endpoint to verify artifact hashes observed by independent peers.
++
++### Endpoint
++- `GET /api/peer/lookup?artifact_hash=<sha256>`
++
++### Response
++```json
++{
++  "artifact_hash": "sha256:...",
++  "registry_id": "example.org",
++  "observed_at": "2025-09-27T10:00:00Z",
++  "sig": "base64..."
++}
++```
++
++### Rules
++- Peers with trust score ≥70 MAY accept artifacts without corroboration.
++- Peers with trust score 30–70 MUST require corroboration from ≥2 distinct trusted registries.
++- Peers with trust score <30 MUST quarantine or reject artifacts.
++- Registries SHOULD log corroboration lookups and responses for audit.
++
++---
++
+ ## 7. Erasure
+ 
+ - `DELETE /api/artifacts/:cid` MUST create a tombstone transparency event.  
+@@ -197,7 +222,7 @@ On failure, default behavior is **fail-fast** (subsequent nodes not executed).
+ 
+ ---
+ 
+-## 16. Remote Fetch Rules (SSRF
++## 16. Remote Fetch Rules (SSRF)
+ 
+ When `source_url` is provided, fetchers MUST:
+ - allow only `https`,
+diff --git a/specs/spp/registry-and-discovery.md b/specs/spp/registry-and-discovery.md
+index 2c88a63..ca288f8 100644
+--- a/specs/spp/registry-and-discovery.md
++++ b/specs/spp/registry-and-discovery.md
+@@ -18,7 +18,7 @@ SPP supports both centralised and decentralised discovery mechanisms — priorit
+ 
+ ### 1. `.well-known/spp.json` (recommended for traditional websites)
+ 
+-Each SPS-compliant website **MAY** expose:
++Each SPP-compliant website **MAY** expose:
+ 
+ ```
+ https://example.com/.well-known/spp.json
+@@ -26,7 +26,7 @@ https://example.com/.well-known/spp.json
+ 
+ This file describes:
+ - Registry metadata
+-- Available SPS documents
++- Available SPP documents
+ - Content types and delivery methods
+ - Publisher identity (linked to SSOT or DID)
+ 
+@@ -88,7 +88,7 @@ These can be searched or shared (with consent) to **bootstrap trust and speed up
+ 
+ ## 📜 Content Type Metadata
+ 
+-Every published SPS content document **SHOULD** expose a minimal metadata block:
++Every published SPP content document **SHOULD** expose a minimal metadata block:
+ 
+ ```json
+ {
+@@ -115,6 +115,15 @@ This allows agents to:
+ 
+ ---
+ 
++## 🔐 Peering Security (v0.4)
++
++- **Inbound validation (MUST):** Enforce schema + provenance + signature checks on all artifacts received via peering.
++- **Trust scoring:** Apply probation for new peers, asymmetric decay, and daily caps; weight endorsements from long-trusted registries.
++- **Corroboration:** For intermediate-trust peers, require corroboration (≥2 trusted registries) via `/peer/lookup?artifact_hash=...` before re-sharing.
++- **Identity:** `registry_id` is a domain with DNS/.well-known proof of key.
++
++---
++
+ ## 🛠 Roadmap
+ 
+ - AI-native registry query format (e.g. “find all recent AI articles by reputable sources in English”)
+diff --git a/specs/spp/security-model.md b/specs/spp/security-model.md
+index 2bc5d7c..1504cd1 100644
+--- a/specs/spp/security-model.md
++++ b/specs/spp/security-model.md
+@@ -1,48 +1,48 @@
+ # Security Model – Semantic Publishing Protocol (SPP)
+ 
+-This document outlines the security principles, threat mitigations, and best practices for the SPP ecosystem. It is intended to guide implementers, auditors, and contributors in building secure, privacy-respecting systems.
+-
+----
+-
+ ## 1. Security Principles
+ 
+-- **User Sovereignty**: Users retain full control over their identity, consent, and data sharing.
+-- **Least Privilege**: Agents, services, and adapters operate with the minimum permissions required.
+-- **Transparency**: All actions, consent grants, and payments are auditable by the user.
+-- **Decentralization**: No single point of failure or control; registries and agents are federated or user-hosted.
+-- **Privacy by Design**: Personal data is local-first, encrypted, and shared only with explicit consent.
+-
+----
++- **Data Integrity**: All artifacts must be cryptographically signed to ensure authenticity and prevent tampering.
++- **Provenance Transparency**: Each artifact includes detailed provenance metadata to trace its origin and transformations.
++- **Minimal Trust**: Trust assumptions are minimized by requiring verifiable signatures and consistent registry behavior.
++- **Immutable Records**: Once published, artifacts should not be altered; updates result in new versions.
+ 
+ ## 2. Threat Model
+ 
+-- **Identity Theft**: Mitigated by SSOT-ID, DID, and cryptographic signatures. See [SSOT-ID](../identity/ssot-id.md).
+-- **Consent Forgery**: All consent tokens are signed and verifiable. See [Consent Engine](../identity/consent-engine.md).
+-- **Payment Fraud**: Payment adapters require user consent and cryptographic receipts. See [Micro-Payments](../payments/micro-payments.md).
+-- **Sybil Attacks**: Trust and reputation are multi-sourced and weighted by verified signals. See [Trust Engine](../consent-engine/trust-engine.md).
+-- **Data Leakage**: Agents and browsers must not leak private context across domains or tasks. See [Agent Behaviour](./agent-behaviour.md).
+-- **Registry Poisoning**: Registries validate publisher signatures and support audit trails. See [Publishing Registry](./publishing-registry.md).
+-
+----
++- **Malicious Adapters**: Adapters may produce incorrect or malicious artifacts.
++- **Compromised Registries**: Registries might be compromised and serve tampered data.
++- **Replay Attacks**: Old artifacts could be replayed to mislead consumers.
++- **Sybil Attacks**: Malicious entities might create multiple identities to subvert trust.
+ 
+ ## 3. Best Practices
+ 
+-- Use strong cryptographic primitives for all signatures and receipts.
+-- Rotate keys and credentials regularly; support revocation.
+-- Log all consent, payment, and trust events for user audit.
+-- Validate all external data and registry entries before use.
+-- Implement rate limiting and anomaly detection for agents and adapters.
+-- Provide clear user interfaces for reviewing and revoking consent, payments, and agent permissions.
+-
+----
++- **Signature Verification**: Consumers must verify signatures against known trusted keys.
++- **Provenance Checks**: Validate provenance fields for consistency and freshness.
++- **Versioning**: Always prefer the latest valid version of an artifact.
++- **Audit Trails**: Maintain logs of artifact ingestion and modification.
+ 
+ ## 4. Future Considerations
+ 
+-- Zero-knowledge proofs for privacy-preserving consent and payments.
+-- Decentralized registry consensus and dispute resolution.
+-- Automated threat intelligence sharing between registries and agents.
+-- Formal verification of critical protocol flows.
++- **Decentralized Trust Networks**: Explore webs of trust and decentralized identifiers.
++- **Enhanced Privacy Controls**: Support selective disclosure and encrypted content.
++- **Automated Trust Scoring**: Develop algorithms to score artifact and registry trustworthiness.
++- **Plugin Sandboxing**: Improve isolation and monitoring of adapters/plugins.
++
++## 5. Plugin/Adapter Isolation (v0.4)
++
++To enhance the security posture of the SPP ecosystem, all plugins and adapters MUST be deployed in isolated container environments. This isolation ensures that compromise or malfunction of one component does not cascade through the system.
++
++- **Mandatory Containerisation**: Each plugin/adapter runs within its own container with strict resource limits.
++- **Egress Allowlist**: Network egress from containers is restricted to a predefined allowlist, preventing unauthorized data exfiltration.
++- **No Direct DB/Object-store Credentials**: Plugins/adapters are prohibited from holding direct credentials to databases or object stores; all data access must be mediated through secure APIs.
++- **Rationale**: Containerisation and strict network policies reduce attack surfaces, limit lateral movement, and enforce principle of least privilege.
++
++## 6. Peering Guardrails (v0.4)
+ 
+----
++To maintain the integrity and reliability of data exchanged between registries, the following inbound validation and trust mechanisms are mandated:
+ 
+-_See also: [Consent Grant Flow](../../flows/consent-grant-flow.md), [Trust Engine](../consent-engine/trust-engine.md), [SSOT-ID](../identity/ssot-id.md), [Micro-Payments](../payments/micro-payments.md)_
++- **Inbound Validation (MUST)**: Registries MUST validate all incoming artifacts for schema compliance, signature correctness, and provenance completeness before acceptance.
++- **Signature Requirements (MUST)**: All inbound artifacts require at least one valid signature from a trusted origin registry.
++- **Trust Scoring (MUST)**: Registries MUST implement trust scoring for peers based on historical behavior, signature validity, and corroboration.
++- **Corroboration Requirements (MUST)**: Artifacts from peers below the immediate-accept threshold MUST be corroborated by multiple independent trusted sources (per peering spec) before re-share.
++- **Rationale**: These guardrails ensure only trustworthy data propagates through the network, preserving overall ecosystem integrity.
+\ No newline at end of file
+
+From bf1d0dcca4e40e42fe6da49b54bfaf7da0d8f083 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sat, 27 Sep 2025 15:16:13 +0100
+Subject: [PATCH 2/7] Minor tweaks and enhancements.
+
+---
+ docs/releases/v0.4.0-migration.md             | 60 +++++++++++++++++++
+ docs/security/peering.md                      | 16 +++++
+ schemas/common/provenance.json                | 38 ++++++++++++
+ .../extensions/registry/adapter-manifest.json | 56 +++++++++++++++++
+ schemas/extensions/registry/semantic.json     | 39 +-----------
+ specs/registry/peering.md                     |  8 ++-
+ 6 files changed, 180 insertions(+), 37 deletions(-)
+ create mode 100644 docs/releases/v0.4.0-migration.md
+ create mode 100644 schemas/common/provenance.json
+ create mode 100644 schemas/extensions/registry/adapter-manifest.json
+
+diff --git a/docs/releases/v0.4.0-migration.md b/docs/releases/v0.4.0-migration.md
+new file mode 100644
+index 0000000..b6d3ea0
+--- /dev/null
++++ b/docs/releases/v0.4.0-migration.md
+@@ -0,0 +1,60 @@
++
++# Migration Guide — SPP v0.4.0
++
++This guide helps implementers upgrade artifacts and registries to v0.4.
++
++## 1) `signature` → `signatures[]`
++**Before**
++```json
++{ "signature": { "signer": "old.example", "sig": "..." } }
++```
++**After**
++```json
++{ "signatures": [ { "signer": "registry.example.org", "key_id": "ed25519-2025-09", "sig": "..." } ] }
++```
++
++## 2) Add `provenance` fields
++- Required: `registry_id` (domain), `adapter_id`, `collected_at`, `content_hash`.
++- Optional: `publisher_did`, `adoption`, `snapshot_uri`.
++
++**Example**
++```json
++{
++  "provenance": {
++    "mode": "adopted",
++    "source_url": "https://example.com/post/123",
++    "collected_at": "2025-09-27T12:34:56Z",
++    "registry_id": "registry.example.org",
++    "adapter_id": "youtube.core",
++    "content_hash": "sha256:0123abcd...ef",
++    "snapshot_uri": "https://cdn.example.org/snapshots/0123abcd"
++  }
++}
++```
++
++## 3) Signing (JCS)
++- Canonicalise JSON with RFC 8785 (JCS).
++- Sign payload: `{content_hash, registry_id, collected_at}` with Ed25519.
++- Include signature under `signatures[]` (origin first).
++- The origin registry’s signature MUST be the **first** element in `signatures[]`.
++
++## 4) Peering requirements
++- Implement `/api/peer/lookup?artifact_hash=...`.
++- Enforce trust scoring: baseline 10; probation 14d; thresholds 70 / 30; daily cap ±15.
++- Require corroboration (≥2 peers) for intermediate-trust registries.
++
++## 5) Plugin isolation
++- Run adapters in containers; read-only FS; caps on CPU/mem/time.
++- Enforce egress allowlists; no direct DB/object-store creds.
++
++## 6) Schema resolution
++- If you use relative `$ref` (recommended), ensure your validator resolves local paths under `schemas/**`.
++
++## 7) Checklist
++- [ ] Schema updated to `signatures[]` and `provenance.*`
++- [ ] Signature verification with JCS/Ed25519
++- [ ] Peering trust scoring + corroboration flow
++- [ ] `/api/peer/lookup` endpoint + errors
++- [ ] Adapter containers + egress proxy
++- [ ] DNS TXT or `/.well-known/spp` key proof live before peering
++
+diff --git a/docs/security/peering.md b/docs/security/peering.md
+index 04719e2..21454eb 100644
+--- a/docs/security/peering.md
++++ b/docs/security/peering.md
+@@ -28,6 +28,22 @@ This document defines mandatory guardrails for accepting artifacts from other re
+ - `registry_id` MUST be a valid domain name with DNS TXT or `.well-known/spp` proof of the public key.
+ - Excessive key rotations decrease trust.
+ 
++
+ ## 6) Endorsements (v0.4)
+ - Inline endorsements MAY be included and MUST be independently verifiable (signed objects over `artifact_hash`).
+ - Future versions will add endorsement logs and gossip protocols.
++
++
++## Trust Scoring Parameters (v0.4)
++
++| Parameter                    | Value           | Notes                                         |
++|-----------------------------|-----------------|-----------------------------------------------|
++| Baseline score              | 10              | New peers start low                           |
++| Probation period            | 14 days         | Throughput cap ~20 artifacts/day              |
++| Daily score movement cap    | ±15             | Limits gaming by bursts                       |
++| Good event half-life        | 7 days          | Faster decay for positives                    |
++| Bad event half-life         | 60 days         | Penalties persist longer                      |
++| Immediate-accept threshold  | 70              | No corroboration required                     |
++| Quarantine threshold        | 30              | Below this, quarantine or reject              |
++| Corroboration quorum        | 2 peers         | Distinct trusted registries                   |
++| Endorsement weighting       | Tiered (×5/×3/×1) | Long-trusted > reviewed > new/unknown       |
+diff --git a/schemas/common/provenance.json b/schemas/common/provenance.json
+new file mode 100644
+index 0000000..dc73dfd
+--- /dev/null
++++ b/schemas/common/provenance.json
+@@ -0,0 +1,38 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "$id": "https://spp.dev/schemas/common/provenance.json",
++  "title": "Artifact Provenance",
++  "description": "Reusable schema for artifact provenance in SPP",
++  "type": "object",
++  "additionalProperties": false,
++  "required": ["mode", "content_hash", "registry_id", "adapter_id", "collected_at"],
++  "properties": {
++    "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
++    "publisher_did": { "type": "string", "pattern": "^did:[a-z0-9]+:.*$" },
++    "adoption": { "type": "object" },
++    "source_url": { "type": "string", "format": "uri" },
++    "capture_method": { "type": "string" },
++    "captured_at": { "type": "string", "format": "date-time" },
++    "collected_at": { "type": "string", "format": "date-time", "description": "When this artifact was ingested by the registry" },
++    "registry_id": {
++      "type": "string",
++      "minLength": 1,
++      "format": "hostname",
++      "description": "Domain identifier of the signing registry (must be a valid hostname)"
++    },
++    "adapter_id": { "type": "string", "minLength": 1, "description": "Identifier of the adapter/plugin that produced this artifact" },
++    "reconstruction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
++    "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
++    "snapshot_uri": { "type": "string", "format": "uri" }
++  }
++,
++  "allOf": [
++    {
++      "if": { "properties": { "mode": { "const": "authoritative" } }, "required": ["mode"] },
++      "then": {}
++    },
++    {
++      "else": { "required": ["source_url"] }
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/schemas/extensions/registry/adapter-manifest.json b/schemas/extensions/registry/adapter-manifest.json
+new file mode 100644
+index 0000000..ba14fae
+--- /dev/null
++++ b/schemas/extensions/registry/adapter-manifest.json
+@@ -0,0 +1,56 @@
++{
++  "$schema": "https://json-schema.org/draft/2020-12/schema",
++  "$id": "https://spp.dev/schemas/extensions/registry/adapter-manifest.json",
++  "title": "SPP Adapter Manifest",
++  "type": "object",
++  "additionalProperties": false,
++  "required": ["id","version","sdk","networkDomains","needsSecrets","permissions"],
++  "properties": {
++    "id": { "type": "string", "minLength": 1, "description": "Adapter identifier (e.g., youtube.core)" },
++    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
++    "sdk": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
++    "displayName": { "type": "string" },
++    "networkDomains": {
++      "type": "array",
++      "minItems": 0,
++      "items": { "type": "string", "format": "hostname" },
++      "description": "Explicit egress allowlist"
++    },
++    "needsSecrets": {
++      "type": "array",
++      "items": { "type": "string", "minLength": 1 }
++    },
++    "permissions": {
++      "type": "object",
++      "additionalProperties": false,
++      "properties": {
++        "fs": { "type": "string", "enum": ["none","read"], "default": "none" },
++        "net": {
++          "type": "object",
++          "additionalProperties": false,
++          "properties": {
++            "dns": { "type": "string", "enum": ["blocked","system"], "default": "blocked" }
++          }
++        },
++        "time": { "type": "boolean", "default": true }
++      }
++    },
++    "capabilities": {
++      "type": "object",
++      "additionalProperties": false,
++      "properties": {
++        "modes": { "type": "array", "items": { "type": "string", "enum": ["poll","webhook"] } },
++        "media": { "type": "array", "items": { "type": "string", "enum": ["video","image","text","audio","mixed"] } },
++        "sources": { "type": "array", "items": { "type": "string", "enum": ["channel","playlist","user","hashtag","url"] } },
++        "rateHint": {
++          "type": "object",
++          "properties": { "rpm": { "type": "integer", "minimum": 1 }, "burst": { "type": "integer", "minimum": 1 } }
++        }
++      }
++    },
++    "image": { "type": "string", "description": "OCI image reference (registry/path:tag or @digest)" },
++    "cpuLimit": { "type": "number", "minimum": 0, "description": "CPU cores limit (e.g., 0.5 for 500m)" },
++    "memoryLimitMB": { "type": "integer", "minimum": 16, "description": "Memory limit in MB" },
++    "timeoutMs": { "type": "integer", "minimum": 1000, "description": "Execution timeout per job in milliseconds" }
++  }
++}
+\ No newline at end of file
+diff --git a/schemas/extensions/registry/semantic.json b/schemas/extensions/registry/semantic.json
+index 327d94b..d409748 100644
+--- a/schemas/extensions/registry/semantic.json
++++ b/schemas/extensions/registry/semantic.json
+@@ -67,44 +67,11 @@
+         }
+       }
+     },
+-    "provenance": {
+-      "type": "object",
+-      "additionalProperties": false,
+-      "required": ["mode", "source_url", "content_hash", "registry_id", "adapter_id", "collected_at"],
+-      "properties": {
+-        "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
+-        "publisher_did": { "type": "string" },
+-        "adoption": { "type": "object" },
+-        "source_url": { "type": "string", "format": "uri" },
+-        "capture_method": { "type": "string" },
+-        "captured_at": { "type": "string", "format": "date-time" },
+-        "collected_at": { "type": "string", "format": "date-time", "description": "When this artifact was ingested by the registry" },
+-        "registry_id": {
+-          "type": "string",
+-          "minLength": 1,
+-          "format": "hostname",
+-          "description": "Domain identifier of the signing registry (must be a valid hostname)"
+-        },
+-        "adapter_id": { "type": "string", "minLength": 1, "description": "Identifier of the adapter/plugin that produced this artifact" },
+-        "reconstruction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+-        "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+-        "snapshot_uri": { "type": "string", "format": "uri" }
+-      }
+-    },
++    "provenance": { "$ref": "../../common/provenance.json" },
+     "signatures": {
+       "type": "array",
+       "minItems": 1,
+-      "items": {
+-        "type": "object",
+-        "additionalProperties": false,
+-        "required": ["signer", "sig"],
+-        "properties": {
+-          "signer": { "type": "string", "minLength": 1, "description": "Registry domain (registry_id) or key identifier" },
+-          "key_id": { "type": "string", "description": "Identifier for the public key (e.g., DNS TXT name or .well-known path)" },
+-          "sig": { "type": "string", "minLength": 1, "description": "Base64/URL-safe signature over JCS payload {content_hash, registry_id, collected_at}" },
+-          "signedAt": { "type": "string", "format": "date-time" }
+-        }
+-      },
++      "items": { "$ref": "../../common/signature.json" },
+       "description": "One or more signatures; the first MUST be the origin registry"
+     },
+     "version": { "type": "integer", "minimum": 1 },
+@@ -116,7 +83,7 @@
+         "required": ["artifact_hash", "endorser_id", "observed_at", "sig"],
+         "properties": {
+           "artifact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+-          "endorser_id": { "type": "string", "minLength": 1 },
++          "endorser_id": { "type": "string", "minLength": 1, "format": "hostname", "description": "Endorser registry domain" },
+           "observed_at": { "type": "string", "format": "date-time" },
+           "sig": { "type": "string", "minLength": 1 }
+         }
+diff --git a/specs/registry/peering.md b/specs/registry/peering.md
+index 4d299de..2beb206 100644
+--- a/specs/registry/peering.md
++++ b/specs/registry/peering.md
+@@ -33,7 +33,7 @@ It declares identity, capabilities, endpoints, policies, and optional cost hints
+ - Descriptor MUST be signed with a detached JWS over canonical JSON.
+ - Descriptor MUST include a `version` string and `peer_id` (DID or TLS-bound identifier).
+ 
+-Schema: [`peer-descriptor.json`](../schemas/peer-descriptor.json).
++Schema: [`peer-descriptor.json`](../../schemas/peer-descriptor.json).
+ 
+ ---
+ 
+@@ -126,6 +126,11 @@ Registries MUST implement a corroboration endpoint to verify artifact hashes obs
+ }
+ ```
+ 
++#### Errors
++- `404 SPP_ARTIFACT_UNKNOWN` — peer has no record of the artifact hash.
++- `409 SPP_HASH_MISMATCH` — peer has a conflicting record for this artifact (hash differs from its known record).
++- `429 SPP_RATE_LIMIT` — caller exceeded lookup rate limits; respect `Retry-After`.
++
+ ### Rules
+ - Peers with trust score ≥70 MAY accept artifacts without corroboration.
+ - Peers with trust score 30–70 MUST require corroboration from ≥2 distinct trusted registries.
+@@ -197,6 +202,7 @@ Clients MUST send:
+ - `X-Nonce` (128-bit random, single-use within 10 min)
+ 
+ Servers MUST return `Retry-After` on 429/503.
++Servers MAY also include `X-RateLimit-Remaining` and related headers for client backoff heuristics.
+ 
+ ---
+ 
+
+From 9b6dbbaf1e4f129a59e4868c4bf1cf44cc507840 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sat, 27 Sep 2025 15:25:17 +0100
+Subject: [PATCH 3/7] Minor tweaks and enhancements.
+
+---
+ docs/security/signing.md                    | 39 +++++++++++++++++++++
+ examples/adapter-manifest.youtube.json      | 23 ++++++++++++
+ examples/artifacts/bad-sig.json             | 20 +++++++++++
+ examples/artifacts/needs-corroboration.json | 20 +++++++++++
+ examples/artifacts/valid.json               | 20 +++++++++++
+ test/conformance.md                         | 31 ++++++++++++++++
+ 6 files changed, 153 insertions(+)
+ create mode 100644 docs/security/signing.md
+ create mode 100644 examples/adapter-manifest.youtube.json
+ create mode 100644 examples/artifacts/bad-sig.json
+ create mode 100644 examples/artifacts/needs-corroboration.json
+ create mode 100644 examples/artifacts/valid.json
+ create mode 100644 test/conformance.md
+
+diff --git a/docs/security/signing.md b/docs/security/signing.md
+new file mode 100644
+index 0000000..d58aac8
+--- /dev/null
++++ b/docs/security/signing.md
+@@ -0,0 +1,39 @@
++# Signing & Canonicalisation (v0.4)
++
++## Algorithms
++- **MUST** support `Ed25519` (`alg: ed25519`).
++- **MAY** support `P-256` (`alg: ES256`) for compliance environments.
++- **MUST NOT** use RSA < 2048.
++
++## Canonicalisation
++- All JSON to be signed MUST be canonicalised with RFC 8785 JSON Canonicalisation Scheme (JCS).
++- Canonicalisation eliminates whitespace, key ordering differences, and normalises numbers/strings.
++
++## Test Vector
++
++**Original JSON**
++```json
++{ "b":2, "a":1 }
++```
++
++**Canonicalised JSON**
++```json
++{"a":1,"b":2}
++```
++
++**Signed Payload**
++```json
++{
++  "content_hash": "sha256:0123abcd...",
++  "registry_id": "registry.example.org",
++  "collected_at": "2025-09-27T12:34:56Z"
++}
++```
++
++**Example Signature**
++```
++sig = "YWFhYmJiY2Nj..."
++alg = "ed25519"
++```
++
++Registry verifiers MUST reject signatures over non-canonicalised payloads.
+\ No newline at end of file
+diff --git a/examples/adapter-manifest.youtube.json b/examples/adapter-manifest.youtube.json
+new file mode 100644
+index 0000000..0123c5d
+--- /dev/null
++++ b/examples/adapter-manifest.youtube.json
+@@ -0,0 +1,23 @@
++{
++  "id": "youtube.core",
++  "version": "1.0.0",
++  "sdk": "0.4",
++  "displayName": "YouTube Adapter",
++  "networkDomains": ["www.youtube.com", "youtube.googleapis.com"],
++  "needsSecrets": ["YOUTUBE_API_KEY"],
++  "permissions": {
++    "fs": "none",
++    "net": { "dns": "system" },
++    "time": true
++  },
++  "capabilities": {
++    "modes": ["poll"],
++    "media": ["video"],
++    "sources": ["channel", "playlist", "user"],
++    "rateHint": { "rpm": 60, "burst": 10 }
++  },
++  "image": "registry.local/spp-adapters/youtube:1.0.0",
++  "cpuLimit": 1,
++  "memoryLimitMB": 512,
++  "timeoutMs": 30000
++}
+\ No newline at end of file
+diff --git a/examples/artifacts/bad-sig.json b/examples/artifacts/bad-sig.json
+new file mode 100644
+index 0000000..4e67640
+--- /dev/null
++++ b/examples/artifacts/bad-sig.json
+@@ -0,0 +1,20 @@
++{
++  "version": "0.4",
++  "provenance": {
++    "mode": "adopted",
++    "source_url": "https://example.com/post/456",
++    "collected_at": "2025-09-27T12:45:00Z",
++    "registry_id": "registry.example.org",
++    "adapter_id": "youtube.core",
++    "content_hash": "sha256:deadbeef...",
++    "snapshot_uri": "https://cdn.example.org/snapshots/deadbeef"
++  },
++  "signatures": [
++    {
++      "signer": "registry.example.org",
++      "key_id": "ed25519-2025-09",
++      "sig": "INVALID_SIGNATURE",
++      "signedAt": "2025-09-27T12:45:05Z"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/examples/artifacts/needs-corroboration.json b/examples/artifacts/needs-corroboration.json
+new file mode 100644
+index 0000000..392d4fc
+--- /dev/null
++++ b/examples/artifacts/needs-corroboration.json
+@@ -0,0 +1,20 @@
++{
++  "version": "0.4",
++  "provenance": {
++    "mode": "reconstructed",
++    "source_url": "https://example.net/article/789",
++    "collected_at": "2025-09-27T13:00:00Z",
++    "registry_id": "lowtrust.example.net",
++    "adapter_id": "rss.crawler",
++    "content_hash": "sha256:beadfeed...",
++    "snapshot_uri": "https://cdn.example.net/snapshots/beadfeed"
++  },
++  "signatures": [
++    {
++      "signer": "lowtrust.example.net",
++      "key_id": "ed25519-2025-09",
++      "sig": "Zm9vYmFyYmF6...",
++      "signedAt": "2025-09-27T13:00:05Z"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/examples/artifacts/valid.json b/examples/artifacts/valid.json
+new file mode 100644
+index 0000000..8809bb9
+--- /dev/null
++++ b/examples/artifacts/valid.json
+@@ -0,0 +1,20 @@
++{
++  "version": "0.4",
++  "provenance": {
++    "mode": "adopted",
++    "source_url": "https://example.com/post/123",
++    "collected_at": "2025-09-27T12:34:56Z",
++    "registry_id": "registry.example.org",
++    "adapter_id": "youtube.core",
++    "content_hash": "sha256:0123abcd...",
++    "snapshot_uri": "https://cdn.example.org/snapshots/0123abcd"
++  },
++  "signatures": [
++    {
++      "signer": "registry.example.org",
++      "key_id": "ed25519-2025-09",
++      "sig": "YWFhYmJiY2Nj...",
++      "signedAt": "2025-09-27T12:35:00Z"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/test/conformance.md b/test/conformance.md
+new file mode 100644
+index 0000000..9558b90
+--- /dev/null
++++ b/test/conformance.md
+@@ -0,0 +1,31 @@
++# Conformance Tests — SPP v0.4
++
++This document defines the minimum conformance requirements for a registry implementing SPP v0.4.
++
++## Artifact Validation
++- MUST validate artifacts against `schemas/extensions/registry/semantic.json`.
++- MUST verify `signatures[]` using JCS/Ed25519; first signature MUST be the origin registry.
++- MUST enforce required `provenance.*` fields.
++
++## Signing & Canonicalisation
++- MUST canonicalise JSON (RFC 8785) before signing/verifying.
++- MUST reject signatures over non-canonical JSON.
++
++## Peering
++- MUST implement `/api/peer/lookup?artifact_hash=...` with success + 404/409/429 cases.
++- MUST enforce trust scoring thresholds (baseline 10, probation 14d, ±15 daily cap, thresholds 70/30).
++- MUST require corroboration from ≥2 peers for scores in [30,70).
++
++## Plugins / Adapters
++- MUST run adapters in isolated containers with RO FS, CPU/mem/time caps.
++- MUST enforce `networkDomains` egress allowlists.
++- MUST NOT grant DB/object-store credentials directly.
++- MUST validate `adapter-manifest.json` before execution.
++
++## Transparency & Erasure
++- MUST log peering, tasks, usage, and erasure events in append-only transparency log.
++- MUST create immutable tombstone events on erasure.
++
++## Identity
++- MUST serve `/.well-known/spp/registry.json` and signed JWKS.
++- MUST provide DNS TXT or `/.well-known/spp/key.json` proof of registry_id control.
+\ No newline at end of file
+
+From 6d326e92803ab10f5806372547d526ff309749d1 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sat, 27 Sep 2025 16:14:08 +0100
+Subject: [PATCH 4/7] Refernce, links, etc minor tweaks.
+
+---
+ README.md                                     |  6 ++--
+ docs/changelog.md                             | 17 +++++++++
+ docs/spec-index.md                            | 11 +++---
+ schemas/artifact.json                         |  4 +--
+ schemas/semantic.json                         | 35 ++++++++++++-------
+ specs/agent-interface/agent-interface.md      | 32 +++++++++++++++++
+ .../content-attribution.md                    |  0
+ specs/registry/peering.md                     | 14 ++++----
+ 8 files changed, 90 insertions(+), 29 deletions(-)
+ create mode 100644 specs/agent-interface/agent-interface.md
+ rename specs/{spp => publishing}/content-attribution.md (100%)
+
+diff --git a/README.md b/README.md
+index c2b4223..5cff92f 100644
+--- a/README.md
++++ b/README.md
+@@ -99,13 +99,15 @@ AI Agent Guide: [agent.md](docs/agent.md)
+ 
+ ---
+ 
+-## 🚀 Version: `v0.2.2`
++## 🚀 Version: `v0.4.0`
+ 
+ - JSON Schemas
+ - Consent & trust models
+ - Agent reconstruction logic
+ - End-to-end publishing flows
+ 
++**What’s new:** See [v0.4.0 Release Notes](docs/releases/v0.4.0.md) · [Migration Guide](docs/releases/v0.4.0-migration.md)
++
+ Full changelog: [CHANGELOG.md](docs/changelog.md)
+ 
+ ---
+@@ -120,7 +122,7 @@ All SPP metadata includes a `protocolVersion` field that indicates which version
+ 
+ ```json
+ {
+-  "protocolVersion": "1.0.0",
++  "protocolVersion": "1",
+   "id": "example-content",
+   "title": "Example Content"
+ }
+diff --git a/docs/changelog.md b/docs/changelog.md
+index 52f47c4..c214075 100644
+--- a/docs/changelog.md
++++ b/docs/changelog.md
+@@ -4,6 +4,23 @@ This changelog documents major changes, improvements, and fixes between protocol
+ 
+ ---
+ 
++## [v0.4.0] – 2025-09-27
++
++### 🔐 Integrity & Peering
++- **NEW:** Mandatory provenance and signatures (`signatures[]`, JCS/Ed25519)
++- **NEW:** Peering corroboration endpoint (`/api/peer/lookup`) with trust thresholds
++- **NEW:** Plugin isolation (containerised adapters, egress allowlists)
++- **NEW:** Registry identity proofs (DNS TXT / `.well-known` + JWKS)
++
++### 📚 Docs & Tests
++- **NEW:** Release notes and migration guide for v0.4.0
++- **NEW:** Peering & plugin security docs, signing guide
++- **NEW:** Conformance checklist and working examples
++
++_Details:_ [Release Notes v0.4.0](./releases/v0.4.0.md) · [Migration](./releases/v0.4.0-migration.md)
++
++---
++
+ ## [v0.3.0] – 2025-08-05
+ 
+ ### 🧩 Extensions System
+diff --git a/docs/spec-index.md b/docs/spec-index.md
+index fc0c05b..38260fa 100644
+--- a/docs/spec-index.md
++++ b/docs/spec-index.md
+@@ -10,10 +10,10 @@ This index provides a structured overview and navigation map for all major SPP s
+ ---
+ 
+ - [Glossary](./glossary.md)
+-- [Semantic Publishing Specification](../specs/sps/semantic-publishing-specification.md)
+-- [Metadata Tag Map](../specs/sps/metadata-tag-map.md)
+-- [SPS HTML Guide](../specs/sps/sps-html-bootstrap-guide.md)
+-- [SPS JSON Manifest](../specs/sps/sps-json-manifest.md)
++- [Semantic Publishing Specification](../specs/spp/semantic-publishing-specification.md)
++- [Metadata Tag Map](../specs/spp/metadata-tag-map.md)
++- [SPS HTML Guide](../specs/spp/sps-html-bootstrap-guide.md)
++- [SPS JSON Manifest](../specs/spp/sps-json-manifest.md)
+ - [SSOT ID](../specs/identity/ssot-id.md)
+ 
+ ## Publishing
+@@ -46,7 +46,7 @@ This index provides a structured overview and navigation map for all major SPP s
+ - [Ad Auction Engine](../specs/ads/ad-auction-engine.md)
+ - [Ad Ranking Engine](../specs/ads/ad-ranking-engine.md)
+ - [Ad Compliance](../specs/ads/ad-compliance.md)
+-- [Ad Token Schema](../schema/ad-token.json)
++- [Ad Token Schema](../schemas/ad-token.json)
+ - [Saturation Penalty](../specs/ads/saturation-penalty.md)
+ - [FARS Split](../specs/ads/fars-split.md)
+ 
+@@ -59,6 +59,7 @@ This index provides a structured overview and navigation map for all major SPP s
+ 
+ ## Registry & Discovery
+ - [Registry and Discovery](../specs/spp/registry-and-discovery.md)
++- [Registry Peering](../specs/registry/peering.md)
+ - [Publishing Registry](../specs/spp/publishing-registry.md)
+ - [Search Index Snapshot](../specs/spp/search-index-snapshot.md)
+ - [Semantic Inventory](../specs/spp/semantic-inventory.md)
+diff --git a/schemas/artifact.json b/schemas/artifact.json
+index 7ea8fa9..8951786 100644
+--- a/schemas/artifact.json
++++ b/schemas/artifact.json
+@@ -1,6 +1,6 @@
+ {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+-  "$id": "https://spp.dev/schemas/artefact.json",
++  "$id": "https://spp.dev/schemas/artifact.json",
+   "$comment": "DEPRECATED — alias to semantic.json; remove in a future minor release.",
+-  "allOf": [{ "$ref": "https://spp.dev/schemas/semantic.json" }]
++  "allOf": [{ "$ref": "./semantic.json" }]
+ }
+\ No newline at end of file
+diff --git a/schemas/semantic.json b/schemas/semantic.json
+index 07176c9..66df65a 100644
+--- a/schemas/semantic.json
++++ b/schemas/semantic.json
+@@ -4,7 +4,7 @@
+   "title": "SPP Artefact (MVSL)",
+   "type": "object",
+   "additionalProperties": false,
+-  "required": ["id", "type", "title", "language", "content", "links", "provenance", "version"],
++  "required": ["id", "type", "title", "language", "content", "links", "provenance", "version", "signatures"],
+   "properties": {
+     "id": { "type": "string", "minLength": 1 },
+     "type": { "type": "string", "minLength": 1 },
+@@ -70,28 +70,37 @@
+     "provenance": {
+       "type": "object",
+       "additionalProperties": false,
+-      "required": ["mode", "source_url", "content_hash"],
++      "required": ["mode", "source_url", "content_hash", "registry_id", "adapter_id", "collected_at"],
+       "properties": {
+         "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
+-        "publisher_did": { "type": "string" },
++        "publisher_did": { "type": "string", "pattern": "^did:[a-z0-9]+:.*$" },
+         "adoption": { "type": "object" },
+         "source_url": { "type": "string", "format": "uri" },
+         "capture_method": { "type": "string" },
+         "captured_at": { "type": "string", "format": "date-time" },
+         "reconstruction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+         "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+-        "snapshot_uri": { "type": "string" }
++        "snapshot_uri": { "type": "string", "format": "uri" },
++        "collected_at": { "type": "string", "format": "date-time" },
++        "registry_id": { "type": "string", "format": "hostname" },
++        "adapter_id": { "type": "string", "minLength": 1 }
+       }
+     },
+-    "signature": {
+-      "type": "object",
+-      "additionalProperties": false,
+-      "required": ["signer", "sig"],
+-      "properties": {
+-        "signer": { "type": "string", "minLength": 1 },
+-        "sig": { "type": "string", "minLength": 1 },
+-        "signedAt": { "type": "string", "format": "date-time" }
+-      }
++    "signatures": {
++      "type": "array",
++      "minItems": 1,
++      "items": {
++        "type": "object",
++        "additionalProperties": false,
++        "required": ["signer", "sig"],
++        "properties": {
++          "signer": { "type": "string", "minLength": 1 },
++          "key_id": { "type": "string" },
++          "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "minLength": 16, "maxLength": 1024 },
++          "signedAt": { "type": "string", "format": "date-time" }
++        }
++      },
++      "description": "One or more signatures; the first MUST be the origin registry"
+     },
+     "version": { "type": "integer", "minimum": 1 },
+     "extensions": { "type": "object", "description": "Vendor/experimental fields keyed by namespace" }
+diff --git a/specs/agent-interface/agent-interface.md b/specs/agent-interface/agent-interface.md
+new file mode 100644
+index 0000000..7863ce4
+--- /dev/null
++++ b/specs/agent-interface/agent-interface.md
+@@ -0,0 +1,32 @@
++# Agent Interface (Draft)
++
++## Status
++- **Version:** 0.1-draft
++- **Stage:** Placeholder (content TBD)
++- **Normative:** No (informative only)
++- **Dependencies:** SPP-Core
++
++---
++
++## 1. Purpose
++
++The Agent Interface specification defines how **autonomous agents** (browsers, readers, curators, or assistants) interact with the Semantic Publishing Protocol (SPP).  
++It will cover:
++- Discovery of registries and artifacts
++- Querying and filtering of semantic content
++- Presentation and navigation models
++- Optional user context exchange (preferences, trust anchors)
++
++---
++
++## 2. Roadmap
++
++This file is a placeholder in v0.4.  
++Detailed content will be introduced in **v0.5** or later once core registry and peering flows are stable.
++
++---
++
++## 3. References
++
++- [SPP Overview](../spp/spp-overview.md)  
++- [Registry Peering](../registry/peering.md)
+\ No newline at end of file
+diff --git a/specs/spp/content-attribution.md b/specs/publishing/content-attribution.md
+similarity index 100%
+rename from specs/spp/content-attribution.md
+rename to specs/publishing/content-attribution.md
+diff --git a/specs/registry/peering.md b/specs/registry/peering.md
+index 2beb206..5e23f88 100644
+--- a/specs/registry/peering.md
++++ b/specs/registry/peering.md
+@@ -1,4 +1,4 @@
+-# Semantic Publishing Protocol — Registry Peering (v0.2-draft)
++# Semantic Publishing Protocol — Registry Peering (v0.4)
+ 
+ ## Status
+ - **Version:** 0.2-draft
+@@ -6,7 +6,7 @@
+ - **Normative:** Yes
+ - **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
+ 
+-This module is additive to SPP v0.1 federation and does not break existing federation implementations (semver: MINOR).
++This module is additive to SPP v0.3 federation and does not break existing federation implementations (semver: MINOR).
+ 
+ ---
+ 
+@@ -65,16 +65,16 @@ Transparency event: `PEER_HANDSHAKE`.
+ 
+ ### 4.1 Offers
+ - `POST /api/peering/offers`  
+-- Payload: `TaskOffer` (see [`task-offer.json`](../schemas/task-offer.json)).  
++- Payload: `TaskOffer` (see [`task-offer.json`](../../schemas/task-offer.json)).  
+ - Task kinds: `crawl`, `enrich`, `store`.
+ 
+ ### 4.2 Agreements
+ - `POST /api/peering/agreements/:id/accept`  
+-- Payload: `TaskAgreement` (see [`task-agreement.json`](../schemas/task-agreement.json)).
++- Payload: `TaskAgreement` (see [`task-agreement.json`](../../schemas/task-agreement.json)).
+ 
+ ### 4.3 Results
+ - `POST /api/tasks/:id/callback`  
+-- Payload: `TaskResult` (see [`task-result.json`](../schemas/task-result.json)).  
++- Payload: `TaskResult` (see [`task-result.json`](../../schemas/task-result.json)).  
+ - MUST include model/container attestation for enrichments.  
+ - MUST include hashes of inputs and outputs.  
+ - MUST be logged in transparency log.
+@@ -90,7 +90,7 @@ Transparency events: `TASK_OFFERED`, `TASK_ACCEPTED`, `TASK_RESULTED`.
+ ## 5. Usage Records
+ 
+ - `GET /api/usage/records?since=<ts>`  
+-- Payload: array of `UsageRecord` (see [`usage-record.json`](../schemas/usage-record.json)).  
++- Payload: array of `UsageRecord` (see [`usage-record.json`](../../schemas/usage-record.json)).  
+ - MUST be signed.  
+ - MUST include monotonic counters.  
+ - Retention: minimum 90 days.
+@@ -109,7 +109,7 @@ Transparency event: `USAGE_RECORDED`.
+ 
+ ---
+ 
+-## 6a. Artifact Corroboration (v0.4)
++## 6a. Artifact Corroboration
+ 
+ Registries MUST implement a corroboration endpoint to verify artifact hashes observed by independent peers.
+ 
+
+From adc620a4b9f379bfa98c9b74c055bf2cfdbd819f Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Sat, 27 Sep 2025 16:44:00 +0100
+Subject: [PATCH 5/7] Minor v0.4 tweaks, updates and version information.
+
+---
+ docs/security/peering.md      |  1 +
+ docs/security/signing.md      |  4 +++-
+ examples/README.md            |  2 +-
+ examples/artifacts/valid.json |  4 ++--
+ schemas/common/signature.json | 18 ++++++++++++++++--
+ schemas/semantic.json         | 32 ++++++++++++++++++++++++++-----
+ specs/SPP-Versions.md         | 12 ++++++------
+ specs/registry/peering.md     |  3 ++-
+ test/conformance.md           |  3 +--
+ tools/validate.py             | 16 +++++++---------
+ v0.3-extensions.json          | 36 -----------------------------------
+ 11 files changed, 66 insertions(+), 65 deletions(-)
+ delete mode 100644 v0.3-extensions.json
+
+diff --git a/docs/security/peering.md b/docs/security/peering.md
+index 21454eb..8d1c2f8 100644
+--- a/docs/security/peering.md
++++ b/docs/security/peering.md
+@@ -3,6 +3,7 @@
+ This document defines mandatory guardrails for accepting artifacts from other registries.
+ 
+ ## 1) Inbound Validation (MUST)
++- Validate against the SPP Artifact schema.
+ - Validate `provenance`: `registry_id` (domain), `adapter_id`, `collected_at`, `content_hash` (`sha256:...`), and at least one valid signature.
+ - Signature payload (JCS): `{content_hash, registry_id, collected_at}`. Algorithm: Ed25519 (recommended).
+ - Reject on any failure; do not store or re-share.
+diff --git a/docs/security/signing.md b/docs/security/signing.md
+index d58aac8..e0311ea 100644
+--- a/docs/security/signing.md
++++ b/docs/security/signing.md
+@@ -36,4 +36,6 @@ sig = "YWFhYmJiY2Nj..."
+ alg = "ed25519"
+ ```
+ 
+-Registry verifiers MUST reject signatures over non-canonicalised payloads.
+\ No newline at end of file
++Registry verifiers MUST reject signatures over non-canonicalised payloads.
++
++**Schema reference:** see [`schemas/common/signature.json`](../../schemas/common/signature.json) for field constraints.
+\ No newline at end of file
+diff --git a/examples/README.md b/examples/README.md
+index 0070c61..abe4a3f 100644
+--- a/examples/README.md
++++ b/examples/README.md
+@@ -1,7 +1,7 @@
+ # 📁 Examples
+ 
+ Canonical artefact examples for the Semantic Publishing Protocol.  
+-These are fully structured content folders and documents that demonstrate compliance with v0.2 core specs.
++These are fully structured content folders and documents that demonstrate compliance with v0.4 core specs.
+ 
+ ---
+ 
+diff --git a/examples/artifacts/valid.json b/examples/artifacts/valid.json
+index 8809bb9..bc445cd 100644
+--- a/examples/artifacts/valid.json
++++ b/examples/artifacts/valid.json
+@@ -6,14 +6,14 @@
+     "collected_at": "2025-09-27T12:34:56Z",
+     "registry_id": "registry.example.org",
+     "adapter_id": "youtube.core",
+-    "content_hash": "sha256:0123abcd...",
++    "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+     "snapshot_uri": "https://cdn.example.org/snapshots/0123abcd"
+   },
+   "signatures": [
+     {
+       "signer": "registry.example.org",
+       "key_id": "ed25519-2025-09",
+-      "sig": "YWFhYmJiY2Nj...",
++      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4",
+       "signedAt": "2025-09-27T12:35:00Z"
+     }
+   ]
+diff --git a/schemas/common/signature.json b/schemas/common/signature.json
+index 4a052c0..4c1e96f 100644
+--- a/schemas/common/signature.json
++++ b/schemas/common/signature.json
+@@ -6,6 +6,11 @@
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
++    "alg": {
++      "type": "string",
++      "description": "Signing algorithm (see docs/security/signing.md)",
++      "enum": ["ed25519", "ES256"]
++    },
+     "signer": {
+       "type": "string",
+       "description": "Registry domain (registry_id) or key identifier",
+@@ -17,7 +22,7 @@
+     },
+     "sig": {
+       "type": "string",
+-      "description": "Base64url-encoded signature over JCS payload {content_hash, registry_id, collected_at}",
++      "description": "Base64url-encoded signature over JCS payload of {content_hash, registry_id, collected_at}",
+       "pattern": "^[A-Za-z0-9_-]+$",
+       "minLength": 16,
+       "maxLength": 1024
+@@ -28,5 +33,14 @@
+       "description": "When the signature was created"
+     }
+   },
+-  "required": ["signer","sig"]
++  "required": ["signer","sig"],
++  "examples": [
++    {
++      "signer": "registry.example.org",
++      "key_id": "ed25519-2025-09",
++      "alg": "ed25519",
++      "sig": "YWFhYmJiY2Nj...",
++      "signedAt": "2025-09-27T12:35:00Z"
++    }
++  ]
+ }
+\ No newline at end of file
+diff --git a/schemas/semantic.json b/schemas/semantic.json
+index 66df65a..e7f60bd 100644
+--- a/schemas/semantic.json
++++ b/schemas/semantic.json
+@@ -1,7 +1,7 @@
+ {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://spp.dev/schemas/semantic.json",
+-  "title": "SPP Artefact (MVSL)",
++  "title": "SPP Artifact (MVSL)",
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["id", "type", "title", "language", "content", "links", "provenance", "version", "signatures"],
+@@ -70,7 +70,7 @@
+     "provenance": {
+       "type": "object",
+       "additionalProperties": false,
+-      "required": ["mode", "source_url", "content_hash", "registry_id", "adapter_id", "collected_at"],
++      "required": ["mode", "content_hash", "registry_id", "adapter_id", "collected_at"],
+       "properties": {
+         "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
+         "publisher_did": { "type": "string", "pattern": "^did:[a-z0-9]+:.*$" },
+@@ -84,7 +84,14 @@
+         "collected_at": { "type": "string", "format": "date-time" },
+         "registry_id": { "type": "string", "format": "hostname" },
+         "adapter_id": { "type": "string", "minLength": 1 }
+-      }
++      },
++      "allOf": [
++        {
++          "if": { "properties": { "mode": { "const": "authoritative" } }, "required": ["mode"] },
++          "then": {},
++          "else": { "required": ["source_url"] }
++        }
++      ]
+     },
+     "signatures": {
+       "type": "array",
+@@ -94,14 +101,29 @@
+         "additionalProperties": false,
+         "required": ["signer", "sig"],
+         "properties": {
+-          "signer": { "type": "string", "minLength": 1 },
+-          "key_id": { "type": "string" },
++          "signer": { "type": "string", "minLength": 1, "description": "Registry domain (registry_id) or key identifier" },
++          "key_id": { "type": "string", "description": "Identifier for the public key (e.g., DNS TXT name or .well-known path)" },
+           "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "minLength": 16, "maxLength": 1024 },
+           "signedAt": { "type": "string", "format": "date-time" }
+         }
+       },
+       "description": "One or more signatures; the first MUST be the origin registry"
+     },
++    "endorsements": {
++      "type": "array",
++      "items": {
++        "type": "object",
++        "additionalProperties": false,
++        "required": ["artifact_hash", "endorser_id", "observed_at", "sig"],
++        "properties": {
++          "artifact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
++          "endorser_id": { "type": "string", "minLength": 1, "format": "hostname", "description": "Endorser registry domain" },
++          "observed_at": { "type": "string", "format": "date-time" },
++          "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "minLength": 16, "maxLength": 1024 }
++        }
++      },
++      "description": "Inline endorsements; optional in v0.4"
++    },
+     "version": { "type": "integer", "minimum": 1 },
+     "extensions": { "type": "object", "description": "Vendor/experimental fields keyed by namespace" }
+   }
+diff --git a/specs/SPP-Versions.md b/specs/SPP-Versions.md
+index b762e10..a015e27 100644
+--- a/specs/SPP-Versions.md
++++ b/specs/SPP-Versions.md
+@@ -1,8 +1,8 @@
+ # SPP Versioning – Semantic Publishing Protocol (SPP-Versions)
+ 
+-**Version:** 0.2  
++**Version:** 0.4  
+ **Status:** Production-Ready  
+-**Date:** 2025-07-28  
++**Date:** 2025-09-27  
+ **Codename:** SPP-Versions
+ 
+ ---
+@@ -23,7 +23,7 @@ SPP uses [Semantic Versioning](https://semver.org/) in the format:
+ 
+ **Example:**
+ - `v0.1.0` – Initial public draft
+-- `v0.2.0` – Adds new fields, clarifies compliance, no breaking changes
++- `v0.4.0` – Adds provenance, mandatory signatures, peering corroboration, plugin isolation
+ - `v1.0.0` – First stable release, may include breaking changes
+ 
+ ---
+@@ -40,10 +40,10 @@ SPP uses [Semantic Versioning](https://semver.org/) in the format:
+ 
+ ## Compatibility Matrix
+ 
+-| SPS Document Version | Can be read by v0.1 Processor | Can be read by v0.2 Processor | Can be read by v1.0 Processor |
++| SPS Document Version | Can be read by v0.1 Processor | Can be read by v0.4 Processor | Can be read by v1.0 Processor |
+ |---------------------|-------------------------------|-------------------------------|-------------------------------|
+ | v0.1                | Yes                           | Yes                           | Yes (if v1.0 is backward compatible) |
+-| v0.2                | No (if new required fields)    | Yes                           | Yes (if v1.0 is backward compatible) |
++| v0.4                | No (if new required fields)   | Yes                           | Yes (if v1.0 is backward compatible) |
+ | v1.0                | No (if breaking changes)       | No (if breaking changes)       | Yes                           |
+ 
+ - **Backward Compatibility:** Minor and patch releases are always backward compatible. Major releases may break compatibility.
+@@ -61,7 +61,7 @@ SPP uses [Semantic Versioning](https://semver.org/) in the format:
+ 
+ ## Version Declaration
+ 
+-- Every SPS document must declare its compliance version in the frontmatter (e.g., `sps_compliance_level: 2` and `sps_version: 0.2`).
++- Every SPS document must declare its compliance version in the frontmatter (e.g., `spp_compliance_level: 2` and `spp_version: 0.4`).
+ - Tools and processors must check the declared version and handle unsupported versions gracefully.
+ 
+ ---
+diff --git a/specs/registry/peering.md b/specs/registry/peering.md
+index 5e23f88..01cf4b6 100644
+--- a/specs/registry/peering.md
++++ b/specs/registry/peering.md
+@@ -1,7 +1,7 @@
+ # Semantic Publishing Protocol — Registry Peering (v0.4)
+ 
+ ## Status
+-- **Version:** 0.2-draft
++- **Version:** 0.4-draft
+ - **Stage:** Draft (subject to change)
+ - **Normative:** Yes
+ - **Dependencies:** SPP-Core, SPP-Federation, SPP-Transparency
+@@ -264,6 +264,7 @@ On request, servers SHOULD provide inclusion proofs for entries and MAY batch pr
+   - `TASK_ACCEPTED`
+   - `TASK_RESULTED`
+   - `USAGE_RECORDED`
++  - `PEER_CORROBORATION`
+   - `ARTIFACT_ERASED`
+ 
+ - Logs MUST be append-only Merkle trees.  
+diff --git a/test/conformance.md b/test/conformance.md
+index 9558b90..cfd262c 100644
+--- a/test/conformance.md
++++ b/test/conformance.md
+@@ -2,8 +2,7 @@
+ 
+ This document defines the minimum conformance requirements for a registry implementing SPP v0.4.
+ 
+-## Artifact Validation
+-- MUST validate artifacts against `schemas/extensions/registry/semantic.json`.
++- MUST validate artifacts against `schemas/semantic.json`.
+ - MUST verify `signatures[]` using JCS/Ed25519; first signature MUST be the origin registry.
+ - MUST enforce required `provenance.*` fields.
+ 
+diff --git a/tools/validate.py b/tools/validate.py
+index ab2d521..56f3c1e 100644
+--- a/tools/validate.py
++++ b/tools/validate.py
+@@ -1,18 +1,16 @@
+ #!/usr/bin/env python3
+ """
+-validate.py – SPS v0.2 .sps.md Validator
++validate.py – SPP v0.4 .spp.md Validator
+ 
+-Validates SPS Markdown files for required frontmatter fields, claim/reference formatting, and outputs summary results.
++Validates SPP Markdown files for required frontmatter fields, claim/reference formatting, and outputs summary results.
+ 
+ Usage:
+-    python tools/validate.py <path-to-file.sps.md>
++    python tools/validate.py <path-to-file.spp.md>
+ 
+ Requirements:
+     - Python 3.7+
+     - PyYAML (for frontmatter parsing)
+-
+-Install dependencies:
+-    pip install pyyaml
++    - spp_compliance_level
+ """
+ import sys
+ import re
+@@ -53,7 +51,7 @@ def check_claims_and_refs(frontmatter):
+ 
+ def main():
+     if len(sys.argv) != 2:
+-        print("Usage: python tools/validate.py <path-to-file.sps.md>")
++        print("Usage: python tools/validate.py <path-to-file.spp.md>")
+         sys.exit(1)
+     file_path = Path(sys.argv[1])
+     if not file_path.exists():
+@@ -66,7 +64,7 @@ def main():
+         sys.exit(1)
+     required_fields = [
+         'document_id', 'title', 'authors', 'created_at',
+-        'claims', 'references', 'timeline', 'signatures', 'sps_compliance_level'
++        'claims', 'references', 'timeline', 'signatures', 'spp_compliance_level'
+     ]
+     missing = check_required_fields(frontmatter, required_fields)
+     errors = check_claims_and_refs(frontmatter)
+@@ -77,7 +75,7 @@ def main():
+         for e in errors:
+             print(f"  - {e}")
+     if not missing and not errors:
+-        print("PASS: File is SPS-compliant.")
++        print("PASS: File is SPP-compliant.")
+     else:
+         sys.exit(1)
+ 
+diff --git a/v0.3-extensions.json b/v0.3-extensions.json
+deleted file mode 100644
+index 45613ef..0000000
+--- a/v0.3-extensions.json
++++ /dev/null
+@@ -1,36 +0,0 @@
+-{
+-  "$schema": "https://semantic-publishing.org/schema/extensions.json",
+-  "version": "0.3.0",
+-  "extensions": [
+-    {
+-      "id": "spp:endorsement-chains",
+-      "title": "Endorsement Chains",
+-      "description": "Declare trust relationships and endorsement lineage between agents or identities.",
+-      "spec": "specs/extensions/endorsement-chains.md"
+-    },
+-    {
+-      "id": "spp:time-versioning",
+-      "title": "Time-Based Versioning",
+-      "description": "Support for diffs, snapshots, and time-stamped content histories.",
+-      "spec": "specs/extensions/time-versioning.md"
+-    },
+-    {
+-      "id": "spp:ephemeral-content",
+-      "title": "Ephemeral Content",
+-      "description": "Allows content to self-expire or degrade after a defined window.",
+-      "spec": "specs/extensions/ephemeral-content.md"
+-    },
+-    {
+-      "id": "spp:trust-weighting",
+-      "title": "Trust Weighting",
+-      "description": "Calculates content trust based on graph endorsement and context.",
+-      "spec": "specs/extensions/trust-weighting.md"
+-    },
+-    {
+-      "id": "spp:alt-content-types",
+-      "title": "Alternate Content Types",
+-      "description": "Support for podcasts, videos, books, and longform media blocks.",
+-      "spec": "specs/extensions/alt-content-types.md"
+-    }
+-  ]
+-}
+
+From 18ad1a3a4d3b55afd0513c1b8fd8e2183a90532a Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Wed, 15 Oct 2025 16:06:15 +0100
+Subject: [PATCH 6/7] Spec updates to reflect the artifact enrichment.
+
+---
+ docs/data-model.md                     | 101 +++++++++++++++
+ docs/glossary.md                       |  11 ++
+ docs/pipeline.md                       |  64 ++++++++++
+ docs/releases/v0.5.0-migration.md      |  36 ++++++
+ docs/releases/v0.5.0.md                |  33 +++++
+ docs/spec-index.md                     |   3 +
+ docs/storage-layout.md                 |  59 +++++++++
+ openai/registry.yml                    |  74 ++++++++++-
+ specs/publishing/semantic-json.md      |  83 +++++++++++++
+ specs/spp/enrichment-and-versioning.md | 166 +++++++++++++++++++++++++
+ specs/spp/publishing-registry.md       |  31 ++++-
+ specs/spp/registry-and-discovery.md    |  22 ++++
+ 12 files changed, 681 insertions(+), 2 deletions(-)
+ create mode 100644 docs/data-model.md
+ create mode 100644 docs/pipeline.md
+ create mode 100644 docs/releases/v0.5.0-migration.md
+ create mode 100644 docs/releases/v0.5.0.md
+ create mode 100644 docs/storage-layout.md
+ create mode 100644 specs/spp/enrichment-and-versioning.md
+
+diff --git a/docs/data-model.md b/docs/data-model.md
+new file mode 100644
+index 0000000..35787c6
+--- /dev/null
++++ b/docs/data-model.md
+@@ -0,0 +1,101 @@
++
++
++# Data Model — Enrichment & Versioning (v0.4)
++
++This document defines the canonical entities and relationships for SPP implementations that support the **Enrichment Layer**.
++
++## Entity Graph
++
++```
++Publisher ─┬─> Artifact (id, url, domain, first_seen, last_seen, latest_version, status)
++          │
++          └─> Endorsement (optional)
++
++Artifact 1 ── * ArtifactVersion (artifact_id FK, version, content_sha256, created_at, ...)
++                   │
++                   ├─ 1 RawSnapshot     (s3_key, bytes, content_type, encoding, sha256)
++                   ├─ 1 CleanText       (s3_key, bytes, sha256, lang)
++                   ├─ * ArtifactChunk   (chunk_id, start, end, token_count, s3_key)
++                   ├─ 0..1 Diff         (s3_key, format, inserted, deleted, pct)
++                   └─ 0..* EmbeddingRef (chunk_id, model, dims, s3_key)
++```
++
++## Tables (reference DDL)
++> Names/keys are normative; types are suggestive.
++
++### `artifacts`
++- `id UUID PK`
++- `url TEXT UNIQUE NOT NULL`
++- `canonical_url TEXT NULL`
++- `domain TEXT NOT NULL`
++- `type TEXT DEFAULT 'article'`
++- `first_seen TIMESTAMPTZ NOT NULL`
++- `last_seen TIMESTAMPTZ NOT NULL`
++- `latest_version INT DEFAULT 0`
++- `status TEXT DEFAULT 'active'`  // active|invalid|tombstoned
++- Indexes: `(domain, first_seen DESC)`, `(last_seen DESC)`
++
++### `artifact_versions`
++- `id UUID PK`
++- `artifact_id UUID NOT NULL REFERENCES artifacts(id) ON DELETE CASCADE`
++- `version INT NOT NULL`
++- `content_sha256 TEXT NOT NULL`          // sha256 of RAW bytes
++- `created_at TIMESTAMPTZ NOT NULL`
++- `title TEXT`, `byline TEXT`, `lang TEXT`
++- `published_at TIMESTAMPTZ`, `updated_at TIMESTAMPTZ`
++- `http_status INT`, `content_type TEXT`
++- `etag TEXT`, `last_modified TEXT`
++- `raw_bytes INT`, `clean_bytes INT`
++- Constraints: `UNIQUE(artifact_id, version)`
++- Indexes: `(artifact_id, version DESC)`, `(content_sha256)`
++
++### `artifact_chunks`
++- `id UUID PK`
++- `artifact_id UUID NOT NULL REFERENCES artifacts(id) ON DELETE CASCADE`
++- `version INT NOT NULL`
++- `chunk_id TEXT NOT NULL`                 // deterministic (sha1 of ranges)
++- `start INT NOT NULL`, `end INT NOT NULL`
++- `token_count INT NOT NULL`
++- `s3_key TEXT NOT NULL`                   // pointer to gzipped chunk text
++- `embedding_ref TEXT NULL`                // pointer to vector file or index row id
++- Constraints: `UNIQUE(artifact_id, version, chunk_id)`
++- Indexes: `(artifact_id, version)`, `(chunk_id)`
++
++### `artifact_diffs`
++- `artifact_id UUID NOT NULL`
++- `version INT NOT NULL`
++- `format TEXT NOT NULL`                   // json-patch|unified
++- `inserted INT NOT NULL`, `deleted INT NOT NULL`, `pct REAL NOT NULL`
++- `s3_key TEXT NOT NULL`
++- Constraints: `PRIMARY KEY (artifact_id, version)`
++
++> Raw and Clean text are stored in object storage; their sizes are recorded in `artifact_versions`.
++
++## Object Storage Pointers
++- **RawSnapshot** → `spp-raw/raw/<domain>/<yyyy>/<mm>/<dd>/<sha256>.<ext>.gz`
++- **CleanText** → `spp-clean/clean/<artifactId>/<version>.txt.gz`
++- **ChunkText** → `spp-chunks/chunks/<artifactId>/<version>/<chunkId>.txt.gz`
++- **Diff** → `spp-diffs/diffs/<artifactId>/<version>.json.gz`
++- **Manifest** → `spp-artifacts/artifacts/<artifactId>/<version>.json.gz`
++- **Embeddings** → `spp-embeddings/emb/<artifactId>/<version>/<chunkId>.bin` (or parquet per version)
++
++## Version Semantics
++- New `ArtifactVersion` is created **only when** the raw snapshot hash changes.
++- `artifacts.latest_version` is updated accordingly; `last_seen` is always refreshed.
++- Metadata-only tweaks MAY be captured without new raw/clean blobs.
++
++## Idempotency & Integrity
++- All writes keyed by `(artifact_id, version)`; use UPSERT.
++- Object keys are deterministic; S3 writes SHOULD use put-if-absent.
++- Hashes:
++  - `content_sha256` = SHA-256 of raw bytes
++  - `clean_sha256` (object metadata) = SHA-256 of clean text
++
++## Retrieval Contracts
++- `GET /v1/artefacts/{id}` → latest state
++- `GET /v1/artefacts/{id}/versions` → list of `{ version, created_at }`
++- `GET /v1/artefacts/{id}/versions/{v}/manifest` → pointer map for that version
++
++---
++
++_This document is normative for field names and relationships; storage/indexes may vary._
+\ No newline at end of file
+diff --git a/docs/glossary.md b/docs/glossary.md
+index 39efced..2e0b071 100644
+--- a/docs/glossary.md
++++ b/docs/glossary.md
+@@ -65,4 +65,15 @@ This glossary defines key terms, acronyms, and concepts used throughout the SPP
+ 
+ ---
+ 
++
++## E
++
++- **Embedding**: A numeric vector representation of a text chunk used for semantic search and retrieval. Model-agnostic in SPP; referenced via a storage pointer.
++- **Enrichment Layer**: Optional extension that adds raw snapshots, clean text, chunks, embeddings, diffs, provenance, and versioning to artefacts.
++
++## V
++
++- **Version (Content Version)**: Monotonic integer indicating a new state of content created only when the raw snapshot hash changes.
++- **Version Manifest**: The per-version pointer map that references raw, clean, chunks, diffs, and provenance for a specific content version.
++
+ _This glossary is a living document. Please propose additions or clarifications as the protocol evolves._
+diff --git a/docs/pipeline.md b/docs/pipeline.md
+new file mode 100644
+index 0000000..d05677b
+--- /dev/null
++++ b/docs/pipeline.md
+@@ -0,0 +1,64 @@
++
++
++
++# Enrichment Pipeline (v0.4)
++
++This document specifies the **reference pipeline** for producing enriched, versioned artefacts compatible with SPP v0.4. Each stage is idempotent and emits structured outputs to Postgres and MinIO/S3.
++
++## Stages
++
++1. **Fetch**
++   - Input: URL (and optional `etag` / `last-modified`)
++   - Output: `{ rawBytes, headers, httpStatus }`
++   - Notes: set UA; 20s timeout; follow redirects; respect robots.
++
++2. **Hash & Decide Version**
++   - Compute `raw_sha256 = sha256(rawBytes)`.
++   - Look up latest version; **if same hash → skip version**, update `lastSeen`.
++   - Else, `version = latest + 1`.
++
++3. **Persist Raw Snapshot**
++   - Write `rawBytes.gz` to `spp-raw/raw/<domain>/<yyyy>/<mm>/<dd>/<sha256>.<ext>.gz`.
++   - Set metadata: `Content-Type`, `Content-Encoding: gzip`, `x-spp-raw-hash`.
++
++4. **Extract Clean Text & Metadata**
++   - Use readability-style DOM heuristics.
++   - Extract: title, byline, language, published/updated dates.
++   - Persist `clean.txt.gz` to `spp-clean/clean/<artifactId>/<version>.txt.gz` with `x-spp-clean-hash`.
++
++5. **Chunking**
++   - Split clean text into ~800–1200 token chunks, 10–15% overlap.
++   - `chunkId = sha1(artifactId|version|start|end)`.
++   - Persist to `spp-chunks/chunks/<artifactId>/<version>/<chunkId>.txt.gz`.
++
++6. **Diff vs Previous (if any)**
++   - Diff clean text using Myers or similar; summarise `{ ins, del, pct }`.
++   - Persist to `spp-diffs/diffs/<artifactId>/<version>.json.gz`.
++
++7. **Manifest**
++   - Compose per-version manifest (pointers + hashes) and write to `spp-artifacts/artifacts/<artifactId>/<version>.json.gz`.
++
++8. **(Optional) Embeddings**
++   - Queue `embed-chunks` jobs; write vectors per chunk to `spp-embeddings/emb/<artifactId>/<version>/<chunkId>.bin` or a batch parquet.
++
++## Idempotency Rules
++- Keys and DB rows are deterministic and unique per `(artifactId, version)`.
++- S3 writes use put-if-absent; DB uses `INSERT … ON CONFLICT DO UPDATE`.
++
++## Error Handling
++- Network/timeouts → retry with exponential backoff.
++- Invalid dates → omit field (never throw); log with `code/errno/syscall`.
++- Parser failure → mark artefact `invalid` with reason; do not retry endlessly.
++
++## DB Sketch
++- `artifacts(id PK, url UNIQUE, domain, first_seen, latest_version, status)`
++- `artifact_versions(id PK, artifact_id FK, version INT, content_sha256, created_at, title, published_at, updated_at, etag, last_modified, content_type, raw_bytes INT, clean_bytes INT)`
++- `artifact_chunks(id PK, artifact_id FK, version INT, chunk_id TEXT, start INT, end INT, token_count INT, s3_key TEXT, embedding_ref TEXT)`
++
++## API Touchpoints
++- `GET /artifacts/{id}/versions` → list versions
++- `GET /artifacts/{id}/versions/{v}/manifest` → pointer map
++
++## Compliance
++An implementation is pipeline-compliant if it:
++1) decides versions by raw hash; 2) writes raw + clean + manifest; 3) maintains provenance; 4) keeps writes idempotent; 5) never crashes on malformed inputs.
+diff --git a/docs/releases/v0.5.0-migration.md b/docs/releases/v0.5.0-migration.md
+new file mode 100644
+index 0000000..ce372cc
+--- /dev/null
++++ b/docs/releases/v0.5.0-migration.md
+@@ -0,0 +1,36 @@
++
++
++# Migration Guide — v0.5.0 (Enrichment & Versioning)
++
++This guide helps implementers adopt the Enrichment Layer without breaking existing producers/consumers.
++
++## Producers (Publishers / Crawlers)
++1. **Hash first:** compute `sha256(raw_bytes)` and use it to decide new versions.
++2. **Write raw snapshot:** to `spp-raw` with `Content-Encoding: gzip`.
++3. **Extract clean:** normalise text and write to `spp-clean`.
++4. **Chunk:** 800–1200 tokens with 10–15% overlap; deterministic `chunkId`.
++5. **Manifest:** publish per-version pointers and hashes.
++6. **(Optional) Embeddings:** write vectors per chunk or per-version parquet.
++
++## Registries
++1. Add endpoints:
++   - `GET /v1/artefacts/{id}/versions`
++   - `GET /v1/artefacts/{id}/versions/{v}/manifest`
++2. Store `first_seen` / `last_seen`; create versions only on hash change.
++3. Keep idempotent writes; use UPSERTs and deterministic keys.
++
++## Consumers (Agents / Indexers)
++1. Prefer **latest** unless a version is specified.
++2. Cache manifests; raw snapshots are immutable per hash.
++3. Use `etag`/`lastModified` for cheap revalidation.
++
++## Backfill Strategy
++- You can enrich existing artefacts by re-fetching content, generating `raw/clean/chunks`, and writing version `1` manifests.
++- For entries without accessible raw, start from clean text only; mark `raw` as `null`.
++
++## Rollout Steps
++- Phase 1: implement raw+clean+manifest.
++- Phase 2: add chunks and diffs.
++- Phase 3: add embeddings and query endpoints.
++
++_No schema fields were removed; changes are additive._
+diff --git a/docs/releases/v0.5.0.md b/docs/releases/v0.5.0.md
+new file mode 100644
+index 0000000..a7e11f6
+--- /dev/null
++++ b/docs/releases/v0.5.0.md
+@@ -0,0 +1,33 @@
++
++
++# SPP v0.5.0 — Enrichment & Versioning
++
++**Status:** Draft Release Notes  
++**Date:** 2025-10-15
++
++This release introduces the **Enrichment Layer** and **Versioned Artefacts**, enabling durable snapshots, clean text, chunk-level retrieval, diffs, and provenance.
++
++## Highlights
++- `content.raw`, `content.clean`, `content.chunks[]` in `semantic.json`
++- `version{ number, previous, createdAt, diff }` and `provenance{ firstSeen, lastSeen, etag, lastModified }`
++- Deterministic versioning keyed by `content.raw.sha256`
++- New registry endpoints for versions and per-version manifests
++- Canonical storage layout for MinIO/S3 (raw/clean/chunks/embeddings/diffs/manifests)
++
++## Why it matters
++- **Durability:** Immutable snapshots support archival and audit.
++- **Retrieval:** Chunking + (optional) embeddings make LLM search fast and precise.
++- **Trust:** Provenance + hashes enable endorsements to bind to specific content states.
++
++## Compatibility
++- All additions are **optional**; existing producers remain valid.
++- Consumers MUST ignore unknown fields.
++
++## Links
++- Spec: `specs/spp/enrichment-and-versioning.md`
++- Data Model: `docs/data-model.md`
++- Pipeline: `docs/pipeline.md`
++- Storage: `docs/storage-layout.md`
++- OpenAPI: `openai/registry.yml`
++
++---
+\ No newline at end of file
+diff --git a/docs/spec-index.md b/docs/spec-index.md
+index 38260fa..d630fbd 100644
+--- a/docs/spec-index.md
++++ b/docs/spec-index.md
+@@ -63,6 +63,9 @@ This index provides a structured overview and navigation map for all major SPP s
+ - [Publishing Registry](../specs/spp/publishing-registry.md)
+ - [Search Index Snapshot](../specs/spp/search-index-snapshot.md)
+ - [Semantic Inventory](../specs/spp/semantic-inventory.md)
++- [Storage Layout](./storage-layout.md)
++- [Data Model](./data-model.md)
++- [Pipeline](./pipeline.md)
+ 
+ ## Development & Extensibility
+ - [API Endpoints](../specs/dev/api-endpoints.md)
+diff --git a/docs/storage-layout.md b/docs/storage-layout.md
+new file mode 100644
+index 0000000..a06bd4f
+--- /dev/null
++++ b/docs/storage-layout.md
+@@ -0,0 +1,59 @@
++
++
++# Storage Layout (MinIO/S3) — Enrichment v0.4
++
++This document standardises bucket/prefix conventions for raw snapshots, clean text, chunks, embeddings, diffs, and versioned manifests.
++
++## Buckets
++- **`spp-raw`** — raw snapshots (gzipped)
++- **`spp-clean`** — normalised text (gzipped)
++- **`spp-chunks`** — per-chunk text (gzipped)
++- **`spp-embeddings`** — per-chunk vectors (binary/parquet)
++- **`spp-diffs`** — clean-text diffs between versions (gzipped)
++- **`spp-artifacts`** — per-version manifests (gzipped JSON)
++
++## Keys
++```
++# raw snapshot (by domain + date + content hash)
++raw/<domain>/<yyyy>/<mm>/<dd>/<sha256>.<ext>.gz
++
++# clean text (by artifact/version)
++clean/<artifactId>/<version>.txt.gz
++
++# chunk text (by artifact/version/chunk)
++chunks/<artifactId>/<version>/<chunkId>.txt.gz
++
++# embeddings (one file per chunk or batch per version)
++emb/<artifactId>/<version>/<chunkId>.bin
++# or
++emb/<artifactId>/<version>/embeddings.parquet
++
++# diffs (between previous and current clean text)
++diffs/<artifactId>/<version>.json.gz
++
++# per-version manifest (semantic pointers)
++artifacts/<artifactId>/<version>.json.gz
++```
++
++## Metadata
++Set object metadata when writing:
++- `Content-Type` (e.g., `text/html`, `text/plain`, `application/json`)
++- `Content-Encoding: gzip` when applicable
++- `x-spp-raw-hash: sha256:...` (for raw)
++- `x-spp-clean-hash: sha256:...` (for clean)
++- `x-spp-model: <embedding-model>` (for vectors)
++
++## Lifecycle (recommendations)
++- `spp-raw`: retain 90 days (or as policy requires); large footprint
++- `spp-clean`, `spp-chunks`, `spp-artifacts`: retain indefinitely
++- `spp-embeddings`: retain; rebuildable but costly
++- `spp-diffs`: retain ≥180 days for audit
++
++## Idempotency
++- Keys MUST be deterministic
++- Writers MUST use put-if-absent semantics
++- Duplicate writes with same hash MUST NOT create new objects
++
++## Security
++- Private by default; expose via API or signed URLs
++- Respect takedowns by tombstoning manifests and revoking public access
+diff --git a/openai/registry.yml b/openai/registry.yml
+index 38cf413..6ef391e 100644
+--- a/openai/registry.yml
++++ b/openai/registry.yml
+@@ -366,4 +366,76 @@ paths:
+       responses:
+         '202': { description: Accepted }
+         '400': { $ref: '#/components/responses/Problem' }
+-        '401': { $ref: '#/components/responses/Problem' }
+\ No newline at end of file
++        '401': { $ref: '#/components/responses/Problem' }
++
++  /v1/artefacts/{id}/versions:
++    get:
++      summary: List versions for an artefact
++      parameters:
++        - $ref: '#/components/parameters/ArtefactID'
++      responses:
++        '200':
++          description: OK
++          content:
++            application/spp+json;v=1:
++              schema:
++                type: object
++                properties:
++                  items:
++                    type: array
++                    items:
++                      type: object
++                      properties:
++                        version: { type: integer }
++                        created_at: { type: string, format: date-time }
++        '404': { $ref: '#/components/responses/Problem' }
++
++  /v1/artefacts/{id}/versions/{version}/manifest:
++    get:
++      summary: Retrieve per-version manifest pointers
++      parameters:
++        - $ref: '#/components/parameters/ArtefactID'
++        - name: version
++          in: path
++          required: true
++          schema: { type: integer }
++      responses:
++        '200':
++          description: OK
++          content:
++            application/spp+json;v=1:
++              schema:
++                type: object
++                properties:
++                  id: { type: string }
++                  version: { type: integer }
++                  content:
++                    type: object
++                    properties:
++                      raw:
++                        type: object
++                        properties:
++                          sha256: { type: string }
++                          storage:
++                            type: object
++                            properties:
++                              href: { type: string }
++                              bytes: { type: integer }
++                              encoding: { type: string }
++                      clean:
++                        type: object
++                        properties:
++                          sha256: { type: string }
++                          storage:
++                            type: object
++                            properties:
++                              href: { type: string }
++                              encoding: { type: string }
++                  provenance:
++                    type: object
++                    properties:
++                      firstSeen: { type: string, format: date-time }
++                      lastSeen: { type: string, format: date-time }
++                      etag: { type: string }
++                      lastModified: { type: string }
++        '404': { $ref: '#/components/responses/Problem' }
+\ No newline at end of file
+diff --git a/specs/publishing/semantic-json.md b/specs/publishing/semantic-json.md
+index ae72fc9..71f23ae 100644
+--- a/specs/publishing/semantic-json.md
++++ b/specs/publishing/semantic-json.md
+@@ -126,3 +126,86 @@ A valid `semantic.json`:
+ - Add `structuredBody` (optional parsed structure with sections, links, quotes)
+ - Consider `altLangs` for translations of the same artefact
+ - Allow inclusion of embedded agent recommendations or semantic blocks
++
++---
++
++## 🔧 Enrichment Extensions (v0.4) — Optional
++
++> This section defines **non-breaking** extensions for enriched artefacts. Producers MAY include these fields to enable versioning, history, chunk-level retrieval, and provenance. Consumers MUST ignore fields they do not understand.
++
++### Added top-level sections
++- `content` (object) — pointers + hashes for raw/clean/chunks
++- `version` (object) — version number, timestamps, diff
++- `provenance` (object) — crawl/observation details
++
++### Extended Schema (additive)
++```jsonc
++{
++  "id": "...",           // existing
++  "title": "...",        // existing
++  "summary": "...",      // existing
++  "topics": [ /* ... */ ],
++  "tags": [ "..." ],
++  "lang": "en",
++  "date": "2025-07-12",
++  "version": "1.0.0",     // semantic version of this artefact file (existing)
++
++  // NEW: Enrichment (optional)
++  "content": {
++    "raw": {
++      "sha256": "sha256:...",                 // hash of RAW bytes
++      "storage": { "href": "s3://spp-raw/example.com/2025/10/15/<hash>.html.gz", "bytes": 123456, "encoding": "gzip" }
++    },
++    "clean": {
++      "sha256": "sha256:...",                 // hash of main text
++      "storage": { "href": "s3://spp-clean/<artifactId>/4.txt.gz", "encoding": "gzip" }
++    },
++    "chunks": [
++      { "id": "chunk-0001", "tokenCount": 812, "storage": { "href": "s3://spp-chunks/<artifactId>/4/chunk-0001.txt.gz" }, "embedding": { "href": "s3://spp-embeddings/<artifactId>/4/chunk-0001.bin" } }
++    ]
++  },
++  "versionInfo": {                               // avoid clashing with existing "version"
++    "number": 4,
++    "previous": 3,
++    "createdAt": "2025-10-15T08:13:00Z",
++    "diff": { "href": "s3://spp-diffs/<artifactId>/4.json.gz", "format": "json-patch|unified", "changeStats": { "inserted": 120, "deleted": 42, "pct": 1.8 } }
++  },
++  "provenance": {
++    "firstSeen": "2025-10-12T06:31:00Z",
++    "lastSeen": "2025-10-15T08:31:00Z",
++    "crawler": "PunkForge-Crawler/1.0",
++    "etag": "\"W/abc123\"",
++    "lastModified": "Wed, 15 Oct 2025 08:31:00 GMT",
++    "rawHash": "sha256:..."
++  }
++}
++```
++
++> **Note:** This document’s original `version` field denotes the **semantic version of this `semantic.json` artefact itself**. To avoid ambiguity, the enrichment section uses `versionInfo.number` for **content versioning**. Implementations MAY use `version` for file semver and `versionInfo.number` for content history.
++
++### Behavioural Rules
++- **New content version** only when `content.raw.sha256` changes.
++- **Idempotent writes**: same `(id, versionInfo.number)` MUST NOT create duplicates.
++- **Diffs** SHOULD reflect **clean** text deltas.
++- **Embeddings** are optional and model-agnostic; if present, annotate with `model` and `dims`.
++
++### Minimal enriched example
++```json
++{
++  "id": "ai-firms-licensing-treaty",
++  "title": "AI firms to need licences under new global treaty",
++  "summary": "Countries back move to register large AI models used in critical sectors.",
++  "topics": [{"id":"technology","label":"Technology"}],
++  "lang": "en",
++  "date": "2025-07-12",
++  "version": "1.1.0",
++  "content": {
++    "raw": {"sha256": "sha256:abc...", "storage": {"href": "s3://spp-raw/anchor.news/2025/07/12/abc.html.gz", "encoding":"gzip"}},
++    "clean": {"sha256": "sha256:def...", "storage": {"href": "s3://spp-clean/artifacts/uuid/1.txt.gz", "encoding":"gzip"}}
++  },
++  "versionInfo": {"number": 1, "createdAt": "2025-07-12T10:00:00Z"},
++  "provenance": {"firstSeen":"2025-07-12T10:00:00Z","lastSeen":"2025-07-12T10:00:00Z","crawler":"PunkForge-Crawler/1.0","rawHash":"sha256:abc..."}
++}
++```
++
++---
+diff --git a/specs/spp/enrichment-and-versioning.md b/specs/spp/enrichment-and-versioning.md
+new file mode 100644
+index 0000000..97c30f2
+--- /dev/null
++++ b/specs/spp/enrichment-and-versioning.md
+@@ -0,0 +1,166 @@
++# Enrichment & Versioning — SPP v0.4 (Draft)
++
++**Spec Code:** spp/enrichment-and-versioning  
++**Status:** Draft for implementation  
++**Applies to:** Artefacts registered in SPP registries and/or published alongside content (e.g., `.well-known/semantic/`)
++
++---
++
++## 1. Purpose
++This extension elevates SPP from a registry-of-URLs to a **versioned, queryable content archive**. It standardises how implementations persist raw snapshots, normalised (clean) text, chunked semantics, and change history over time, with clear provenance and integrity fields that can be signed and endorsed.
++
++Goals:
++- Durable, reproducible **snapshots** of content (raw bytes + hashes)
++- Normalised **clean text** for language/LLM processing
++- Stable **chunks** for retrieval-augmented search and embedding
++- Deterministic **versioning** keyed by content hash (idempotent writes)
++- Optional **diffs** between versions for efficient sync & auditing
++- Verifiable **provenance** (first/last seen, etag/last-modified, crawler)
++
++---
++
++## 2. Terminology
++- **Raw Snapshot**: The exact bytes fetched from the source (HTML/JSON/RSS/etc.), typically gzipped at rest.
++- **Clean Text**: Boilerplate-stripped text content derived from the raw snapshot.
++- **Chunk**: A bounded text span (e.g., ~800–1200 tokens) with stable `chunkId`, suitable for vector indexing.
++- **Version**: Monotonic integer per artefact (`1,2,3,...`) created only when raw content changes.
++- **Provenance**: Fields describing how/when/with-what the content was observed.
++
++---
++
++## 3. `semantic.json` — Schema Extensions
++These fields are **optional** but RECOMMENDED for enriched artefacts. They extend the base `semantic.json` without breaking existing producers.
++
++```jsonc
++{
++  "id": "urn:spp:artifact:uuid",
++  "type": "article",                     // or other content types
++  "canonical": "https://example.com/x",
++  "metadata": {
++    "title": "...",
++    "byline": "...",
++    "language": "en",
++    "published": "2025-10-15T07:00:00Z",
++    "updated": "2025-10-15T08:12:00Z",
++    "contentType": "text/html"
++  },
++  "content": {
++    "raw": {
++      "sha256": "sha256:...",           // hash of RAW bytes
++      "storage": {
++        "href": "s3://spp-raw/example.com/2025/10/15/<hash>.html.gz",
++        "bytes": 123456,
++        "encoding": "gzip"
++      }
++    },
++    "clean": {
++      "sha256": "sha256:...",           // hash of CLEAN text
++      "storage": {
++        "href": "s3://spp-clean/<artifactId>/4.txt.gz",
++        "encoding": "gzip"
++      }
++    },
++    "chunks": [
++      {
++        "id": "chunk-0001",
++        "tokenCount": 812,
++        "storage": { "href": "s3://spp-chunks/<artifactId>/4/chunk-0001.txt.gz" },
++        "embedding": { "href": "s3://spp-embeddings/<artifactId>/4/chunk-0001.bin" }
++      }
++    ]
++  },
++  "version": {
++    "number": 4,
++    "previous": 3,
++    "createdAt": "2025-10-15T08:13:00Z",
++    "diff": {
++      "href": "s3://spp-diffs/<artifactId>/4.json.gz",
++      "format": "json-patch|unified",
++      "changeStats": { "inserted": 120, "deleted": 42, "pct": 1.8 }
++    }
++  },
++  "provenance": {
++    "firstSeen": "2025-10-12T06:31:00Z",
++    "lastSeen": "2025-10-15T08:31:00Z",
++    "crawler": "PunkForge-Crawler/1.0",
++    "etag": "\"W/abc123\"",
++    "lastModified": "Wed, 15 Oct 2025 08:31:00 GMT",
++    "rawHash": "sha256:..."
++  }
++}
++```
++
++**Notes**
++- `content.raw.sha256` is the canonical **content hash** used for idempotency and versioning decisions.
++- Storage pointers MAY use any scheme (`s3://`, `ipfs://`, `https://`), but SHOULD be dereferenceable by the receiving agent.
++- Embeddings are optional and model-agnostic; `embedding` MAY include `{ "model": "text-embedding-3-large", "dims": 3072 }`.
++
++---
++
++## 4. Versioning Rules
++
++**4.1 New version condition**  
++Create a new version **only** if the **raw snapshot hash** differs from the latest persisted version:
++```
++if sha256(raw_bytes) != latest.version.content_sha256 → version = latest.version + 1
++else → do not create a new version (update lastSeen only)
++```
++
++**4.2 Minor vs Major**  
++- **Major** change: `raw` differs → increment `version.number`.
++- **Minor** (metadata-only) change: `raw` same but metadata differs → MAY record as metadata patch (no new `version.number`).
++
++**4.3 Diffing**  
++If `version.number > 1`, implementers SHOULD store a `diff` between current and previous **clean** text. Format MAY be `json-patch` or unified diff. Include summary stats.
++
++**4.4 Idempotency**  
++Writes MUST be idempotent: same `(artifactId, version)` and same `raw.sha256` MUST NOT produce duplicate versions or blobs.
++
++---
++
++## 5. Provenance & Integrity
++- `provenance.firstSeen` / `lastSeen`: ISO 8601, UTC.
++- `etag` / `lastModified`: lifted from HTTP response headers when present.
++- `crawler`: SHOULD identify the user-agent/version used.
++- `rawHash`: duplicate of `content.raw.sha256` for quick lookup.
++
++**Signatures & Endorsements**  
++When producing endorsements or signatures over artefacts, include:
++- `id`, `canonical`, `version.number`, `content.raw.sha256`
++This binds trust objects to a specific immutable content state.
++
++---
++
++## 6. Compliance
++A registry/node is **Enrichment v0.4 compliant** if it:
++1. Persists `content.raw.sha256` and uses it to decide versioning.
++2. Exposes storage pointers for `raw` and `clean` (chunks optional).
++3. Populates `version.number` and `provenance.{firstSeen,lastSeen}`.
++4. (SHOULD) Emits diffs and chunk manifests.
++
++---
++
++## 7. API Additions (summary)
++Implementations SHOULD provide endpoints (or manifests) to retrieve version lists and per-version manifests:
++- `GET /artifacts/{id}/versions` → array of `{ version, createdAt }`
++- `GET /artifacts/{id}/versions/{v}/manifest` → the object above (or a minimal pointer map)
++
++See `openapi/registry.yml` for canonical definitions.
++
++---
++
++## 8. Backwards Compatibility
++All fields in this extension are optional. Producers without enrichment remain valid. Consumers MUST ignore unknown fields and SHOULD prefer enriched data when present.
++
++---
++
++## 9. Security & Robots
++- Respect `robots.txt` and `Cache-Control: no-archive` where policy requires; document site-level exceptions.
++- Rate-limit per domain; handle legal takedown by tombstoning the artefact (retain hash and provenance).
++
++---
++
++## 10. Examples
++Provide at least one minimal and one full manifest in `examples/enrichment/` (out of scope of this file; tracked in docs).
++
++
+diff --git a/specs/spp/publishing-registry.md b/specs/spp/publishing-registry.md
+index a6ae7b0..0adf618 100644
+--- a/specs/spp/publishing-registry.md
++++ b/specs/spp/publishing-registry.md
+@@ -87,4 +87,33 @@ To be compliant with SPP:
+ 
+ - AI Browsers use registries to discover and prioritise relevant content
+ - Agents may also submit registry entries on behalf of creators or scrape tagged content for registration
+-- Consent receipts are optionally cross-linked for auditing purposes
+\ No newline at end of file
++- Consent receipts are optionally cross-linked for auditing purposes
++
++
++## Enrichment-Aware Persistence (v0.4)
++
++Registries that support the Enrichment Layer MUST follow these rules:
++
++### Idempotency & Versioning
++- Compute `content_sha256 = sha256(raw_bytes)` for each fetched item.
++- Create a new `version` **only if** `content_sha256` differs from the most recent version.
++- Store `first_seen`, update `last_seen` on every observation.
++
++### Manifests & Storage Pointers
++- For each version, produce a **manifest** with pointers to:
++  - `content.raw` (bytes, encoding, sha256)
++  - `content.clean` (sha256)
++  - optional `content.chunks[]` (text and/or embeddings)
++  - optional `version.diff`
++  - `provenance` fields (etag, lastModified, crawler)
++- Manifests SHOULD be retrievable via `GET /v1/artefacts/{id}/versions/{v}/manifest`.
++
++### Discovery
++- The default `GET /v1/artefacts/{id}` returns the **latest** version.
++- Agents MAY request historical versions via the versioned endpoints.
++
++### Retention
++- Keep manifests and clean/chunks indefinitely when feasible.
++- Apply lifecycle to large raw snapshots according to policy (e.g., 90 days).
++
++---
+\ No newline at end of file
+diff --git a/specs/spp/registry-and-discovery.md b/specs/spp/registry-and-discovery.md
+index ca288f8..29db4e8 100644
+--- a/specs/spp/registry-and-discovery.md
++++ b/specs/spp/registry-and-discovery.md
+@@ -137,3 +137,25 @@ This allows agents to:
+ SPP discovery is modular, decentralised, and designed for agents—not crawlers.  
+ No scraping. No clickbait. Just structured, trusted, user-consented knowledge exchange.
+ 
++
++## 📦 Versioned Artefacts (v0.4)
++
++SPP registries MAY expose **version-aware discovery** for enriched artefacts (see `specs/spp/enrichment-and-versioning.md`). This allows agents to fetch historical states, diffs, and chunk manifests.
++
++### Registry requirements (SHOULD)
++- Persist `content.raw.sha256` per artefact version and use it for idempotency.
++- Expose a versions listing for each artefact.
++- Expose a **per-version manifest** that points to `raw`, `clean`, `chunks`, optional `diff`, and `provenance`.
++
++### API surface
++Implementations SHOULD provide the following endpoints (path shapes are normative; details in OpenAPI):
++- `GET /v1/artefacts/{id}/versions` → `[ { version, created_at } ]`
++- `GET /v1/artefacts/{id}/versions/{version}/manifest` → pointer map (storage `href`s + hashes)
++
++### Client behaviour
++- Prefer the **latest** unless a specific version is requested.
++- Use `etag`/`lastModified` for cheap revalidation.
++- Cache manifests aggressively; the raw snapshot is immutable per `sha256`.
++
++---
++
+
+From ca553b1ee509a1147833ce42a576535746f3a647 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Wed, 15 Oct 2025 16:06:30 +0100
+Subject: [PATCH 7/7] Spec updates.
+
+---
+ docs/spec-hierarchy.md | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/docs/spec-hierarchy.md b/docs/spec-hierarchy.md
+index ffde6c8..1076fcd 100644
+--- a/docs/spec-hierarchy.md
++++ b/docs/spec-hierarchy.md
+@@ -26,6 +26,7 @@ SPP (Semantic Publishing Protocol)
+ │
+ ├── Publishing
+ │   ├── Semantic blocks
++│   ├── Enrichment & Versioning
+ │   ├── Attribution & review chain
+ │   └── Publisher metadata & rating
+ │
+@@ -47,4 +48,6 @@ SPP (Semantic Publishing Protocol)
+ - **SPS** is the core specification for content structure and publishing.
+ - **Subdomains** (agents, ads, publishing, consent, payments) provide specialized specs and modules for each area.
+ 
++The *Publishing* branch now includes the **Enrichment & Versioning** layer (v0.4+), defining raw snapshots, clean text, chunking, diffs, and provenance for durable, queryable content history.
++
+ See the [Specification Index](spec-index.md) for links to all documents.
