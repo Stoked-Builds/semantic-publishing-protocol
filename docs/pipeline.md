@@ -1,9 +1,6 @@
+# Processing Pipeline (v0.4+)
 
-
-
-# Enrichment Pipeline (v0.4)
-
-This document specifies the **reference pipeline** for producing enriched, versioned artefacts compatible with SPP v0.4. Each stage is idempotent and emits structured outputs to Postgres and MinIO/S3.
+This document specifies the **reference, modular pipeline** for producing enriched, versioned artefacts. It is split into three services — **Ingest**, **Enrichment**, and **Embeddings** — which communicate via message queues. Each stage is idempotent and writes to Postgres and MinIO/S3.
 
 ## Stages
 
@@ -20,6 +17,8 @@ This document specifies the **reference pipeline** for producing enriched, versi
 3. **Persist Raw Snapshot**
    - Write `rawBytes.gz` to `spp-raw/raw/<domain>/<yyyy>/<mm>/<dd>/<sha256>.<ext>.gz`.
    - Set metadata: `Content-Type`, `Content-Encoding: gzip`, `x-spp-raw-hash`.
+   - Emit event: 
+    `version-created` `{ artifactId, version, rawSha256, s3RawKey, headers }`
 
 4. **Extract Clean Text & Metadata**
    - Use readability-style DOM heuristics.
@@ -37,6 +36,8 @@ This document specifies the **reference pipeline** for producing enriched, versi
 
 7. **Manifest**
    - Compose per-version manifest (pointers + hashes) and write to `spp-artifacts/artifacts/<artifactId>/<version>.json.gz`.
+   - Emit event: 
+    `version-enriched` `{ artifactId, version, chunkRefs }`
 
 8. **(Optional) Embeddings**
    - Queue `embed-chunks` jobs; write vectors per chunk to `spp-embeddings/emb/<artifactId>/<version>/<chunkId>.bin` or a batch parquet.
@@ -62,3 +63,12 @@ This document specifies the **reference pipeline** for producing enriched, versi
 ## Compliance
 An implementation is pipeline-compliant if it:
 1) decides versions by raw hash; 2) writes raw + clean + manifest; 3) maintains provenance; 4) keeps writes idempotent; 5) never crashes on malformed inputs.
+
+## Events (Reference)
+
+- **`version-created`** — emitted by Ingest after raw snapshot is stored.
+  - payload: `{ artifactId, version, rawSha256, s3RawKey, headers }`
+- **`version-enriched`** — emitted by Enrichment after clean/chunks/diff/manifest are written.
+  - payload: `{ artifactId, version, chunkRefs }`
+- **`version-embedded`** *(optional)* — emitted after embeddings are persisted.
+  - payload: `{ artifactId, version, model, dims }`

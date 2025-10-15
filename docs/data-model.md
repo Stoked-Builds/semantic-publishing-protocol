@@ -1,5 +1,3 @@
-
-
 # Data Model — Enrichment & Versioning (v0.4)
 
 This document defines the canonical entities and relationships for SPP implementations that support the **Enrichment Layer**.
@@ -83,6 +81,8 @@ Artifact 1 ── * ArtifactVersion (artifact_id FK, version, content_sha256, cr
 - New `ArtifactVersion` is created **only when** the raw snapshot hash changes.
 - `artifacts.latest_version` is updated accordingly; `last_seen` is always refreshed.
 - Metadata-only tweaks MAY be captured without new raw/clean blobs.
+
+Implementations MAY track stage progression timestamps per version, e.g. `enriched_at TIMESTAMPTZ`, `embedded_at TIMESTAMPTZ`, and a `processing_status` field (e.g., `snapshot|enriched|embedded|invalid`). These are optional and do not affect wire compatibility.
 
 ## Idempotency & Integrity
 - All writes keyed by `(artifact_id, version)`; use UPSERT.

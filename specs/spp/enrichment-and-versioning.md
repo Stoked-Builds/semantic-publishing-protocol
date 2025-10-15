@@ -97,6 +97,20 @@ These fields are **optional** but RECOMMENDED for enriched artefacts. They exten
 
 ---
 
+### 3.2 Processing Architecture (Recommended)
+
+Implementations MAY separate artefact processing into three idempotent stages that communicate via queues/events:
+
+| Stage       | Input                         | Output              | Core responsibility |
+|-------------|-------------------------------|---------------------|---------------------|
+| **Ingest**  | HTTP source (URL → response)  | `version-created`   | Fetch & store raw snapshot; compute `content.raw.sha256`; create minimal DB row/manifest pointer |
+| **Enrichment** | `version-created`          | `version-enriched`  | Extract clean text + normalized metadata; chunk; (if prev) diff; write per-version manifest |
+| **Embeddings** | `version-enriched`         | `version-embedded` *(optional)* | Generate vectors and persist embedding pointers |
+
+Each event MUST include at least `{ artifactId, version, rawSha256, s3RawKey }` and SHOULD use deterministic `jobId`s. Storage writes MUST be idempotent. See `docs/pipeline.md` for the reference flow.
+
+---
+
 ## 4. Versioning Rules
 
 **4.1 New version condition**  

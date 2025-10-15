@@ -46,6 +46,7 @@ This glossary defines key terms, acronyms, and concepts used throughout the SPP 
 
 - **Payment Adapter**: A pluggable module that executes payment transactions using various methods (crypto, fiat, stablecoin, etc.). See [Payment Adapter Contract](../specs/payments/payment-adapter-contract.md).
 - **Publisher Metadata**: Structured data describing a publisher's identity, reputation, and content offerings. See [Publisher Metadata](../specs/publishing/publisher-metadata.md).
+- **Processing Pipeline**: The ordered sequence of **Ingest → Enrichment → Embedding** stages that together produce a fully enriched, versioned artefact. Stages communicate via events (e.g., `version-created`, `version-enriched`).
 
 ## R
 
