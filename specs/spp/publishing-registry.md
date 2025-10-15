@@ -88,3 +88,32 @@ To be compliant with SPP:
 - AI Browsers use registries to discover and prioritise relevant content
 - Agents may also submit registry entries on behalf of creators or scrape tagged content for registration
 - Consent receipts are optionally cross-linked for auditing purposes
+
+
+## Enrichment-Aware Persistence (v0.4)
+
+Registries that support the Enrichment Layer MUST follow these rules:
+
+### Idempotency & Versioning
+- Compute `content_sha256 = sha256(raw_bytes)` for each fetched item.
+- Create a new `version` **only if** `content_sha256` differs from the most recent version.
+- Store `first_seen`, update `last_seen` on every observation.
+
+### Manifests & Storage Pointers
+- For each version, produce a **manifest** with pointers to:
+  - `content.raw` (bytes, encoding, sha256)
+  - `content.clean` (sha256)
+  - optional `content.chunks[]` (text and/or embeddings)
+  - optional `version.diff`
+  - `provenance` fields (etag, lastModified, crawler)
+- Manifests SHOULD be retrievable via `GET /v1/artefacts/{id}/versions/{v}/manifest`.
+
+### Discovery
+- The default `GET /v1/artefacts/{id}` returns the **latest** version.
+- Agents MAY request historical versions via the versioned endpoints.
+
+### Retention
+- Keep manifests and clean/chunks indefinitely when feasible.
+- Apply lifecycle to large raw snapshots according to policy (e.g., 90 days).
+
+---

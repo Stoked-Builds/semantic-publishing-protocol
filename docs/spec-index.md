@@ -63,6 +63,9 @@ This index provides a structured overview and navigation map for all major SPP s
 - [Publishing Registry](../specs/spp/publishing-registry.md)
 - [Search Index Snapshot](../specs/spp/search-index-snapshot.md)
 - [Semantic Inventory](../specs/spp/semantic-inventory.md)
+- [Storage Layout](./storage-layout.md)
+- [Data Model](./data-model.md)
+- [Pipeline](./pipeline.md)
 
 ## Development & Extensibility
 - [API Endpoints](../specs/dev/api-endpoints.md)

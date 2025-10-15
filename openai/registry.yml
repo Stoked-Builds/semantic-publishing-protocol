@@ -367,3 +367,75 @@ paths:
         '202': { description: Accepted }
         '400': { $ref: '#/components/responses/Problem' }
         '401': { $ref: '#/components/responses/Problem' }
+
+  /v1/artefacts/{id}/versions:
+    get:
+      summary: List versions for an artefact
+      parameters:
+        - $ref: '#/components/parameters/ArtefactID'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        version: { type: integer }
+                        created_at: { type: string, format: date-time }
+        '404': { $ref: '#/components/responses/Problem' }
+
+  /v1/artefacts/{id}/versions/{version}/manifest:
+    get:
+      summary: Retrieve per-version manifest pointers
+      parameters:
+        - $ref: '#/components/parameters/ArtefactID'
+        - name: version
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/spp+json;v=1:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  version: { type: integer }
+                  content:
+                    type: object
+                    properties:
+                      raw:
+                        type: object
+                        properties:
+                          sha256: { type: string }
+                          storage:
+                            type: object
+                            properties:
+                              href: { type: string }
+                              bytes: { type: integer }
+                              encoding: { type: string }
+                      clean:
+                        type: object
+                        properties:
+                          sha256: { type: string }
+                          storage:
+                            type: object
+                            properties:
+                              href: { type: string }
+                              encoding: { type: string }
+                  provenance:
+                    type: object
+                    properties:
+                      firstSeen: { type: string, format: date-time }
+                      lastSeen: { type: string, format: date-time }
+                      etag: { type: string }
+                      lastModified: { type: string }
+        '404': { $ref: '#/components/responses/Problem' }
