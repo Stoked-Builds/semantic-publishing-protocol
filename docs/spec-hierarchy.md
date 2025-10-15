@@ -26,6 +26,7 @@ SPP (Semantic Publishing Protocol)
 │
 ├── Publishing
 │   ├── Semantic blocks
+│   ├── Enrichment & Versioning
 │   ├── Attribution & review chain
 │   └── Publisher metadata & rating
 │
@@ -46,5 +47,7 @@ SPP (Semantic Publishing Protocol)
 - **SPP** is the umbrella protocol, defining the overall architecture and interoperability.
 - **SPS** is the core specification for content structure and publishing.
 - **Subdomains** (agents, ads, publishing, consent, payments) provide specialized specs and modules for each area.
+
+The *Publishing* branch now includes the **Enrichment & Versioning** layer (v0.4+), defining raw snapshots, clean text, chunking, diffs, and provenance for durable, queryable content history.
 
 See the [Specification Index](spec-index.md) for links to all documents.
