@@ -21,6 +21,42 @@ if (!fs.existsSync(testDataDir)) {
   fs.mkdirSync(testDataDir, { recursive: true });
 }
 
+const baseSemantic = (overrides = {}) => ({
+  "id": "test:agent-base",
+  "type": "article",
+  "title": "Agent Test Content",
+  "summary": "Agent conformance payload",
+  "spec_version": "0.4.0",
+  "language": "en",
+  "authors": [
+    { "name": "Test Author", "url": "https://example.com/authors/test" }
+  ],
+  "content": {
+    "format": "markdown",
+    "value": "Agent conformance content body."
+  },
+  "links": [
+    { "rel": "canonical", "href": "https://example.com/tests/agent" }
+  ],
+  "provenance": {
+    "mode": "authoritative",
+    "content_hash": `sha256:${'d'.repeat(64)}`,
+    "registry_id": "registry.test",
+    "adapter_id": "agent.tests/1.0.0",
+    "collected_at": "2025-01-15T12:00:00Z"
+  },
+  "signatures": [
+    {
+      "signer": "registry.test",
+      "key_id": "agent-test-key",
+      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4",
+      "signedAt": "2025-01-15T12:01:00Z"
+    }
+  ],
+  "version": 1,
+  ...overrides
+});
+
 // Sample trust weighting scenarios
 const trustWeights = {
   "publisher:reuters": 0.95,
@@ -31,6 +67,9 @@ const trustWeights = {
   "endorser:user-community": 0.45
 };
 
+const trustSignalsOf = (content) =>
+  content.extensions?.['spp:trust-weighting']?.trust_signals || {};
+
 // Create test data files
 function setupTestData() {
   // 1. Content with endorsement chains
@@ -40,10 +79,19 @@ function setupTestData() {
     "title": "Global Climate Report Shows Accelerating Changes",
     "author": { "name": "Sarah Climate", "id": "author:sarah-climate" },
     "publisher": { "name": "Science Daily", "id": "publisher:science-daily" },
-    "extensions": [
-      { "id": "spp:endorsement-chains", "version": "0.3.0" },
-      { "id": "spp:trust-weighting", "version": "0.3.0" }
-    ],
+  "extensions": {
+    "spp:endorsement-chains": { "version": "0.3.0" },
+    "spp:trust-weighting": {
+      "version": "0.3.0",
+      "trust_signals": {
+        "source_credibility": 0.85,
+        "peer_review": true,
+        "fact_checked": true,
+        "endorsement_chain_length": 2,
+        "aggregate_trust_score": 0.87
+      }
+    }
+  },
     "endorsements": [
       {
         "endorser": {
@@ -70,13 +118,6 @@ function setupTestData() {
         "evidence": ["peer-review-check"]
       }
     ],
-    "trust_signals": {
-      "source_credibility": 0.85,
-      "peer_review": true,
-      "fact_checked": true,
-      "endorsement_chain_length": 2,
-      "aggregate_trust_score": 0.87
-    }
   };
 
   // 2. Content with complex trust chain
@@ -86,10 +127,18 @@ function setupTestData() {
     "title": "Market Analysis: Tech Sector Outlook",
     "author": { "name": "John Economist", "id": "author:john-economist" },
     "publisher": { "name": "Financial Blog", "id": "publisher:fin-blog" },
-    "extensions": [
-      { "id": "spp:endorsement-chains", "version": "0.3.0" },
-      { "id": "spp:trust-weighting", "version": "0.3.0" }
-    ],
+  "extensions": {
+    "spp:endorsement-chains": { "version": "0.3.0" },
+    "spp:trust-weighting": {
+      "version": "0.3.0",
+      "trust_signals": {
+        "source_credibility": 0.3,
+        "controversy_detected": true,
+        "endorsement_chain_length": 2,
+        "aggregate_trust_score": 0.52
+      }
+    }
+  },
     "endorsements": [
       {
         "endorser": {
@@ -117,12 +166,6 @@ function setupTestData() {
         "dissenting_voices": 3
       }
     ],
-    "trust_signals": {
-      "source_credibility": 0.3,
-      "controversy_detected": true,
-      "endorsement_chain_length": 2,
-      "aggregate_trust_score": 0.52
-    }
   };
 
   // 3. Content with multiple extensions
@@ -132,12 +175,33 @@ function setupTestData() {
     "title": "Breaking: Policy Changes Announced",
     "author": { "name": "News Reporter", "id": "author:reporter" },
     "publisher": { "name": "Breaking News", "id": "publisher:breaking" },
-    "extensions": [
-      { "id": "spp:endorsement-chains", "version": "0.3.0" },
-      { "id": "spp:trust-weighting", "version": "0.3.0" },
-      { "id": "spp:time-versioning", "version": "0.3.0" },
-      { "id": "spp:ephemeral-content", "version": "0.3.0" }
-    ],
+  "extensions": {
+    "spp:endorsement-chains": { "version": "0.3.0" },
+    "spp:trust-weighting": {
+      "version": "0.3.0",
+      "trust_signals": {
+        "source_credibility": 0.8,
+        "breaking_news": true,
+        "time_sensitive": true,
+        "aggregate_trust_score": 0.88
+      }
+    },
+    "spp:time-versioning": {
+      "version": "0.3.0",
+      "snapshots": [
+        {
+          "timestamp": "2025-01-15T10:00:00Z",
+          "version": "1.0.0",
+          "content_hash": `sha256:${'f'.repeat(64)}`
+        }
+      ],
+      "expiry": {
+        "expires_at": "2025-01-22T10:00:00Z",
+        "reason": "breaking-news-update"
+      }
+    },
+    "spp:ephemeral-content": { "version": "0.3.0" }
+  },
     "endorsements": [
       {
         "endorser": {
@@ -150,24 +214,7 @@ function setupTestData() {
         "date": "2025-01-15",
         "trust_weight": 0.92
       }
-    ],
-    "snapshots": [
-      {
-        "timestamp": "2025-01-15T10:00:00Z",
-        "version": "1.0.0",
-        "content_hash": "sha256:abc123..."
-      }
-    ],
-    "expiry": {
-      "expires_at": "2025-01-22T10:00:00Z",
-      "reason": "breaking-news-update"
-    },
-    "trust_signals": {
-      "source_credibility": 0.8,
-      "breaking_news": true,
-      "time_sensitive": true,
-      "aggregate_trust_score": 0.88
-    }
+    ]
   };
 
   // 4. Untrusted content (low trust signals)
@@ -177,16 +224,18 @@ function setupTestData() {
     "title": "Hidden Truth About Recent Events",
     "author": { "name": "Anonymous Blogger", "id": "author:anon-blogger" },
     "publisher": { "name": "Random Blog", "id": "publisher:random-blog" },
-    "extensions": [
-      { "id": "spp:trust-weighting", "version": "0.3.0" }
-    ],
-    "endorsements": [],
-    "trust_signals": {
-      "source_credibility": 0.1,
-      "fact_checked": false,
-      "anonymous_author": true,
-      "aggregate_trust_score": 0.15
+  "extensions": {
+    "spp:trust-weighting": {
+      "version": "0.3.0",
+      "trust_signals": {
+        "source_credibility": 0.1,
+        "fact_checked": false,
+        "anonymous_author": true,
+        "aggregate_trust_score": 0.15
+      }
     }
+  },
+    "endorsements": []
   };
 
   // Write test files
@@ -230,7 +279,7 @@ class AgentConformanceTestFramework {
    */
   calculateTrustScore(content) {
     if (!content.endorsements || content.endorsements.length === 0) {
-      return content.trust_signals?.source_credibility || 0.1;
+      return trustSignalsOf(content).source_credibility || 0.1;
     }
 
     let totalWeight = 0;
@@ -264,7 +313,7 @@ class AgentConformanceTestFramework {
     const endorsementScore = totalWeight > 0 ? weightedSum / totalWeight : 0.1;
     
     // Combine with source credibility if available
-    const sourceCredibility = content.trust_signals?.source_credibility || 0.5;
+    const sourceCredibility = trustSignalsOf(content).source_credibility || 0.5;
     return (endorsementScore * 0.7) + (sourceCredibility * 0.3);
   }
 
@@ -281,8 +330,14 @@ class AgentConformanceTestFramework {
    */
   checkExtensionSupport(content, requiredExtensions) {
     if (!content.extensions) return false;
-    
-    const declaredExtensions = content.extensions.map(ext => ext.id);
+
+    let declaredExtensions = [];
+    if (Array.isArray(content.extensions)) {
+      declaredExtensions = content.extensions.map(ext => ext.id);
+    } else if (content.extensions && typeof content.extensions === 'object') {
+      declaredExtensions = Object.keys(content.extensions);
+    }
+
     return requiredExtensions.every(ext => declaredExtensions.includes(ext));
   }
 
@@ -369,7 +424,7 @@ test('Agent should correctly parse extension declarations', async () => {
   ok(testFramework.checkExtensionSupport(content, ['spp:time-versioning']), 
      'Should detect time-versioning extension');
   
-  strictEqual(content.extensions.length, 4, 'Should have 4 extensions declared');
+  strictEqual(Object.keys(content.extensions).length, 4, 'Should have 4 extensions declared');
 });
 
 // Test: Endorsement Chain Validation
@@ -394,7 +449,7 @@ test('Agent should correctly calculate trust weights', () => {
   const content = JSON.parse(fs.readFileSync(path.join(testDataDir, 'endorsed-content.json'), 'utf8'));
   
   const calculatedScore = testFramework.calculateTrustScore(content);
-  const expectedScore = content.trust_signals.aggregate_trust_score;
+  const expectedScore = trustSignalsOf(content).aggregate_trust_score;
   
   ok(testFramework.validateTrustPath(content, expectedScore, 0.1), 
      `Trust score calculation should match expected. Calculated: ${calculatedScore}, Expected: ${expectedScore}`);
@@ -415,7 +470,7 @@ test('Agent should handle complex trust chains with conflicting signals', () => 
      `Trust score should reflect mixed signals. Got: ${calculatedScore}`);
      
   // Should detect controversy
-  ok(content.trust_signals.controversy_detected, 'Should detect controversy in trust signals');
+  ok(trustSignalsOf(content).controversy_detected, 'Should detect controversy in trust signals');
 });
 
 // Test: Rendering Decision Logic
@@ -474,16 +529,14 @@ test('Agent should respect configured trust weights', () => {
 
 // Test: Extension Compatibility 
 test('Agent should handle unknown extensions gracefully', async () => {
-  const contentWithUnknownExtension = {
-    "protocolVersion": "1.0.0",
+  const contentWithUnknownExtension = baseSemantic({
     "id": "test:unknown-ext",
     "title": "Test Unknown Extension",
-    "author": { "name": "Test Author" },
-    "extensions": [
-      { "id": "spp:unknown-extension", "version": "1.0.0" },
-      { "id": "spp:trust-weighting", "version": "0.3.0" }
-    ]
-  };
+    "extensions": {
+      "spp:unknown-extension": { "version": "1.0.0" },
+      "spp:trust-weighting": { "version": "0.3.0" }
+    }
+  });
   
   fs.writeFileSync(
     path.join(testDataDir, 'unknown-extension.json'),

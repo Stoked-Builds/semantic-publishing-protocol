@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/claim.json",
+  "title": "SPP Claim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["nonce", "namespace", "proof", "signature"],
+  "properties": {
+    "nonce": { "type": "string", "minLength": 1 },
+    "namespace": { "type": "string", "minLength": 1 },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "record"],
+      "properties": {
+        "method": { "type": "string", "enum": ["dns-txt", "well-known", "platform-relme"] },
+        "record": { "type": "string", "minLength": 1 }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signer", "sig"],
+      "properties": {
+        "signer": { "type": "string", "minLength": 1 },
+        "sig": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

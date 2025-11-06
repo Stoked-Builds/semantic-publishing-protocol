@@ -1,0 +1,24 @@
+{
+  "$id": "https://punkforge.io/schemas/item.json",
+  "title": "SppItem",
+  "type": "object",
+  "required": ["id", "feedId", "guid", "url", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "feedId": { "type": "string", "format": "uuid" },
+    "guid": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "title": { "type": "string" },
+    "summary": { "type": "string" },
+    "contentHtml": { "type": "string" },
+    "contentText": { "type": "string" },
+    "authors": { "type": "array", "items": { "type": "string" } },
+    "publishedAt": { "type": "string", "format": "date-time" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "artifactHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "originRegistryId": { "type": "string" },
+    "adapterId": { "type": "string" },
+    "collectedAt": { "type": "string", "format": "date-time" }
+  }
+}

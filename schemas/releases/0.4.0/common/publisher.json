@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/common/publisher.json",
+  "title": "Publisher",
+  "description": "Schema for publisher object used across SPP content types",
+  "$comment": "vNext may allow richer publisher metadata, such as multiple contacts or verified social accounts.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the publisher",
+      "minLength": 1
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the publisher (e.g., publisher:name)",
+      "pattern": "^publisher:[a-zA-Z0-9._-]+$",
+      "minLength": 1
+    },
+    "uri": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI to the publisher's website or main page",
+      "minLength": 1
+    },
+    "publicKey": {
+      "type": "string",
+      "description": "Public key for verification (DID format preferred)",
+      "minLength": 1,
+      "pattern": "^did:[a-z0-9]+:[a-zA-Z0-9._:-]+$"
+    },
+    "contact": {
+      "type": "string",
+      "description": "Contact information",
+      "minLength": 1,
+      "oneOf": [
+        { "format": "email" },
+        { "format": "uri" }
+      ]
+    },
+    "topics": {
+      "type": "array",
+      "description": "Topics or categories this publisher covers",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "licenses": {
+      "type": "array",
+      "description": "Supported content licenses",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "trustModel": {
+      "type": "string",
+      "description": "Trust model used by this publisher",
+      "enum": ["editorial-chain", "endorsement", "editorial-chain+endorsement", "community", "algorithmic"],
+      "minLength": 1
+    }
+  },
+  "required": ["name", "id", "uri"],
+  "additionalProperties": false
+}

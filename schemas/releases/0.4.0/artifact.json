@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/artifact.json",
+  "$comment": "DEPRECATED — alias to semantic.json; remove in a future minor release.",
+  "allOf": [{ "$ref": "./semantic.json" }]
+}

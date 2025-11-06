@@ -1,20 +1,50 @@
 {
-  "version": "0.4",
+  "id": "urn:spp:anchor.news:ai-firms-licensing-treaty",
+  "type": "article",
+  "title": "AI firms to need licences under new global treaty",
+  "summary": "Countries back a move to register large AI models used in critical sectors.",
+  "spec_version": "0.4.0",
+  "language": "en",
+  "authors": [
+    {
+      "name": "Priya Desai",
+      "url": "https://anchor.news/authors/priya-desai"
+    }
+  ],
+  "published_at": "2025-07-12T08:30:00Z",
+  "updated_at": "2025-07-12T09:15:00Z",
+  "topics": ["technology", "policy"],
+  "content": {
+    "format": "markdown",
+    "value": "Countries back a move to register large AI models used in critical sectors..."
+  },
+  "links": [
+    { "rel": "canonical", "href": "https://anchor.news/stories/ai-firms-licensing-treaty" },
+    { "rel": "story", "href": "https://anchor.news/stories/ai-firms-licensing-treaty/story.md" }
+  ],
   "provenance": {
     "mode": "adopted",
-    "source_url": "https://example.com/post/123",
-    "collected_at": "2025-09-27T12:34:56Z",
-    "registry_id": "registry.example.org",
-    "adapter_id": "youtube.core",
-    "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "snapshot_uri": "https://cdn.example.org/snapshots/0123abcd"
+    "source_url": "https://anchor.news/stories/ai-firms-licensing-treaty",
+    "collected_at": "2025-07-12T09:20:00Z",
+    "registry_id": "registry.anchor.news",
+    "adapter_id": "anchor.scraper/1.4.0",
+    "content_hash": "sha256:5feceb66ffc86f38d952786c6d696c79d8ea5f160b2498b67ae713d2f3aa2f12",
+    "snapshot_uri": "https://cdn.anchor.news/snapshots/ai-firms-licensing-treaty.json",
+    "adoption": {
+      "manifest_url": "https://registry.anchor.news/adoptions/ai-firms-licensing-treaty.json",
+      "signature": {
+        "signer": "registry.anchor.news",
+        "sig": "QW5jaG9yTmV3c0FuY2hvck5ld3NBbmNob3I"
+      }
+    }
   },
   "signatures": [
     {
-      "signer": "registry.example.org",
-      "key_id": "ed25519-2025-09",
-      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4",
-      "signedAt": "2025-09-27T12:35:00Z"
+      "signer": "registry.anchor.news",
+      "key_id": "ed25519-2025-Q3",
+      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4YWJjZA",
+      "signedAt": "2025-07-12T09:20:05Z"
     }
-  ]
+  ],
+  "version": 4
 }

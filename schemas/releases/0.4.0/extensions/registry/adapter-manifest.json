@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/extensions/registry/adapter-manifest.json",
+  "title": "SPP Adapter Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id","version","sdk","networkDomains","needsSecrets","permissions"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1, "description": "Adapter identifier (e.g., youtube.core)" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "sdk": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "displayName": { "type": "string" },
+    "networkDomains": {
+      "type": "array",
+      "minItems": 0,
+      "items": { "type": "string", "format": "hostname" },
+      "description": "Explicit egress allowlist"
+    },
+    "needsSecrets": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fs": { "type": "string", "enum": ["none","read"], "default": "none" },
+        "net": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "dns": { "type": "string", "enum": ["blocked","system"], "default": "blocked" }
+          }
+        },
+        "time": { "type": "boolean", "default": true }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "modes": { "type": "array", "items": { "type": "string", "enum": ["poll","webhook"] } },
+        "media": { "type": "array", "items": { "type": "string", "enum": ["video","image","text","audio","mixed"] } },
+        "sources": { "type": "array", "items": { "type": "string", "enum": ["channel","playlist","user","hashtag","url"] } },
+        "rateHint": {
+          "type": "object",
+          "properties": { "rpm": { "type": "integer", "minimum": 1 }, "burst": { "type": "integer", "minimum": 1 } }
+        }
+      }
+    },
+    "image": { "type": "string", "description": "OCI image reference (registry/path:tag or @digest)" },
+    "cpuLimit": { "type": "number", "minimum": 0, "description": "CPU cores limit (e.g., 0.5 for 500m)" },
+    "memoryLimitMB": { "type": "integer", "minimum": 16, "description": "Memory limit in MB" },
+    "timeoutMs": { "type": "integer", "minimum": 1000, "description": "Execution timeout per job in milliseconds" }
+  }
+}

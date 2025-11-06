@@ -1,8 +1,34 @@
 {
-  "protocolVersion": "1.0.0",
   "id": "conformance:minimal",
+  "type": "article",
   "title": "Minimal Conformance Test Content",
-  "author": {
-    "name": "SPP Conformance Test"
-  }
+  "summary": "Baseline artefact used for schema smoke testing.",
+  "spec_version": "0.4.0",
+  "language": "en",
+  "authors": [
+    { "name": "SPP Conformance Test Runner" }
+  ],
+  "content": {
+    "format": "markdown",
+    "value": "Minimal content body for conformance smoke testing."
+  },
+  "links": [
+    { "rel": "canonical", "href": "https://example.com/conformance/minimal" }
+  ],
+  "provenance": {
+    "mode": "authoritative",
+    "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "registry_id": "conformance.example",
+    "adapter_id": "conformance.runner/1.0.0",
+    "collected_at": "2025-01-15T12:00:00Z"
+  },
+  "signatures": [
+    {
+      "signer": "conformance.example",
+      "key_id": "conformance-key",
+      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4",
+      "signedAt": "2025-01-15T12:01:00Z"
+    }
+  ],
+  "version": 1
 }

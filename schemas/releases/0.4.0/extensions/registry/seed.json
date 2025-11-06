@@ -1,0 +1,18 @@
+{
+  "$id": "https://punkforge.io/schemas/seed.json",
+  "title": "SppSeed",
+  "type": "object",
+  "required": ["id", "url", "type", "status", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "url": { "type": "string", "format": "uri" },
+    "type": { "type": "string", "enum": ["rss", "atom", "sitemap", "api", "page", "json"] },
+    "tags": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "notes": { "type": "string" },
+    "status": { "type": "string", "enum": ["active", "inactive"] },
+    "lastCrawledAt": { "type": "string", "format": "date-time" },
+    "errorCount": { "type": "integer", "default": 0 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

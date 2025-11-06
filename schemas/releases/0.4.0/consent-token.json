@@ -1,0 +1,112 @@
+{
+  "$comment": "vNext ideas: multi-scope consent bundles, selective revocation, multi-sig consent, machine-readable legal text",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/consent-token.json",
+  "title": "Consent Token",
+  "description": "Schema for consent token objects in the Semantic Publishing Protocol",
+  "type": "object",
+  "properties": {
+    "iss": {
+      "type": "string",
+      "description": "Issuer - who is granting the consent",
+      "pattern": "^ssot:[a-zA-Z0-9._-]+$",
+      "minLength": 1
+    },
+    "sub": {
+      "type": "string",
+      "description": "Subject - who is receiving the consent",
+      "pattern": "^ssot:[a-zA-Z0-9._-]+$",
+      "minLength": 1
+    },
+    "aud": {
+      "type": "string",
+      "description": "Audience - service or endpoint that will use this consent",
+      "minLength": 1
+    },
+    "request_scope": {
+      "type": "array",
+      "description": "Array of requested permissions or data scopes",
+      "items": {
+        "type": "string",
+        "enum": [
+          "interests",
+          "ad_preferences",
+          "location",
+          "demographics",
+          "browsing_history",
+          "purchase_history",
+          "read:profile",
+          "access:health",
+          "write:preferences"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "reason": {
+      "type": "string",
+      "description": "Human-readable reason for the consent request",
+      "minLength": 1
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the consent was issued",
+      "minLength": 1
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the consent expires",
+      "minLength": 1
+    },
+    "delegated_by": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^ssot:[a-zA-Z0-9._-]+$",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Who delegated this consent (if applicable)"
+    },
+    "signature": {
+      "type": "string",
+      "description": "Cryptographic signature of the consent token",
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "minLength": 1
+    },
+    "conditions": {
+      "type": "object",
+      "description": "Additional conditions or constraints on the consent",
+      "properties": {
+        "usage_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum number of times this consent can be used"
+        },
+        "purpose_limitation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Specific purposes for which the consent can be used",
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "data_retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum number of days data can be retained"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["iss", "sub", "aud", "request_scope", "issued_at", "expires_at", "signature"],
+  "additionalProperties": false
+}

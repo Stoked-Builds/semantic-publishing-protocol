@@ -1,0 +1,65 @@
+
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/collection.json",
+  "title": "Collection",
+  "description": "Schema for collection-type artefacts (e.g., curated lists, series, galleries) in the Semantic Publishing Protocol",
+  "$comment": "vNext: add pagination metadata for very large collections, allow ordered/unordered distinction, support external collection sources, and enable dynamic/AI-generated collections with provenance.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://spp.dev/schemas/sps-license-metadata.json" },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sps_type": { "const": "collection" },
+        "items": {
+          "type": "array",
+          "description": "Array of items within the collection",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "format": "uri" },
+              "title": { "type": "string", "minLength": 1 },
+              "summary": { "type": "string", "minLength": 1 },
+              "sps_type": {
+                "type": "string",
+                "enum": ["article", "video", "product", "person", "event", "organization", "knowledge", "collection"]
+              },
+              "position": { "type": "integer", "minimum": 1 },
+              "added_at": { "type": "string", "format": "date-time" },
+              "artefact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+            },
+            "required": ["id", "title"]
+          },
+          "uniqueItems": true
+        },
+        "collection_type": {
+          "type": "string",
+          "enum": ["list", "series", "gallery", "playlist", "other"],
+          "description": "The presentation style/type of the collection"
+        },
+        "curator": {
+          "type": "object",
+          "description": "Person or organization responsible for curating the collection",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "id": { "type": "string", "minLength": 1 },
+            "url": { "type": "string", "format": "uri" }
+          },
+          "required": ["name"]
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "required": ["sps_type", "items"]
+    }
+  ]
+}

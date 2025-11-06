@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/pub.schema.json",
+  "title": "Publication Item Schema",
+  "description": "Schema for each item in the pubs[] array representing individual publications",
+  "$comment": "vNext: enforce dateModified >= datePublished via custom assertion; prefer HTTPS for canonical/url; consider mapping contentType to MVSL types and deprecating this shim when artefacts are fully MVSL.",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "contentType",
+    "datePublished",
+    "protocolVersion"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the publication",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "description": "The title of the publication",
+      "minLength": 1
+    },
+    "contentType": {
+      "type": "string",
+      "enum": ["article", "video", "product", "person", "event", "organization", "knowledge", "collection"],
+      "description": "The type of content this publication represents"
+    },
+    "datePublished": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "description": "The date the publication was published (ISO 8601)"
+    },
+    "protocolVersion": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The version of the Semantic Publishing Protocol being used",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A brief summary or description of the publication"
+    },
+    "author": {
+      "type": "object",
+      "description": "The author of the publication",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique identifier for the author"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": ["name"]
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1,
+      "description": "The canonical URL of the publication",
+      "$comment": "vNext: enforce HTTPS-only at application layer"
+    },
+    "dateModified": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "description": "The date the publication was last modified (ISO 8601)"
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags or keywords associated with the publication",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "topics": {
+      "type": "array",
+      "description": "Structured topic information",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "global": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Global identifier for the topic (e.g., Wikidata ID)"
+          }
+        },
+        "required": ["id", "label"]
+      }
+    },
+    "language": {
+      "type": "string",
+      "minLength": 2,
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "description": "The language of the publication (ISO 639-1 code)"
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The license under which the publication is released",
+      "pattern": "^[A-Za-z0-9.+-]+$",
+      "$comment": "SPDX-like token (e.g., CC-BY-4.0, MIT)"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of the publication content (semantic versioning)"
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Content hash or digest for integrity verification",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Original source attribution if republishing content"
+    },
+    "canonical": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1,
+      "description": "Canonical URL for this content",
+      "$comment": "vNext: enforce HTTPS-only at application layer"
+    },
+    "archived": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this publication is archived"
+    },
+    "estimatedDuration": {
+      "type": "string",
+      "pattern": "^\\d+[smhd]$",
+      "description": "Estimated time to consume content (e.g., '5m', '2h', '1d')"
+    },
+    "contentQuality": {
+      "type": "object",
+      "description": "Quality metrics for the content",
+      "additionalProperties": false,
+      "properties": {
+        "readingLevel": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "expert"]
+        },
+        "accuracy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "endorsements": {
+      "type": "array",
+      "description": "Endorsements received for this publication",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "endorserName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "endorserId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "endorsementType": {
+            "type": "string",
+            "enum": ["approval", "recommendation", "verification", "citation"]
+          },
+          "dateEndorsed": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          }
+        },
+        "required": ["endorserName", "endorsementType"]
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "description": "Extensions used by this publication",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Extension identifier"
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Extension version",
+            "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+          }
+        },
+        "required": ["id", "version"]
+      }
+    }
+  }
+}

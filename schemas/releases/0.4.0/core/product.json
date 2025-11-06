@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/product.json",
+  "$comment": "vNext may include multi-currency pricing, regional availability, richer review metadata, and inventory feeds.",
+  "title": "Product",
+  "description": "Schema for product content type in SPS",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://spp.dev/schemas/sps-license-metadata.json"
+    },
+    {
+      "properties": {
+        "sps_type": {
+          "const": "product"
+        },
+        "price": {
+          "type": "object",
+          "description": "Product pricing information",
+          "properties": {
+            "amount": {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d{1,2})?$",
+              "description": "Price amount as string to preserve precision",
+              "minLength": 1
+            },
+            "currency": {
+              "type": "string",
+              "description": "Currency code (ISO 4217)",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "sale_price": {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d{1,2})?$",
+              "description": "Sale price if on sale",
+              "minLength": 1
+            }
+          },
+          "required": ["amount", "currency"],
+          "additionalProperties": false
+        },
+        "availability": {
+          "type": "string",
+          "description": "Product availability status",
+          "enum": ["in_stock", "out_of_stock", "limited", "pre_order", "discontinued"]
+        },
+        "affiliate_tracking_id": {
+          "type": "string",
+          "description": "Affiliate tracking identifier if revenue-sharing is active",
+          "minLength": 1
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock keeping unit identifier",
+          "minLength": 1
+        },
+        "brand": {
+          "type": "string",
+          "description": "Product brand name",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "description": "Product category",
+          "minLength": 1
+        },
+        "specifications": {
+          "type": "object",
+          "description": "Product specifications as key-value pairs",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "images": {
+          "type": "array",
+          "description": "Product images",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "primary": {
+                "type": "boolean",
+                "description": "Whether this is the primary product image"
+              }
+            },
+            "required": ["url", "alt"],
+            "additionalProperties": false
+          }
+        },
+        "reviews": {
+          "type": "object",
+          "description": "Product review summary",
+          "properties": {
+            "average_rating": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "total_reviews": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

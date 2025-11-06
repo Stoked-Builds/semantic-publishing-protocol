@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/sps-license-metadata.json",
+  "title": "SPS License Metadata",
+  "description": "Schema for SPS license metadata objects",
+  "$comment": "vNext: enforce HTTPS-only URLs at application layer, validate updated_at >= published_at via custom assertion, allow multi-author arrays, and support BCP47 locales fully.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "sps_version": {
+      "type": "string",
+      "description": "Version of the SPS specification being used",
+      "minLength": 1,
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "sps_type": {
+      "type": "string",
+      "description": "Type of SPS content",
+      "enum": [
+        "article",
+        "video",
+        "product",
+        "person",
+        "organization",
+        "event",
+        "app",
+        "knowledge",
+        "collection"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1,
+      "description": "Unique identifier for the content"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Title of the content"
+    },
+    "author": {
+      "$ref": "https://spp.dev/schemas/common/author.json"
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags associated with the content",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Brief summary of the content"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "description": "Publication timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "description": "Last update timestamp"
+    },
+    "content_url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1,
+      "description": "URL to the actual content"
+    },
+    "preview_image": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1,
+      "description": "URL to preview image"
+    },
+    "estimated_duration": {
+      "type": "string",
+      "description": "Estimated reading/viewing duration (e.g., '6m', '2h')",
+      "minLength": 1,
+      "pattern": "^\\d+[smhd]$"
+    },
+    "consent_required": {
+      "type": "array",
+      "description": "Array of consent requirements",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "examples": ["read:profile", "access:health"]
+      },
+      "uniqueItems": true
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Content license",
+      "pattern": "^[A-Za-z0-9.+-]+$",
+      "$comment": "SPDX-like token (e.g., CC-BY-4.0, MIT)"
+    },
+    "language": {
+      "type": "string",
+      "description": "Content language (ISO 639-1 or BCP47 short tag)",
+      "minLength": 2,
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+    }
+  },
+  "required": ["sps_version", "sps_type", "id", "title", "author"]
+}

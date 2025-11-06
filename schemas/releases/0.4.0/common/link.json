@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/common/link.json",
+  "title": "Link",
+  "description": "Reusable schema for a hyperlink with optional relationship type and media type",
+  "$comment": "vNext: allow language-tagged titles, hreflang, integrity metadata (SRI), and link purpose taxonomy.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "rel": {
+      "type": "string",
+      "description": "Link relation type (e.g., 'self', 'next', 'prev', 'canonical')",
+      "minLength": 1
+    },
+    "href": {
+      "type": "string",
+      "format": "uri",
+      "description": "Target IRI/URI for the link",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "description": "Media type (MIME type) of the target resource",
+      "pattern": "^[a-z0-9!#$&.+\\-^_]{1,127}\\/[a-z0-9!#$&.+\\-^_]{1,127}$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable label for the link",
+      "minLength": 1
+    },
+    "hreflang": {
+      "type": "string",
+      "description": "Language of the linked resource (BCP 47)",
+      "pattern": "^[a-z]{2}(-[A-Za-z0-9-]+)?$"
+    }
+  },
+  "required": ["rel", "href"]
+}

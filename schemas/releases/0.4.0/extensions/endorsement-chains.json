@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/extensions/endorsement-chains.json",
+  "title": "Endorsement Chains Extension Schema",
+  "description": "Schema for endorsement-chains extension fields in the Semantic Publishing Protocol",
+  "$comment": "vNext: consider requiring verifiable credential (VC) envelopes, endorsement revocation records, and explicit trust-anchor references.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "endorsements": {
+      "type": "array",
+      "description": "Array of verifiable endorsements with optional delegation chains and confidence scores",
+      "minItems": 1,
+      "uniqueItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "endorser": {
+            "type": "object",
+            "description": "Optional human-readable endorser details",
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "id": { "type": "string", "minLength": 1 },
+              "uri": { "type": "string", "format": "uri" },
+              "type": {
+                "type": "string",
+                "enum": ["fact-checker", "publisher", "expert", "community"],
+                "description": "Optional classification of endorser"
+              }
+            },
+            "required": ["name", "id"]
+          },
+          "endorser_did": {
+            "type": "string",
+            "pattern": "^did:[a-z0-9]+:[A-Za-z0-9._:-]+$",
+            "description": "Decentralized Identifier of the endorsing entity"
+          },
+          "endorser_name": { "type": "string", "minLength": 1, "description": "Human-readable name of the endorser" },
+          "endorsed": { "type": "string", "format": "uri", "description": "URI of content being endorsed" },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "accurate", "verified", "corroborated", "referenced",
+              "disputed", "questionable", "false", "misleading"
+            ],
+            "description": "Endorsement verdict"
+          },
+          "endorsement_type": {
+            "type": "string",
+            "enum": ["content", "delegated", "peer"],
+            "description": "Type of endorsement"
+          },
+          "timestamp": { "type": "string", "format": "date-time", "description": "When the endorsement was created" },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "$comment": "DEPRECATED: use timestamp"
+          },
+          "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "Confidence level in the endorsement" },
+          "trust_weight": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "Weight assigned to this endorser" },
+          "signature": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["alg", "sig"],
+                "properties": {
+                  "alg": { "type": "string", "enum": ["ed25519", "secp256k1", "secp256r1"] },
+                  "kid": { "type": "string" },
+                  "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }
+                }
+              },
+              {
+                "$comment": "Legacy form: string signature + signature_algorithm. Prefer object form above.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["raw", "algorithm"],
+                "properties": {
+                  "raw": { "type": "string", "pattern": "^[A-Za-z0-9_\\-]+={0,2}$" },
+                  "algorithm": { "type": "string", "enum": ["ed25519", "secp256k1", "secp256r1"] }
+                }
+              }
+            ]
+          },
+          "comment": { "type": "string", "minLength": 1, "description": "Optional commentary from the endorser" },
+          "evidence": {
+            "type": "array",
+            "description": "URLs or identifiers supporting the endorsement",
+            "minItems": 0,
+            "uniqueItems": true,
+            "items": { "type": "string", "format": "uri", "minLength": 1 }
+          },
+          "chain_depth": { "type": "integer", "minimum": 0, "description": "Depth in endorsement chain" },
+          "transitive_endorsements": {
+            "type": "array",
+            "description": "Endorsements that led to this one",
+            "items": { "$ref": "#/properties/endorsements/items" }
+          },
+          "delegation_chain": {
+            "type": "array",
+            "description": "Array of delegation objects for delegated endorsements",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "delegator_did": {
+                  "type": "string",
+                  "pattern": "^did:[a-z0-9]+:[A-Za-z0-9._:-]+$",
+                  "description": "DID of the entity granting delegation authority"
+                },
+                "delegator_name": { "type": "string", "minLength": 1, "description": "Name of the delegator" },
+                "delegation_signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "description": "Signature authorizing the delegation" },
+                "delegation_timestamp": { "type": "string", "format": "date-time", "description": "When the delegation was granted" },
+                "delegation_scope": { "type": "string", "minLength": 1, "description": "Scope of delegation authority" },
+                "delegation_expires": { "type": "string", "format": "date-time", "description": "When the delegation expires" }
+              },
+              "required": ["delegator_did", "delegation_signature", "delegation_timestamp", "delegation_scope"]
+            }
+          }
+        },
+        "required": ["endorsement_type", "timestamp", "signature"],
+        "allOf": [
+          {
+            "$comment": "Require at least one endorser identity: either a DID or an endorser object.",
+            "anyOf": [
+              { "required": ["endorser_did"] },
+              { "required": ["endorser"] }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

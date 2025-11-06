@@ -1,0 +1,18 @@
+{
+  "$id": "https://spp.dev/schemas/task-offer.json",
+  "type": "object",
+  "required": ["id", "kind", "inputs", "outputs", "callback_url", "ts", "sig"],
+  "properties": {
+    "id": { "type": "string" },
+    "kind": { "enum": ["enrich", "crawl", "store"] },
+    "inputs": { "type": "object" },
+    "outputs": { "type": "object", "properties": { "schema": { "type": "string" } } },
+    "limits": { "type": "object" },
+    "depends_on": { "type": "array", "items": { "type": "string" } },
+    "callback_url": { "type": "string", "format": "uri" },
+    "ts": { "type": "string", "format": "date-time" },
+    "idempotency_key": { "type": "string" },
+    "sig": { "type": "string" }
+  },
+  "additionalProperties": false
+}

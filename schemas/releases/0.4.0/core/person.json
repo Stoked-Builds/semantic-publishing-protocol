@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/person.json",
+  "title": "Person",
+  "description": "Schema for person profile content type in SPS",
+  "$comment": "vNext: consider structured social identity proofs, multiple avatars with descriptors, and verified credentials (VCs).",
+  "type": "object",
+  "allOf": [
+    { "$ref": "https://spp.dev/schemas/sps-license-metadata.json" },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sps_type": { "const": "person" },
+        "profile": {
+          "type": "object",
+          "description": "Person profile information",
+          "additionalProperties": false,
+          "properties": {
+            "first_name": { "type": "string", "minLength": 1 },
+            "last_name": { "type": "string", "minLength": 1 },
+            "display_name": { "type": "string", "minLength": 1 },
+            "bio": { "type": "string", "minLength": 1, "description": "Biography or description" },
+            "occupation": { "type": "string", "minLength": 1 },
+            "organization": { "type": "string", "minLength": 1 },
+            "location": { "type": "string", "minLength": 1, "description": "Current location" },
+            "website": { "type": "string", "format": "uri" },
+            "avatar": { "type": "string", "format": "uri", "description": "Profile picture URL" }
+          },
+          "required": ["display_name"]
+        },
+        "social_links": {
+          "type": "object",
+          "description": "Social media profiles",
+          "additionalProperties": false,
+          "properties": {
+            "twitter": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_]{1,15}$",
+              "description": "Twitter username (without @)"
+            },
+            "linkedin": { "type": "string", "format": "uri" },
+            "github": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9-]{1,39}$",
+              "description": "GitHub username"
+            },
+            "mastodon": { "type": "string", "format": "uri" },
+            "orcid": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$",
+              "description": "ORCID identifier"
+            }
+          }
+        },
+        "credentials": {
+          "type": "array",
+          "description": "Professional credentials and qualifications",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "enum": ["degree", "certification", "license", "award", "publication"] },
+              "title": { "type": "string", "minLength": 1 },
+              "institution": { "type": "string", "minLength": 1 },
+              "date_earned": { "type": "string", "format": "date" },
+              "expires": { "type": "string", "format": "date" },
+              "verification_url": { "type": "string", "format": "uri" }
+            },
+            "required": ["type", "title"]
+          }
+        },
+        "expertise": {
+          "type": "array",
+          "description": "Areas of expertise or specialization",
+          "minItems": 0,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "contact_info": {
+          "type": "object",
+          "description": "Contact information",
+          "additionalProperties": false,
+          "properties": {
+            "email": { "type": "string", "format": "email" },
+            "phone": { "type": "string", "pattern": "^\\+?[0-9 .\\-()]{7,20}$" },
+            "preferred_contact": { "type": "string", "enum": ["email", "phone", "social", "website"] }
+          }
+        }
+      },
+      "required": ["sps_type", "profile"]
+    }
+  ]
+}

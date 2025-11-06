@@ -1,0 +1,16 @@
+{
+  "$id": "https://spp.dev/schemas/usage-record.json",
+  "type": "object",
+  "required": ["peer_id", "counter", "bytes", "tasks", "qps", "ts", "sig"],
+  "properties": {
+    "peer_id": { "type": "string" },
+    "counter": { "type": "integer" },
+    "bytes": { "type": "integer" },
+    "tasks": { "type": "integer" },
+    "qps": { "type": "integer" },
+    "cost": { "type": "number" },
+    "ts": { "type": "string", "format": "date-time" },
+    "sig": { "type": "string" }
+  },
+  "additionalProperties": false
+}

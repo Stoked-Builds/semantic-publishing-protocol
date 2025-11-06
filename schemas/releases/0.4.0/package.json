@@ -1,0 +1,14 @@
+{
+  "name": "@spp/schemas",
+  "version": "0.4.0",
+  "description": "Semantic Publishing Protocol canonical JSON Schemas",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./manifest.json"
+  },
+  "files": [
+    "**/*.json",
+    "checksums.txt"
+  ]
+}

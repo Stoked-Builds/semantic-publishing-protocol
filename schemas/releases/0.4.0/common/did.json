@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/common/did.json",
+  "title": "Decentralized Identifier (DID)",
+  "description": "Reusable schema for a W3C Decentralized Identifier (base DID string).",
+  "$comment": "vNext: add a companion did-url.json for full DID URL syntax (params, path, query, fragment) and resolution metadata (DID Document).",
+  "type": "string",
+  "minLength": 1,
+  "pattern": "^did:[a-z0-9]+:[A-Za-z0-9._:%-]+$",
+  "examples": [
+    "did:key:z6MkgXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "did:example:123456789abcdefghi",
+    "did:web:example.com"
+  ]
+}
