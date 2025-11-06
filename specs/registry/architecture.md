@@ -129,7 +129,8 @@ A **Registry Entry** represents a single piece of semantic content in the regist
     "type": "article",
     "title": "string",
     "summary": "string",
-    "language": "en",
+      "language": "en",
+      "spec_version": "0.4.0",
     "authors": [ { "name": "string", "url": "https://example.com/author" } ],
     "published_at": "2025-01-10T15:30:00Z",
     "updated_at": "2025-01-10T16:00:00Z",
@@ -149,7 +150,9 @@ A **Registry Entry** represents a single piece of semantic content in the regist
       "content_hash": "sha256:<hex>",
       "snapshot_uri": "wacz://..."
     },
-    "signature": { "signer": "did:key:z6Mk...", "sig": "base64url" },
+    "signatures": [
+      { "signer": "did:key:z6Mk...", "sig": "base64url", "signedAt": "2025-01-10T16:00:00Z" }
+    ],
     "version": 1
   }
 }
@@ -158,14 +161,22 @@ A **Registry Entry** represents a single piece of semantic content in the regist
 > **Note:** The `provenance.content_hash` field **MUST** be in the form `sha256:<hex>` and **MUST** match the SHA-256 hash of the canonical JSON serialisation of the artefact (see [Canonicalisation and Signing](#canonicalisation-and-signing)).
 
 **Field Requirements:**
-- `id`: **MUST** be globally unique identifier for the content
-- `title`: **MUST** be present and non-empty
-- `authors`: **MUST** be a non-empty array of author objects
-- `topics`: **MUST** contain array of strings (topic tags)
-- `language`: **MUST** be an ISO 639-1 language code (BCP 47 MAY be used for locales).
+- `id`: **MUST** be a globally unique identifier for the content.
+- `title`: **MUST** be present and non-empty.
+- `spec_version`: **MUST** match a version the registry currently supports (see [Spec Version Policy](#spec-version-policy)).
+- `authors`: When provided, **MUST** be a non-empty array of author objects.
+- `topics`: When provided, **MUST** contain an array of strings (topic tags).
+- `language`: **MUST** be an ISO 639-1 language code; BCP 47 subtags MAY be used for locales.
 - `links[rel=canonical].href`: **MUST** be an absolute **HTTPS** URL.
-- `signature`: **MUST** contain an Ed25519 signature over canonical JSON, with `signer` resolvable to a valid DID/JWK.
+- `signatures[0]`: **MUST** contain an Ed25519 signature over canonical JSON, with `signer` resolvable to a valid DID/JWK.
 - `provenance.content_hash`: **MUST** equal the SHA‑256 of the canonical JSON serialisation (see Canonicalisation and Signing).
+
+### Spec Version Policy
+
+- Registries **MUST** publish the set of supported `spec_version` values via `.well-known/spp/registry.json` (`specVersions.supported` / `specVersions.preferred`).
+- During ingestion, artefacts whose `spec_version` exceeds the registry’s supported range **MUST** be rejected with HTTP `406 Not Acceptable` and a Problem Details payload explaining the unsupported revision.
+- Registries **SHOULD** continue accepting artefacts for the previous supported MINOR release for at least one full publishing cycle, enabling producers to roll out upgrades gradually.
+- Producers **SHOULD** maintain pipelines capable of emitting artefacts at any version in a partner registry’s supported set.
 
 ### Well-Known Endpoint
 

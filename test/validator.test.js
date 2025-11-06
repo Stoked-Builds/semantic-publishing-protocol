@@ -11,31 +11,84 @@ if (!fs.existsSync(testDataDir)) {
   fs.mkdirSync(testDataDir, { recursive: true });
 }
 
-// Valid semantic.json
-const validSemantic = {
-  "protocolVersion": "1.0.0",
-  "id": "test:valid",
+const baseSemantic = (overrides = {}) => ({
+  "id": "test:base",
+  "type": "article",
   "title": "Test Content",
-  "author": { "name": "Test Author" }
-};
+  "summary": "Validator test payload",
+  "spec_version": "0.4.0",
+  "language": "en",
+  "authors": [
+    { "name": "Test Author", "url": "https://example.com/authors/test" }
+  ],
+  "content": {
+    "format": "markdown",
+    "value": "Validator test content body."
+  },
+  "links": [
+    { "rel": "canonical", "href": "https://example.com/tests/validator" }
+  ],
+  "provenance": {
+    "mode": "authoritative",
+    "content_hash": `sha256:${'a'.repeat(64)}`,
+    "registry_id": "registry.test",
+    "adapter_id": "validator.test/1.0.0",
+    "collected_at": "2025-01-15T12:00:00Z"
+  },
+  "signatures": [
+    {
+      "signer": "registry.test",
+      "key_id": "validator-test-key",
+      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4",
+      "signedAt": "2025-01-15T12:01:00Z"
+    }
+  ],
+  "version": 1,
+  ...overrides
+});
+
+// Valid semantic.json
+const validSemantic = baseSemantic({
+  "id": "test:valid"
+});
 fs.writeFileSync(path.join(testDataDir, 'valid.json'), JSON.stringify(validSemantic, null, 2));
 
 // Invalid semantic.json
 const invalidSemantic = {
-  "protocolVersion": "1.0.0",
-  "id": "test:invalid",
-  "title": "Test Content",
+  ...baseSemantic({ "id": "test:invalid" }),
   "invalidField": "should not be here"
 };
 fs.writeFileSync(path.join(testDataDir, 'invalid.json'), JSON.stringify(invalidSemantic, null, 2));
 
 // Valid SPS markdown
 const validSpsMarkdown = `---
-protocolVersion: "1.0.0"
 id: "test:sps"
+type: "article"
 title: "Test SPS"
-author:
-  name: "Test Author"
+summary: "Validator SPS markdown example"
+spec_version: "0.4.0"
+language: "en"
+authors:
+  - name: "Test Author"
+    url: "https://example.com/authors/test"
+content:
+  format: "markdown"
+  value: "Validator test content body."
+links:
+  - rel: "canonical"
+    href: "https://example.com/tests/sps-markdown"
+provenance:
+  mode: "authoritative"
+  content_hash: "sha256:${'b'.repeat(64)}"
+  registry_id: "registry.test"
+  adapter_id: "validator.test/1.0.0"
+  collected_at: "2025-01-15T12:00:00Z"
+signatures:
+  - signer: "registry.test"
+    key_id: "validator-test-key"
+    sig: "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4"
+    signedAt: "2025-01-15T12:01:00Z"
+version: 1
 ---
 
 # Test Content`;

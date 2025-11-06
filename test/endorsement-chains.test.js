@@ -11,91 +11,103 @@ if (!fs.existsSync(testDataDir)) {
   fs.mkdirSync(testDataDir, { recursive: true });
 }
 
-// Valid endorsement with basic content endorsement
-const validEndorsement = {
-  "protocolVersion": "1.0.0",
-  "id": "test:endorsement-valid",
-  "title": "Test Content with Endorsement",
-  "author": { "name": "Test Author" },
-  "extensions": [
+const baseSemantic = (overrides = {}) => ({
+  "id": "test:base-endorsement",
+  "type": "article",
+  "title": "Test Endorsement Payload",
+  "summary": "Endorsement test payload",
+  "spec_version": "0.4.0",
+  "language": "en",
+  "authors": [
+    { "name": "Test Author", "url": "https://example.com/authors/test" }
+  ],
+  "content": {
+    "format": "markdown",
+    "value": "Test endorsement content."
+  },
+  "links": [
+    { "rel": "canonical", "href": "https://example.com/tests/endorsement" }
+  ],
+  "provenance": {
+    "mode": "authoritative",
+    "content_hash": `sha256:${'c'.repeat(64)}`,
+    "registry_id": "registry.test",
+    "adapter_id": "endorsement.tests/1.0.0",
+    "collected_at": "2025-01-15T12:00:00Z"
+  },
+  "signatures": [
     {
-      "id": "spp:endorsement-chains",
-      "version": "0.3.0"
+      "signer": "registry.test",
+      "key_id": "endorsement-test-key",
+      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4",
+      "signedAt": "2025-01-15T12:01:00Z"
     }
   ],
+  "version": 1,
+  ...overrides
+});
+
+// Valid endorsement with basic content endorsement
+const validEndorsement = baseSemantic({
+  "id": "test:endorsement-valid",
+  "title": "Test Content with Endorsement",
+  "extensions": {
+    "spp:endorsement-chains": { "version": "0.3.0" }
+  },
   "endorsements": [
     {
-      "endorser_did": "did:web:example.com:expert",
-      "endorser_name": "Dr. Test Expert",
-      "timestamp": "2025-01-15T14:30:00Z",
-      "signature": "zQmF3ysuHnLmKxn2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2E",
-      "comment": "This content is scientifically accurate.",
-      "endorsement_type": "content",
-      "signature_algorithm": "ed25519",
-      "delegation_chain": []
+      "artifact_hash": `sha256:${'a'.repeat(64)}`,
+      "endorser_id": "endorser.example.com",
+      "observed_at": "2025-01-15T14:30:00Z",
+      "sig": "c3RydWN0dXJlZC1leGFtcGxlLXNpZ25hdHVyZQ"
     }
   ]
-};
+});
 fs.writeFileSync(path.join(testDataDir, 'valid-endorsement.json'), JSON.stringify(validEndorsement, null, 2));
 
 // Valid endorsement with delegation chain
-const validDelegation = {
-  "protocolVersion": "1.0.0",
+const validDelegation = baseSemantic({
   "id": "test:delegation-valid",
   "title": "Test Content with Delegated Endorsement",
-  "author": { "name": "Test Author" },
-  "extensions": [
-    {
-      "id": "spp:endorsement-chains",
-      "version": "0.3.0"
-    }
-  ],
-  "endorsements": [
-    {
-      "endorser_did": "did:web:institution.edu:assistant:ai-01",
-      "endorser_name": "AI Research Assistant",
-      "timestamp": "2025-01-15T16:00:00Z",
-      "signature": "zQmK4xtuJnPmKyn3eKcnF3nLsAkYsJzY2JYFCsLrE5ZHxi9JGwW3F",
-      "comment": "Endorsed on behalf of supervising researcher.",
-      "endorsement_type": "delegated",
-      "signature_algorithm": "ed25519",
-      "delegation_chain": [
+  "extensions": {
+    "spp:endorsement-chains": {
+      "version": "0.3.0",
+      "delegations": [
         {
-          "delegator_did": "did:web:institution.edu:supervisor",
-          "delegator_name": "Prof. Test Supervisor",
-          "delegation_signature": "zQmA1wriHmLkNxm2dKbmF2mLrZjYrJYFBrKqD4ZGwh9JFvW2E",
-          "delegation_timestamp": "2025-01-01T00:00:00Z",
+          "delegator_id": "supervisor.institution.edu",
+          "delegation_signature": "c3VwZXJ2aXNvci1zaWduYXR1cmU",
           "delegation_scope": "research_endorsement",
           "delegation_expires": "2025-12-31T23:59:59Z"
         }
       ]
     }
+  },
+  "endorsements": [
+    {
+      "artifact_hash": `sha256:${'b'.repeat(64)}`,
+      "endorser_id": "assistant.institution.edu",
+      "observed_at": "2025-01-15T16:00:00Z",
+      "sig": "ZGVsZWdhdGVkLXNpZ25hdHVyZS1leGFtcGxl"
+    }
   ]
-};
+});
 fs.writeFileSync(path.join(testDataDir, 'valid-delegation.json'), JSON.stringify(validDelegation, null, 2));
 
 // Invalid endorsement - missing required fields
-const invalidEndorsement = {
-  "protocolVersion": "1.0.0",
+const invalidEndorsement = baseSemantic({
   "id": "test:endorsement-invalid",
   "title": "Test Content with Invalid Endorsement",
-  "author": { "name": "Test Author" },
-  "extensions": [
-    {
-      "id": "spp:endorsement-chains",
-      "version": "0.3.0"
-    }
-  ],
+  "extensions": {
+    "spp:endorsement-chains": { "version": "0.3.0" }
+  },
   "endorsements": [
     {
-      "endorser_did": "did:web:example.com:expert",
-      "timestamp": "2025-01-15T14:30:00Z",
-      // Missing required signature field
-      "endorsement_type": "content",
-      "signature_algorithm": "ed25519"
+      "artifact_hash": `sha256:${'c'.repeat(64)}`,
+      "observed_at": "2025-01-15T14:30:00Z"
+      // Missing required endorser_id and sig fields
     }
   ]
-};
+});
 fs.writeFileSync(path.join(testDataDir, 'invalid-endorsement.json'), JSON.stringify(invalidEndorsement, null, 2));
 
 test('validateFile should validate content with basic endorsement', async () => {

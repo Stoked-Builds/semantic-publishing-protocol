@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/common/address.json",
+  "title": "Postal Address",
+  "description": "Reusable schema for a structured postal address with optional geo point.",
+  "$comment": "vNext: add regional format profiles (US/EU/JP), strict postal code patterns by country, multiple lines, and validation against official country/region lists.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "line1": { "type": "string", "minLength": 1, "description": "Primary street address line" },
+    "line2": { "type": "string", "description": "Secondary address line (apt, suite, unit)" },
+    "city": { "type": "string", "minLength": 1 },
+    "region": { "type": "string", "minLength": 1, "description": "State/Province/Region" },
+    "postal_code": { "type": "string", "minLength": 1 },
+    "country": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2,
+      "pattern": "^[A-Z]{2}$",
+      "description": "ISO 3166-1 alpha-2 country code"
+    },
+    "geo": { "$ref": "https://spp.dev/schemas/common/geo.json" },
+    "formatted": { "type": "string", "description": "Human-readable single-line formatted address" }
+  },
+  "required": ["line1", "city", "country"]
+}

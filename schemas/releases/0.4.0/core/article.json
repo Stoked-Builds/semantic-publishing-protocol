@@ -1,0 +1,83 @@
+{
+  "$comment": "vNext may include richer structured summary formats and machine-readable citation metadata.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/article.json",
+  "title": "Article",
+  "description": "Schema for article content type in SPS",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://spp.dev/schemas/sps-license-metadata.json"
+    },
+    {
+      "properties": {
+        "sps_type": {
+          "const": "article"
+        },
+        "transcript": {
+          "type": "string",
+          "description": "Full text transcript for accessibility",
+          "minLength": 1
+        },
+        "structured_summary": {
+          "type": "array",
+          "description": "Structured summary with headings",
+          "items": {
+            "type": "object",
+            "properties": {
+              "heading": {
+                "type": "string",
+                "minLength": 1
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["heading", "summary"],
+            "additionalProperties": false
+          }
+        },
+        "reading_level": {
+          "type": "string",
+          "description": "Reading difficulty level",
+          "enum": ["elementary", "middle", "high", "college", "graduate", "adult"]
+        },
+        "source_citations": {
+          "type": "array",
+          "description": "Array of source citations",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "minLength": 1
+              },
+              "author": {
+                "type": "string",
+                "minLength": 1
+              },
+              "published": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "required": ["title", "url"],
+            "additionalProperties": false
+          }
+        },
+        "word_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Approximate word count"
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

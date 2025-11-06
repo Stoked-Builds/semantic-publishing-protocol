@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/common/money.json",
+  "title": "Monetary Value",
+  "description": "Reusable schema for representing a monetary amount in a specific currency",
+  "$comment": "vNext: add support for multi-currency price ranges, inflation adjustment metadata, and exchange rate provenance.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "amount": {
+      "type": "string",
+      "pattern": "^-?\\d+(\\.\\d{1,4})?$",
+      "description": "Decimal string representation of the amount, with up to 4 decimal places"
+    },
+    "minor_units": {
+      "type": "integer",
+      "description": "Amount in minor units (e.g., cents, pence) as integer; mutually exclusive with 'amount'"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "minLength": 3,
+      "maxLength": 3,
+      "description": "ISO 4217 currency code (3 uppercase letters)"
+    }
+  },
+  "required": ["currency"],
+  "oneOf": [
+    { "required": ["amount"] },
+    { "required": ["minor_units"] }
+  ]
+}

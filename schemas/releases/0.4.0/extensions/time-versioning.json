@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/extensions/time-versioning.json",
+  "title": "Time-Versioning Extension Schema",
+  "description": "Schema for time-versioning extension fields in the Semantic Publishing Protocol",
+  "$comment": "vNext: consider on-chain anchors (e.g., transparency log roots), WACZ/ZIP snapshot artifacts, and formal diff formats (JSON-Patch, RDF diffs).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "snapshots": {
+      "type": "array",
+      "description": "Collection of point-in-time snapshots of the content",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1,
+            "description": "ISO 8601 timestamp when snapshot was created"
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$",
+            "description": "Semantic version of content at snapshot time (SemVer)"
+          },
+          "content_hash": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "Hash of content at snapshot time (format: sha256:<hex64>)"
+          },
+          "archive_url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1,
+            "description": "URL to archived version on external service"
+          },
+          "archive_provider": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of archive service (e.g., archive.org, perma.cc)"
+          },
+          "changes_from_previous": {
+            "type": "array",
+            "description": "Array of change objects describing differences from the previous snapshot",
+            "minItems": 0,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["edit", "addition", "deletion", "restructure"],
+                  "description": "Type of change"
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "JSON Pointer or JSONPath indicating what changed",
+                  "$comment": "vNext: consider oneOf pattern checks for JSON Pointer (^/.*) vs JSONPath (^[$])"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Human-readable description of the change"
+                }
+              },
+              "required": ["type", "description"]
+            }
+          }
+        },
+        "required": ["timestamp", "version", "content_hash"]
+      }
+    },
+    "version_history": {
+      "type": "object",
+      "description": "Metadata about the content's version history",
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "minLength": 1,
+          "description": "ISO 8601 timestamp of initial creation"
+        },
+        "last_modified": {
+          "type": "string",
+          "format": "date-time",
+          "minLength": 1,
+          "description": "ISO 8601 timestamp of most recent modification"
+        },
+        "revision_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of revisions made"
+        },
+        "editorial_notes": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Notes about recent changes"
+        }
+      },
+      "required": ["created_at", "last_modified"]
+    }
+  }
+}

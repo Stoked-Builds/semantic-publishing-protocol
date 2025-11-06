@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/common/provenance.json",
+  "title": "Artifact Provenance",
+  "description": "Reusable schema for artifact provenance in SPP",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "content_hash", "registry_id", "adapter_id", "collected_at"],
+  "properties": {
+    "mode": { "type": "string", "enum": ["reconstructed", "claimed", "adopted", "authoritative"] },
+    "publisher_did": { "type": "string", "pattern": "^did:[a-z0-9]+:.*$" },
+    "adoption": { "type": "object" },
+    "source_url": { "type": "string", "format": "uri" },
+    "capture_method": { "type": "string" },
+    "captured_at": { "type": "string", "format": "date-time" },
+    "collected_at": { "type": "string", "format": "date-time", "description": "When this artifact was ingested by the registry" },
+    "registry_id": {
+      "type": "string",
+      "minLength": 1,
+      "format": "hostname",
+      "description": "Domain identifier of the signing registry (must be a valid hostname)"
+    },
+    "adapter_id": { "type": "string", "minLength": 1, "description": "Identifier of the adapter/plugin that produced this artifact" },
+    "reconstruction_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "snapshot_uri": { "type": "string", "format": "uri" }
+  }
+,
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "authoritative" } }, "required": ["mode"] },
+      "then": {}
+    },
+    {
+      "else": { "required": ["source_url"] }
+    }
+  ]
+}

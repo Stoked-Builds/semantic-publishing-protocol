@@ -1,0 +1,18 @@
+{
+  "$id": "https://punkforge.io/schemas/feed.json",
+  "title": "SppFeed",
+  "type": "object",
+  "required": ["id", "publisherId", "url", "feedType", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "publisherId": { "type": "string", "format": "uuid" },
+    "url": { "type": "string", "format": "uri" },
+    "feedType": { "type": "string", "enum": ["rss", "atom", "sitemap"] },
+    "etag": { "type": "string" },
+    "lastModified": { "type": "string", "format": "date-time" },
+    "lastSeen": { "type": "string", "format": "date-time" },
+    "status": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

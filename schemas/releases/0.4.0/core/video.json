@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/core/video.json",
+  "$comment": "vNext ideas: multi-bitrate manifests, adaptive streaming metadata, and alternate thumbnail sets.",
+  "title": "Video",
+  "description": "Schema for video content type in SPS",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://spp.dev/schemas/sps-license-metadata.json"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "sps_type": {
+          "const": "video"
+        },
+        "video_url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1,
+          "description": "URL to the video file or stream"
+        },
+        "duration": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Video duration in ISO 8601 duration format (e.g., PT1H30M)",
+          "pattern": "^PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?$"
+        },
+        "transcript": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Full text transcript for accessibility"
+        },
+        "captions": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Available caption tracks",
+          "items": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string",
+                "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "minLength": 1
+              },
+              "format": {
+                "type": "string",
+                "enum": ["srt", "vtt", "ass"]
+              }
+            },
+            "required": ["language", "url"],
+            "additionalProperties": false
+          }
+        },
+        "chapters": {
+          "$comment": "vNext may require end_time ≥ start_time and could allow optional descriptions.",
+          "type": "array",
+          "minItems": 1,
+          "description": "Video chapter markers",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "start_time": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Start time in ISO 8601 duration format"
+              },
+              "end_time": {
+                "type": "string",
+                "minLength": 1,
+                "description": "End time in ISO 8601 duration format"
+              }
+            },
+            "required": ["title", "start_time"],
+            "additionalProperties": false
+          }
+        },
+        "thumbnail": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1,
+          "description": "Video thumbnail image URL"
+        },
+        "resolution": {
+          "type": "object",
+          "description": "Video resolution",
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": ["width", "height"],
+          "additionalProperties": false
+        },
+        "bitrate": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Video bitrate in bps"
+        },
+        "format": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Video format/codec",
+          "examples": ["mp4", "webm", "mov", "h264", "vp9"]
+        },
+        "streaming": {
+          "type": "object",
+          "description": "Streaming configuration",
+          "properties": {
+            "live": {
+              "type": "boolean",
+              "description": "Whether this is a live stream"
+            },
+            "hls_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "HLS streaming URL"
+            },
+            "dash_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "DASH streaming URL"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["video_url"]
+    }
+  ]
+}

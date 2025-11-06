@@ -1,18 +1,53 @@
 {
-  "protocolVersion": "1.0.0",
   "id": "conformance:extensions",
+  "type": "article",
   "title": "Content with Extensions",
-  "author": {
-    "name": "SPP Conformance Test"
+  "summary": "Artefact demonstrating extension declarations.",
+  "spec_version": "0.4.0",
+  "language": "en",
+  "authors": [
+    { "name": "SPP Conformance Test Runner" }
+  ],
+  "content": {
+    "format": "markdown",
+    "value": "This artefact demonstrates extension declarations used in the smoke test."
   },
-  "extensions": [
-    {
-      "id": "spp:trust-weighting",
-      "version": "0.3.0"
+  "links": [
+    { "rel": "canonical", "href": "https://example.com/conformance/extensions" }
+  ],
+  "extensions": {
+    "spp:trust-weighting": {
+      "version": "0.3.0",
+      "trust_signals": {
+        "source_credibility": 0.9,
+        "fact_checked": true,
+        "aggregate_trust_score": 0.92
+      }
     },
+    "spp:endorsement-chains": { "version": "0.3.0" }
+  },
+  "endorsements": [
     {
-      "id": "spp:endorsement-chains", 
-      "version": "0.3.0"
+      "artifact_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "endorser_id": "registry.trusted.example",
+      "observed_at": "2025-01-15T12:10:00Z",
+      "sig": "dHJ1c3RlZC1leHRlbnNpb24tc2lnbmF0dXJl"
     }
-  ]
+  ],
+  "provenance": {
+    "mode": "authoritative",
+    "content_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "registry_id": "conformance.example",
+    "adapter_id": "conformance.runner/1.0.0",
+    "collected_at": "2025-01-15T12:05:00Z"
+  },
+  "signatures": [
+    {
+      "signer": "conformance.example",
+      "key_id": "conformance-key",
+      "sig": "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4",
+      "signedAt": "2025-01-15T12:06:00Z"
+    }
+  ],
+  "version": 1
 }

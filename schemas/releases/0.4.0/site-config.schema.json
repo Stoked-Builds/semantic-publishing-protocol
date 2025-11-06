@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/site-config.schema.json",
+  "title": "Site Configuration Schema",
+  "description": "Schema for site.config.json at site root containing publisher and site configuration",
+  "$comment": "vNext: enforce HTTPS-only URLs at application layer, assert date relations (e.g., none here), and allow per-environment overrides (dev/stage/prod).",
+  "type": "object",
+  "required": [
+    "protocolVersion",
+    "siteMetadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "protocolVersion": {
+      "type": "string",
+      "description": "The version of the Semantic Publishing Protocol being used",
+      "minLength": 1,
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+
+    "siteMetadata": {
+      "type": "object",
+      "description": "Core metadata about the site",
+      "required": ["name", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the site or publication",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The canonical URL of the site",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the site or publication",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "description": "The primary language of the site (ISO 639-1 code)",
+          "minLength": 2
+        },
+        "publisher": {
+          "type": "object",
+          "description": "Information about the publisher",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "url": { "type": "string", "format": "uri", "minLength": 1 },
+            "email": { "type": "string", "format": "email" },
+            "organizationType": {
+              "type": "string",
+              "enum": ["individual", "company", "nonprofit", "government", "organization"]
+            }
+          },
+          "required": ["name"]
+        },
+        "topics": {
+          "type": "array",
+          "description": "Primary topics or focus areas of the site",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "license": {
+          "type": "string",
+          "description": "Default license for content on this site",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9.+-]+$",
+          "$comment": "SPDX-like token, e.g., CC-BY-4.0, MIT"
+        }
+      }
+    },
+
+    "publishingSettings": {
+      "type": "object",
+      "description": "Configuration settings for publishing behavior",
+      "additionalProperties": false,
+      "properties": {
+        "defaultContentType": {
+          "type": "string",
+          "enum": ["article", "video", "product", "person", "event", "organization"],
+          "default": "article",
+          "description": "Default content type for publications"
+        },
+        "feedUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the site's semantic feed",
+          "minLength": 1
+        },
+        "sitemapUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the semantic sitemap",
+          "minLength": 1
+        },
+        "enableAnalytics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable analytics tracking"
+        },
+        "enableComments": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to enable comments on publications"
+        }
+      }
+    },
+
+    "trustSettings": {
+      "type": "object",
+      "description": "Trust and verification settings",
+      "additionalProperties": false,
+      "properties": {
+        "verificationLevel": {
+          "type": "string",
+          "enum": ["none", "basic", "verified", "premium"],
+          "default": "none",
+          "description": "Level of verification for this publisher"
+        },
+        "allowEndorsements": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to allow endorsements on content"
+        },
+        "trustedSources": {
+          "type": "array",
+          "description": "List of trusted source URLs for content attribution",
+          "items": { "type": "string", "format": "uri", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+
+    "extensions": {
+      "type": "array",
+      "description": "Enabled extensions and their configurations",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "description": "Extension identifier", "minLength": 1 },
+          "version": {
+            "type": "string",
+            "description": "Extension version",
+            "minLength": 1,
+            "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+          },
+          "config": { "type": "object", "description": "Extension-specific configuration" }
+        },
+        "required": ["id", "version"]
+      }
+    }
+  }
+}

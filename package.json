@@ -20,6 +20,9 @@
     "LICENSE.md"
   ],
   "scripts": {
+    "lint": "npm run lint:js && npm run lint:md && npm run validate",
+    "lint:js": "eslint \"bin/**/*.js\" \"lib/**/*.js\" \"scripts/**/*.js\" \"test/**/*.js\"",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules --ignore .github --ignore docs/releases --ignore specs --ignore conformance/fixtures",
     "test": "node --test && node bin/spp-conformance-smoke.js",
     "test:unit": "node --test",
     "test:conformance": "node bin/spp-conformance-smoke.js",
@@ -45,6 +48,8 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "^12.0.0",
     "@types/node": "^20.0.0",
+    "eslint": "^8.57.0",
+    "markdownlint-cli": "^0.41.0",
     "speccy": "^0.11.0"
   },
   "engines": {

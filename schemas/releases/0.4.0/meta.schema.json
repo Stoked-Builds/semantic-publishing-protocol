@@ -1,0 +1,144 @@
+{
+  "$comment": "vNext: stricter cross-field validation (e.g., dateModified ≥ datePublished), enforce HTTPS-only URLs, link integrity checks, and schema.org type whitelisting from a controlled list.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/meta.schema.json",
+  "title": "Meta JSON-LD Schema",
+  "description": "Schema for meta.jsonld files in each publication following JSON-LD structure",
+  "type": "object",
+  "required": [
+    "@context",
+    "@type", 
+    "name",
+    "datePublished",
+    "protocolVersion"
+  ],
+  "properties": {
+    "@context": {
+      "type": "string",
+      "const": "https://schema.org",
+      "description": "JSON-LD context URL",
+      "minLength": 1
+    },
+    "@type": {
+      "type": "string",
+      "description": "The type of the entity according to schema.org vocabulary",
+      "examples": ["Article", "BlogPosting", "NewsArticle", "CreativeWork"],
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "The name/title of the publication",
+      "minLength": 1
+    },
+    "datePublished": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the publication was published (ISO 8601)"
+    },
+    "protocolVersion": {
+      "type": "string",
+      "description": "The version of the Semantic Publishing Protocol being used",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "minLength": 1
+    },
+    "author": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "@type": {
+              "type": "string",
+              "const": "Person"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": ["@type", "name"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object", 
+          "properties": {
+            "@type": {
+              "type": "string",
+              "const": "Organization"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": ["@type", "name"],
+          "additionalProperties": false
+        }
+      ],
+      "description": "The author of the publication"
+    },
+    "description": {
+      "type": "string",
+      "description": "A description or summary of the publication",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The canonical URL of the publication"
+    },
+    "dateModified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the publication was last modified (ISO 8601)"
+    },
+    "publisher": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "enum": ["Person", "Organization"]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": ["@type", "name"],
+      "description": "The publisher of the publication",
+      "additionalProperties": false
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Keywords or tags associated with the publication",
+      "uniqueItems": true
+    },
+    "license": {
+      "type": "string",
+      "description": "The license under which the publication is released",
+      "minLength": 1
+    },
+    "inLanguage": {
+      "type": "string",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "description": "The language of the publication (ISO 639-1 code)",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

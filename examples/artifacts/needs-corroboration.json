@@ -1,20 +1,36 @@
 {
-  "version": "0.4",
+  "id": "urn:spp:lowtrust.example.net:needs-corroboration",
+  "type": "article",
+  "title": "Unverified report awaiting corroboration",
+  "summary": "Crawler-captured story with low confidence requiring endorsements.",
+  "spec_version": "0.4.0",
+  "language": "en",
+  "content": {
+    "format": "markdown",
+    "value": "This artefact was reconstructed from RSS and awaits corroboration."
+  },
+  "links": [
+    { "rel": "canonical", "href": "https://example.net/articles/needs-corroboration" }
+  ],
   "provenance": {
     "mode": "reconstructed",
-    "source_url": "https://example.net/article/789",
+    "source_url": "https://example.net/articles/needs-corroboration",
     "collected_at": "2025-09-27T13:00:00Z",
     "registry_id": "lowtrust.example.net",
-    "adapter_id": "rss.crawler",
-    "content_hash": "sha256:beadfeed...",
-    "snapshot_uri": "https://cdn.example.net/snapshots/beadfeed"
+    "adapter_id": "rss.crawler/0.9.1",
+    "capture_method": "rss",
+    "reconstruction_confidence": 0.35,
+    "content_hash": "sha256:6f1d5fcce73d5b2fc03d2c127959a6d3f5f2b9e3edfaf953b9a2a52d58a9c5a2",
+    "snapshot_uri": "https://cdn.example.net/snapshots/needs-corroboration.json"
   },
   "signatures": [
     {
       "signer": "lowtrust.example.net",
       "key_id": "ed25519-2025-09",
-      "sig": "Zm9vYmFyYmF6...",
+      "sig": "Wm05dmJHeHZaR0Z1YVdOdVp6QQ",
       "signedAt": "2025-09-27T13:00:05Z"
     }
-  ]
+  ],
+  "version": 1,
+  "endorsements": []
 }

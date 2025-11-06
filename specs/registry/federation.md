@@ -15,6 +15,7 @@ Federation-capable registries **MUST**:
 - Verify cryptographic signatures before accepting federated content
 - Honor publisher consent policies from originating registries
 - Maintain provenance information when replicating content
+- Advertise and enforce supported `semantic.json` `spec_version` ranges
 
 Federation-capable registries **SHOULD**:
 - Implement WebSub push notifications for real-time content updates
@@ -78,6 +79,10 @@ The `.well-known/spp/registry.json` discovery record **MUST** validate against t
     "contentTypes": ["article", "paper", "dataset"],
     "languages": ["en", "es", "fr"]
   },
+  "specVersions": {
+    "supported": ["0.3.2", "0.4.0"],
+    "preferred": "0.4.0"
+  },
   "anchors": []
 }
 ```
@@ -88,7 +93,15 @@ The `.well-known/spp/registry.json` discovery record **MUST** validate against t
 - `registry.publicKey`: **MUST** be Ed25519 public key in JWK format, and **MUST** match the public key used to sign registry transparency and ownership proofs.
 - `endpoints.harvest.baseUrl`: **MUST** be absolute HTTPS URL
 - `federation.allowHarvesting`: **MUST** indicate if harvest API is available
+- `specVersions.supported`: **MUST** be a non-empty array of SemVer-compatible strings that the registry can validate today
+- `specVersions.preferred`: **MUST** reference one of the supported versions and represents the best-effort target for producers
 - `anchors`: **MUST** be present as an array (may be empty) reserved for future blockchain/NFT anchoring.
+
+### Spec Version Negotiation
+
+- Registries **MUST** reject artefacts whose `spec_version` exceeds the highest value in `specVersions.supported`. The rejection response SHOULD use HTTP `406 Not Acceptable` with a Problem Details payload (`type`: `https://spp.dev/problems/spec-version/unsupported`).
+- Registries **SHOULD** accept artefacts declaring any version listed in `specVersions.supported` and MAY provide downgrade guidance when a producer publishes higher versions.
+- Producers **SHOULD** treat `specVersions.preferred` as the default target when emitting artefacts for that registry. Where negotiation fails, producers MAY republish using an older supported version if they maintain the necessary tooling.
 
 ### Harvest Record
 
@@ -105,6 +118,7 @@ Each harvest record **MUST** validate against `/schemas/semantic.json` extended 
   "id": "urn:spp:example:article-123",
   "type": "article",
   "title": "Example Article",
+  "spec_version": "0.4.0",
   "language": "en",
   "authors": [
     {
@@ -132,13 +146,20 @@ Each harvest record **MUST** validate against `/schemas/semantic.json` extended 
     "publisher_did": "did:key:z6MkABC...",
     "source_url": "https://example.com/articles/123",
     "captured_at": "2025-01-10T16:01:00Z",
-    "content_hash": "sha256:abc123..."
+    "collected_at": "2025-01-10T16:01:00Z",
+    "registry_id": "registry.example.com",
+    "adapter_id": "registry.harvest/1.0.0",
+    "content_hash": "sha256:5feceb66ffc86f38d952786c6d696c79d8ea5f160b2498b67ae713d2f3aa2f12",
+    "snapshot_uri": "https://registry.example.com/snapshots/article-123.json"
   },
-  "signature": {
-    "signer": "did:key:z6MkABC...",
-    "sig": "base64url-signature",
-    "signedAt": "2025-01-10T16:00:00Z"
-  },
+  "signatures": [
+    {
+      "signer": "registry.example.com",
+      "key_id": "ed25519-2025-Q1",
+      "sig": "YmFzZTY0dXJsLXNpZ25hdHVyZS1leGFtcGxl",
+      "signedAt": "2025-01-10T16:00:00Z"
+    }
+  ],
   "version": 1,
   "federation": {
     "sourceRegistry": "registry:example",
@@ -153,6 +174,7 @@ Each harvest record **MUST** validate against `/schemas/semantic.json` extended 
 - `identifier`: **MUST** follow OAI-PMH identifier format `oai:registry:localid`
 - `datestamp`: **MUST** be RFC3339 timestamp of last modification
 - `status`: **MUST** be one of "active", "deleted", "superseded"
+- `spec_version`: **MUST** match one of the `specVersions.supported` values advertised by the publishing registry
 - Core semantic fields: **MUST** conform to `/schemas/semantic.json`
 - `federation.sourceRegistry`: **MUST** identify originating registry
 - `federation.harvestedAt`: **MUST** be RFC3339 timestamp of harvest operation

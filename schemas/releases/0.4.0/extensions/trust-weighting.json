@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spp.dev/schemas/extensions/trust-weighting.json",
+  "title": "Trust Weighting Extension",
+  "description": "Schema for trust weighting extension in SPP",
+  "$comment": "vNext: add provenance for computed scores, monotonic decay proofs, calibration test vectors, and audit trails for algorithm versions.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "trust_signals": {
+      "type": "object",
+      "description": "Collection of trust indicators and computed scores",
+      "additionalProperties": false,
+      "properties": {
+        "source_credibility": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "Base credibility of content source" },
+        "peer_review": { "type": "boolean", "description": "Whether content has undergone peer review" },
+        "fact_checked": { "type": "boolean", "description": "Whether content has been fact-checked" },
+        "controversy_detected": { "type": "boolean", "description": "Whether controversial elements are detected" },
+        "breaking_news": { "type": "boolean", "description": "Whether this is breaking/urgent news" },
+        "time_sensitive": { "type": "boolean", "description": "Whether content becomes less reliable over time" },
+        "anonymous_author": { "type": "boolean", "description": "Whether author identity is unknown" },
+        "editorial_oversight": { "type": "boolean", "description": "Whether content has editorial review" },
+        "endorsement_chain_length": { "type": "integer", "minimum": 0, "description": "Number of endorsements in chain" },
+        "aggregate_trust_score": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "Final computed trust score" },
+        "trust_decay_rate": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "Rate at which trust decreases over time" },
+        "last_updated": { "type": "string", "format": "date-time", "minLength": 1, "description": "ISO 8601 timestamp of last trust calculation" },
+        "context_scores": {
+          "type": "object",
+          "description": "Trust scores for different contexts",
+          "additionalProperties": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+        },
+        "network_effects": {
+          "type": "object",
+          "description": "Trust network calculations",
+          "additionalProperties": false,
+          "properties": {
+            "related_content_scores": {
+              "type": "array",
+              "minItems": 0,
+              "items": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+            },
+            "network_average": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "network_influence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+          }
+        }
+      }
+    },
+    "trust_config": {
+      "type": "object",
+      "description": "Configuration for trust calculation algorithms",
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "type": "string", "enum": ["weighted_average", "bayesian", "neural"], "description": "Trust calculation method" },
+        "version": { "type": "string", "minLength": 1, "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$", "description": "Version of algorithm used (SemVer)" },
+        "weights": {
+          "type": "object",
+          "description": "Relative importance of different factors",
+          "additionalProperties": false,
+          "properties": {
+            "source_credibility": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "endorsement_quality": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "evidence_strength": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "temporal_factors": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "description": "Score ranges for trust levels",
+          "$comment": "vNext: enforce high >= medium >= low via custom assertion; JSON Schema cannot express cross-field numeric ordering natively.",
+          "additionalProperties": false,
+          "properties": {
+            "high_trust": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "medium_trust": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "low_trust": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+          }
+        },
+        "decay": {
+          "type": "object",
+          "description": "Time-based trust degradation settings",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "half_life": { "type": "string", "minLength": 1, "pattern": "^\\d+(ms|s|m|h|d|w)$", "description": "Duration (e.g., 30d, 6h, 45m)" },
+            "minimum_score": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+          }
+        }
+      }
+    }
+  }
+}
