@@ -92,9 +92,9 @@ Implementations MAY track stage progression timestamps per version, e.g. `enrich
   - `clean_sha256` (object metadata) = SHA-256 of clean text
 
 ## Retrieval Contracts
-- `GET /v1/artefacts/{id}` → latest state
-- `GET /v1/artefacts/{id}/versions` → list of `{ version, created_at }`
-- `GET /v1/artefacts/{id}/versions/{v}/manifest` → pointer map for that version
+- `GET /v1/artifacts/{id}` → latest state
+- `GET /v1/artifacts/{id}/versions` → list of `{ version, created_at }`
+- `GET /v1/artifacts/{id}/versions/{v}/manifest` → pointer map for that version
 
 ---
 

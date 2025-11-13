@@ -2,17 +2,17 @@
 
 ## Purpose [Informative]
 
-This specification defines how publishers claim namespaces and adopt artefacts within the Semantic Publishing Protocol (SPP) registry system. It establishes the provenance lifecycle from reconstructed content to authoritative publisher control, enabling decentralized verification of content ownership and authenticity without requiring centralized gatekeepers.
+This specification defines how publishers claim namespaces and adopt artifacts within the Semantic Publishing Protocol (SPP) registry system. It establishes the provenance lifecycle from reconstructed content to authoritative publisher control, enabling decentralized verification of content ownership and authenticity without requiring centralized gatekeepers.
 
 ## Normative Requirements [Normative]
 
 ### Provenance States
 
-All SPP artefacts **MUST** maintain one of the following provenance states in their lifecycle:
+All SPP artifacts **MUST** maintain one of the following provenance states in their lifecycle:
 
 - **reconstructed**: Content captured from public sources without publisher verification
 - **claimed**: Publisher has proven control over the source namespace
-- **adopted**: Publisher has explicitly acknowledged ownership of specific artefacts  
+- **adopted**: Publisher has explicitly acknowledged ownership of specific artifacts  
 - **authoritative**: Final state combining valid claim + adoption + ongoing verification
 
 ### State Transitions
@@ -30,7 +30,7 @@ Implementations **MUST** enforce the following state transition rules:
 States:
 • reconstructed: Content captured from public sources without publisher verification
 • claimed: Publisher has proven control over source namespace via DNS+well-known verification  
-• adopted: Publisher has explicitly acknowledged ownership of specific artefacts
+• adopted: Publisher has explicitly acknowledged ownership of specific artifacts
 • authoritative: Final state with valid claim + adoption + ongoing verification
 ```
 
@@ -48,7 +48,7 @@ All claims **MUST** include digital signatures conforming to `/schemas/common/si
 
 ### Adoption Requirements  
 
-Publishers **MUST** explicitly adopt artefacts using one of these modes:
+Publishers **MUST** explicitly adopt artifacts using one of these modes:
 
 - **hash-based**: Direct acknowledgment of specific content hashes
 - **manifest-based**: Bulk adoption via manifest URLs
@@ -86,7 +86,7 @@ Adoptions **MUST** conform to `/schemas/adoption.json`:
 
 ```json
 {
-  "artefact_hashes": ["sha256:..."],
+  "artifact_hashes": ["sha256:..."],
   "manifest_url": "https://...",
   "signature": {
     "signer": "<did_identifier>",
@@ -134,11 +134,11 @@ Publishers **MUST**:
 
 ### Hash-Based Adoption
 
-Publishers **MAY** adopt specific artefacts by content hash:
+Publishers **MAY** adopt specific artifacts by content hash:
 
 ```json
 {
-  "artefact_hashes": [
+  "artifact_hashes": [
     "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
   ],
   "signature": {
@@ -151,7 +151,7 @@ Publishers **MAY** adopt specific artefacts by content hash:
 
 ### Manifest-Based Adoption
 
-Publishers **MAY** adopt multiple artefacts via manifest URL:
+Publishers **MAY** adopt multiple artifacts via manifest URL:
 
 ```json
 {
@@ -168,7 +168,7 @@ The manifest **MUST** contain a JSON array of content hashes:
 
 ```json
 {
-  "artefacts": [
+  "artifacts": [
     "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
     "sha256:b694a542120422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae9"
   ],
@@ -247,7 +247,7 @@ _spp.example.com. 3600 IN TXT "did=did:key:z6MkHaDGvcFU3qhk2hZwJC6KBN6RKpJtmvAyD
 
 ```json
 {
-  "artefact_hashes": [
+  "artifact_hashes": [
     "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   ],
   "signature": {
@@ -334,7 +334,7 @@ Extensions and experimental features **SHOULD** be prefixed with vendor namespac
 - [Claim Schema](/schemas/claim.json): Claim data structure
 - [Adoption Schema](/schemas/adoption.json): Adoption data structure
 - [Ownership Schema](/schemas/ownership.json): Optional ownership records
-- [Semantic Schema](/schemas/semantic.json): Artefact provenance states
+- [Semantic Schema](/schemas/semantic.json): Artifact provenance states
 - [Signature Schema](/schemas/common/signature.json): Digital signature format
 - [DID Schema](/schemas/common/did.json): Decentralized identifier format
 - [RFC 2119](https://tools.ietf.org/html/rfc2119): Key words for use in RFCs to Indicate Requirement Levels

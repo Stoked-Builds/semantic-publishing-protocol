@@ -13,7 +13,7 @@
     "spec_version": {
       "type": "string",
       "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?$",
-      "$comment": "Semantic Publishing Protocol revision that produced this artefact (semver with optional pre-release tag)."
+      "$comment": "Semantic Publishing Protocol revision that produced this artifact (semver with optional pre-release tag)."
     },
     "language": {
       "type": "string",

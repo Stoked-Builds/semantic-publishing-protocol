@@ -2,7 +2,7 @@
   "id": "conformance:extensions",
   "type": "article",
   "title": "Content with Extensions",
-  "summary": "Artefact demonstrating extension declarations.",
+  "summary": "Artifact demonstrating extension declarations.",
   "spec_version": "0.4.0",
   "language": "en",
   "authors": [
@@ -10,7 +10,7 @@
   ],
   "content": {
     "format": "markdown",
-    "value": "This artefact demonstrates extension declarations used in the smoke test."
+    "value": "This artifact demonstrates extension declarations used in the smoke test."
   },
   "links": [
     { "rel": "canonical", "href": "https://example.com/conformance/extensions" }

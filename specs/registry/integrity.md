@@ -2,7 +2,7 @@
 
 ## Purpose [Informative]
 
-This specification defines the transparency log format and HTTP endpoints for verifiable artefact, claim, and ownership tracking within the SPP Registry system. It establishes a Certificate Transparency-style append-only Merkle tree log that enables cryptographic verification of registry operations, providing transparency and integrity guarantees without requiring blockchain infrastructure.
+This specification defines the transparency log format and HTTP endpoints for verifiable artifact, claim, and ownership tracking within the SPP Registry system. It establishes a Certificate Transparency-style append-only Merkle tree log that enables cryptographic verification of registry operations, providing transparency and integrity guarantees without requiring blockchain infrastructure.
 
 ## Normative Requirements [Normative]
 
@@ -10,16 +10,16 @@ This specification defines the transparency log format and HTTP endpoints for ve
 
 Implementations **MUST** maintain an append-only transparency log of all registry operations including:
 
-- Artefact ingestion events 
+- Artifact ingestion events 
 - Publisher claims of namespace control
-- Artefact adoption by publishers
+- Artifact adoption by publishers
 - Ownership record submissions (when enabled)
 
 Implementations **MUST NOT** allow deletion or modification of log entries once committed to the transparency log.
 
 ### Log Entry Ordering
 
-Implementations **MUST** order log entries chronologically by their `timestamp` field in ascending order. Entries with identical timestamps **MUST** be ordered deterministically using a secondary sorting criterion (e.g., lexicographic ordering of `artefact_hash`).
+Implementations **MUST** order log entries chronologically by their `timestamp` field in ascending order. Entries with identical timestamps **MUST** be ordered deterministically using a secondary sorting criterion (e.g., lexicographic ordering of `artifact_hash`).
 
 ### Merkle Tree Construction
 
@@ -47,7 +47,7 @@ STH signatures **MUST** conform to `/schemas/common/signature.json` using Ed2551
 
 Log entries **MUST** conform to `/schemas/transparency-log-entry.json` with the following required fields:
 
-- `artefact_hash`: SHA-256 content hash in format `sha256:[hex]`
+- `artifact_hash`: SHA-256 content hash in format `sha256:[hex]`
 - `publisher_did`: DID of the publisher associated with this entry
 - `provenance_mode`: One of `reconstructed`, `claimed`, `adopted`, `authoritative`
 - `timestamp`: RFC3339 UTC timestamp of the operation
@@ -83,7 +83,7 @@ Returns the latest Signed Tree Head.
 
 ### GET /ct/proof
 
-Returns Merkle inclusion proof for a specific artefact.
+Returns Merkle inclusion proof for a specific artifact.
 
 **Parameters**:
 - `id` (query, required): Content hash in format `sha256:[hex]`
@@ -141,7 +141,7 @@ Implementations **MAY** populate the `anchors` array but **MUST NOT** require it
 
 ```json
 {
-  "artefact_hash": "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+  "artifact_hash": "sha256:a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
   "publisher_did": "did:web:example.com",
   "provenance_mode": "adopted",
   "timestamp": "2024-01-15T10:30:00Z",

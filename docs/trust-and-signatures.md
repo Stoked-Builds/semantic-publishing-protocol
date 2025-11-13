@@ -1,9 +1,9 @@
 # Trust & Signatures (SPP v0.4)
 
-This guide describes how to **bind endorsements and signatures** to a specific versioned artefact so that consumers can verify integrity and provenance.
+This guide describes how to **bind endorsements and signatures** to a specific versioned artifact so that consumers can verify integrity and provenance.
 
 ## What to Sign
-Always include these fields when signing an enriched artefact version:
+Always include these fields when signing an enriched artifact version:
 
 ```json
 {
@@ -55,7 +55,7 @@ Whatever you pick, keep the **payload canonical** and **stable**.
 1. Resolve the `kid` → fetch the public key (DID document, jwk.json, etc.).
 2. Verify the JWS signature.
 3. Recompute `sha256(raw_bytes)` of the referenced raw snapshot; compare with `rawSha256`.
-4. Confirm `version` exists via `/v1/artefacts/{id}/versions/{v}/manifest`.
+4. Confirm `version` exists via `/v1/artifacts/{id}/versions/{v}/manifest`.
 
 ## Binding to the Web Origin
 Publish the **public key** under the site’s origin (e.g., `/.well-known/spp/jwk.json`) and/or a **DID document** (`did:web`). This lets agents tie endorsements to the publisher’s domain.
@@ -67,9 +67,9 @@ Publish the **public key** under the site’s origin (e.g., `/.well-known/spp/jw
 
 ## Tamper Response
 If content is removed or legally restricted:
-- Tombstone the artefact; keep the hash and version history.
+- Tombstone the artifact; keep the hash and version history.
 - Revoke or supersede endorsements with a revocation list (simple JSON).
 
 ---
 
-_This document is intentionally format‑agnostic. The only requirement is that signatures include the artefact `id`, `canonical`, **content version number**, and **raw snapshot hash**._
+_This document is intentionally format‑agnostic. The only requirement is that signatures include the artifact `id`, `canonical`, **content version number**, and **raw snapshot hash**._

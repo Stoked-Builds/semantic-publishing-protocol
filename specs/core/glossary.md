@@ -71,7 +71,7 @@ Each term links to where it is normatively defined and used across the protocol 
 
 - **Saturation Penalty**: A system that reduces the display score of ads that users repeatedly see but don't engage with, preventing ad fatigue and improving targeting quality. See [Saturation Penalty System](../ads/saturation-penalty.md).
 - **Semantic Block**: A modular, self-contained unit of structured content with embedded metadata. Same as Content Block. See [Semantic Blocks](../publishing/semantic-blocks.md).
-- **semantic.json**: The machine-readable canonical representation of a content artefact, generated from story.md and used by agents, search systems, and AI browsers. See [semantic.json](../publishing/semantic-json.md).
+- **semantic.json**: The machine-readable canonical representation of a content artifact, generated from story.md and used by agents, search systems, and AI browsers. See [semantic.json](../publishing/semantic-json.md).
 - **Signature**: A cryptographic proof of authorship, amendment, or endorsement, providing verifiable proof using multiple cryptographic algorithms. See [SPS-Core](../SPS-Core.md#7-signature).
 - **Single Source of Truth (SSOT)**: A globally unique, resolvable identifier (e.g., `ssot://`) for identity and attribution. See [SSOT-ID](../identity/ssot-id.md).
 - **SPP Token (SPX)**: The native or planned token for micro-payments and incentive alignment in the protocol. See [SPP Token Roadmap](../payments/spp-token-roadmap.md).

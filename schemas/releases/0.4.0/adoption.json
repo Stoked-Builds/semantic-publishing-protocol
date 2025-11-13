@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["signature"],
   "properties": {
-    "artefact_hashes": {
+    "artifact_hashes": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
@@ -24,7 +24,7 @@
     }
   },
   "oneOf": [
-    { "required": ["artefact_hashes"] },
+    { "required": ["artifact_hashes"] },
     { "required": ["manifest_url"] }
   ]
 }

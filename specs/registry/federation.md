@@ -99,9 +99,9 @@ The `.well-known/spp/registry.json` discovery record **MUST** validate against t
 
 ### Spec Version Negotiation
 
-- Registries **MUST** reject artefacts whose `spec_version` exceeds the highest value in `specVersions.supported`. The rejection response SHOULD use HTTP `406 Not Acceptable` with a Problem Details payload (`type`: `https://spp.dev/problems/spec-version/unsupported`).
-- Registries **SHOULD** accept artefacts declaring any version listed in `specVersions.supported` and MAY provide downgrade guidance when a producer publishes higher versions.
-- Producers **SHOULD** treat `specVersions.preferred` as the default target when emitting artefacts for that registry. Where negotiation fails, producers MAY republish using an older supported version if they maintain the necessary tooling.
+- Registries **MUST** reject artifacts whose `spec_version` exceeds the highest value in `specVersions.supported`. The rejection response SHOULD use HTTP `406 Not Acceptable` with a Problem Details payload (`type`: `https://spp.dev/problems/spec-version/unsupported`).
+- Registries **SHOULD** accept artifacts declaring any version listed in `specVersions.supported` and MAY provide downgrade guidance when a producer publishes higher versions.
+- Producers **SHOULD** treat `specVersions.preferred` as the default target when emitting artifacts for that registry. Where negotiation fails, producers MAY republish using an older supported version if they maintain the necessary tooling.
 
 ### Harvest Record
 
@@ -454,7 +454,7 @@ User-Agent: SPP-Registry/1.0 (registry:harvester.example.com)
 ### Content Verification
 
 Harvesting registries **MUST**:
-- Verify cryptographic signatures on all artefacts before acceptance
+- Verify cryptographic signatures on all artifacts before acceptance
 - Validate content hashes match computed SHA-256 of canonical JSON
 - Reject content with invalid or expired signatures
 - Preserve original provenance and signature information

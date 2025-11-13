@@ -4,7 +4,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/core/collection.json",
   "title": "Collection",
-  "description": "Schema for collection-type artefacts (e.g., curated lists, series, galleries) in the Semantic Publishing Protocol",
+  "description": "Schema for collection-type artifacts (e.g., curated lists, series, galleries) in the Semantic Publishing Protocol",
   "$comment": "vNext: add pagination metadata for very large collections, allow ordered/unordered distinction, support external collection sources, and enable dynamic/AI-generated collections with provenance.",
   "type": "object",
   "allOf": [
@@ -31,7 +31,7 @@
               },
               "position": { "type": "integer", "minimum": 1 },
               "added_at": { "type": "string", "format": "date-time" },
-              "artefact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+              "artifact_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
             },
             "required": ["id", "title"]
           },

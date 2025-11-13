@@ -46,7 +46,7 @@ This glossary defines key terms, acronyms, and concepts used throughout the SPP 
 
 - **Payment Adapter**: A pluggable module that executes payment transactions using various methods (crypto, fiat, stablecoin, etc.). See [Payment Adapter Contract](../specs/payments/payment-adapter-contract.md).
 - **Publisher Metadata**: Structured data describing a publisher's identity, reputation, and content offerings. See [Publisher Metadata](../specs/publishing/publisher-metadata.md).
-- **Processing Pipeline**: The ordered sequence of **Ingest → Enrichment → Embedding** stages that together produce a fully enriched, versioned artefact. Stages communicate via events (e.g., `version-created`, `version-enriched`).
+- **Processing Pipeline**: The ordered sequence of **Ingest → Enrichment → Embedding** stages that together produce a fully enriched, versioned artifact. Stages communicate via events (e.g., `version-created`, `version-enriched`).
 
 ## R
 
@@ -70,7 +70,7 @@ This glossary defines key terms, acronyms, and concepts used throughout the SPP 
 ## E
 
 - **Embedding**: A numeric vector representation of a text chunk used for semantic search and retrieval. Model-agnostic in SPP; referenced via a storage pointer.
-- **Enrichment Layer**: Optional extension that adds raw snapshots, clean text, chunks, embeddings, diffs, provenance, and versioning to artefacts.
+- **Enrichment Layer**: Optional extension that adds raw snapshots, clean text, chunks, embeddings, diffs, provenance, and versioning to artifacts.
 
 ## V
 

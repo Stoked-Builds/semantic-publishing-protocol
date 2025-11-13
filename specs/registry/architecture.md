@@ -124,7 +124,7 @@ A **Registry Entry** represents a single piece of semantic content in the regist
 **Base Semantic Content** (MVSL-compliant example):
 ```json
 {
-  "artefact": {
+  "artifact": {
     "id": "urn:spp:example:article-123",
     "type": "article",
     "title": "string",
@@ -158,7 +158,7 @@ A **Registry Entry** represents a single piece of semantic content in the regist
 }
 ```
 
-> **Note:** The `provenance.content_hash` field **MUST** be in the form `sha256:<hex>` and **MUST** match the SHA-256 hash of the canonical JSON serialisation of the artefact (see [Canonicalisation and Signing](#canonicalisation-and-signing)).
+> **Note:** The `provenance.content_hash` field **MUST** be in the form `sha256:<hex>` and **MUST** match the SHA-256 hash of the canonical JSON serialisation of the artifact (see [Canonicalisation and Signing](#canonicalisation-and-signing)).
 
 **Field Requirements:**
 - `id`: **MUST** be a globally unique identifier for the content.
@@ -174,9 +174,9 @@ A **Registry Entry** represents a single piece of semantic content in the regist
 ### Spec Version Policy
 
 - Registries **MUST** publish the set of supported `spec_version` values via `.well-known/spp/registry.json` (`specVersions.supported` / `specVersions.preferred`).
-- During ingestion, artefacts whose `spec_version` exceeds the registry’s supported range **MUST** be rejected with HTTP `406 Not Acceptable` and a Problem Details payload explaining the unsupported revision.
-- Registries **SHOULD** continue accepting artefacts for the previous supported MINOR release for at least one full publishing cycle, enabling producers to roll out upgrades gradually.
-- Producers **SHOULD** maintain pipelines capable of emitting artefacts at any version in a partner registry’s supported set.
+- During ingestion, artifacts whose `spec_version` exceeds the registry’s supported range **MUST** be rejected with HTTP `406 Not Acceptable` and a Problem Details payload explaining the unsupported revision.
+- Registries **SHOULD** continue accepting artifacts for the previous supported MINOR release for at least one full publishing cycle, enabling producers to roll out upgrades gradually.
+- Producers **SHOULD** maintain pipelines capable of emitting artifacts at any version in a partner registry’s supported set.
 
 ### Well-Known Endpoint
 
@@ -238,7 +238,7 @@ Publishers **SHOULD** expose a machine-readable sitemap at the declared endpoint
 }
 ```
 
-Sitemaps **MUST** include a `version` field (initially "1"). Large publishers **SHOULD** paginate using `page`/`next` and **MUST** ensure stable ordering by `lastModified` descending. Each item’s `digest` **MUST** match the artefact’s `provenance.content_hash`.
+Sitemaps **MUST** include a `version` field (initially "1"). Large publishers **SHOULD** paginate using `page`/`next` and **MUST** ensure stable ordering by `lastModified` descending. Each item’s `digest` **MUST** match the artifact’s `provenance.content_hash`.
 
 ---
 
@@ -284,11 +284,11 @@ Registry operators **SHOULD** use persistent storage systems that support:
 The SPP Registry API is HTTP/JSON. The full contract is defined in `/openapi/registry.yml`.
 
 ### Core Endpoints (Registry)
-- `GET /v1/artefacts` — Search/browse artefacts
-- `GET /v1/artefacts/{id}` — Retrieve by ID
-- `POST /v1/artefacts` — Ingest artefact (signed)
+- `GET /v1/artifacts` — Search/browse artifacts
+- `GET /v1/artifacts/{id}` — Retrieve by ID
+- `POST /v1/artifacts` — Ingest artifact (signed)
 - `POST /v1/claims` — Submit namespace claim proof
-- `POST /v1/adoptions` — Adopt artefacts by hash/manifest
+- `POST /v1/adoptions` — Adopt artifacts by hash/manifest
 - `GET /v1/harvest/ListIdentifiers` — Harvest identifiers (cursored)
 - `GET /v1/harvest/ListRecords` — Harvest records (cursored)
 - `GET /v1/harvest/GetRecord` — Fetch a single record
@@ -300,7 +300,7 @@ The SPP Registry API is HTTP/JSON. The full contract is defined in `/openapi/reg
 ### Publisher Endpoints
 - `GET /.well-known/spp.json` — Publisher metadata & keys
 - `GET /spp/sitemap.json` — Content index
-- `GET /spp/content/{id}.json` — Artefact payloads
+- `GET /spp/content/{id}.json` — Artifact payloads
 
 ### Authentication
 Mutating endpoints **MUST** be authenticated via detached request signatures bound to the publisher DID/JWK. Scopes **MUST** constrain publishers to their namespaces.
@@ -367,15 +367,15 @@ Publishers **MUST** be able to request complete removal of their content:
 - Registry entries **MUST** be deleted upon authenticated request
 - Cached content **SHOULD** be invalidated across federated registries
 - Consumers **SHOULD** respect deletion notices
-- Registries **SHOULD** issue a signed deletion receipt containing the artefact ID, timestamp, and request verifier.
+- Registries **SHOULD** issue a signed deletion receipt containing the artifact ID, timestamp, and request verifier.
 ## Provenance States (Normative)
 
-SPP defines four provenance states for artefacts:
+SPP defines four provenance states for artifacts:
 
 - **reconstructed** — third‑party reconstruction without a publisher signature.
-- **claimed** — publisher control of the namespace verified (DNS/.well‑known), but artefact not yet signed.
-- **adopted** — publisher has acknowledged the artefact (by content hash or manifest); awaiting or substituting a signed feed.
-- **authoritative** — artefact and future updates are publisher‑signed; registries relay without modification.
+- **claimed** — publisher control of the namespace verified (DNS/.well‑known), but artifact not yet signed.
+- **adopted** — publisher has acknowledged the artifact (by content hash or manifest); awaiting or substituting a signed feed.
+- **authoritative** — artifact and future updates are publisher‑signed; registries relay without modification.
 
 State transitions **MUST** follow: reconstructed → claimed → adopted → authoritative. Direct jumps that skip required proofs **MUST NOT** occur.
 
@@ -383,7 +383,7 @@ State transitions **MUST** follow: reconstructed → claimed → adopted → aut
 ## HTTP Behaviour (Normative)
 
 ### Media types and negotiation
-Implementations **MUST** serve artefacts with `Content-Type: application/spp+json;v=1`. Signed Tree Heads **MUST** be served with `Content-Type: application/spp.sth+json;v=1`. Clients **MUST** use HTTP content negotiation (`Accept`) and servers **SHOULD** support `gzip` or `br` compression. Servers **SHOULD** emit `ETag` and `Last-Modified` for cacheable GETs and **MUST** respond to `If-None-Match` / `If-Modified-Since` with `304 Not Modified` when applicable.
+Implementations **MUST** serve artifacts with `Content-Type: application/spp+json;v=1`. Signed Tree Heads **MUST** be served with `Content-Type: application/spp.sth+json;v=1`. Clients **MUST** use HTTP content negotiation (`Accept`) and servers **SHOULD** support `gzip` or `br` compression. Servers **SHOULD** emit `ETag` and `Last-Modified` for cacheable GETs and **MUST** respond to `If-None-Match` / `If-Modified-Since` with `304 Not Modified` when applicable.
 
 ### Pagination and cursors
 All list endpoints **MUST** support `limit` and `cursor` query parameters. `limit` **MUST** default to `50` and **MUST NOT** exceed `100`. The response **MUST** include a `Link` header with `rel="next"` when another page is available. Cursors **MUST** be opaque **base64url**-encoded JSON objects containing at minimum:
@@ -418,8 +418,8 @@ Example:
   "title": "Schema validation failed",
   "status": 422,
   "detail": "Field provenance.content_hash is missing",
-  "instance": "/v1/artefacts",
-  "errors": [{"path":"/artefact/provenance/content_hash","message":"required"}]
+  "instance": "/v1/artifacts",
+  "errors": [{"path":"/artifact/provenance/content_hash","message":"required"}]
 }
 ```
 
@@ -464,7 +464,7 @@ To produce canonical JSON for signing and hashing, implementations **MUST** foll
 2. Remove fields outside the schema unless under an `extensions` object; if present, canonicalise recursively.
 3. Sort object members lexicographically; no insignificant whitespace; newline `\n` only.
 
-### A.2 Artefact Content Hash
+### A.2 Artifact Content Hash
 ```
 sha256 = SHA-256( canonical_json_bytes )
 digest = "sha256:" + hex(SHA-256)
@@ -693,16 +693,16 @@ Additional resources:
 
 This appendix provides concrete, reproducible vectors to validate canonicalisation and hashing across implementations.
 
-### C.1 Artefact → Canonical JSON → SHA‑256
+### C.1 Artifact → Canonical JSON → SHA‑256
 
-**Input (artefact JSON):**
+**Input (artifact JSON):**
 ```json
 {
-  "artefact": {
+  "artifact": {
     "id": "urn:spp:example:tv-001",
     "type": "article",
     "title": "Test Vector One",
-    "summary": "Minimal MVSL artefact",
+    "summary": "Minimal MVSL artifact",
     "language": "en",
     "authors": [ { "name": "Example Author", "url": "https://example.com/author" } ],
     "published_at": "2025-01-10T15:30:00Z",
@@ -726,7 +726,7 @@ This appendix provides concrete, reproducible vectors to validate canonicalisati
 
 **Canonical JSON (RFC 8785 + rules in Appendix A.1):**
 ```
-{"artefact":{"authors":[{"name":"Example Author","url":"https://example.com/author"}],"content":{"format":"markdown","value":"Hello **world**"},"id":"urn:spp:example:tv-001","language":"en","links":[{"href":"https://example.com/posts/tv-001","rel":"canonical"}],"media":[],"published_at":"2025-01-10T15:30:00Z","sections":[],"summary":"Minimal MVSL artefact","topics":["Testing"],"provenance":{"capture_method":"rss","captured_at":"2025-01-10T16:01:00Z","mode":"reconstructed","reconstruction_confidence":0.8,"source_url":"https://example.com/posts/tv-001"},"title":"Test Vector One","type":"article","updated_at":"2025-01-10T16:00:00Z","version":1}}
+{"artifact":{"authors":[{"name":"Example Author","url":"https://example.com/author"}],"content":{"format":"markdown","value":"Hello **world**"},"id":"urn:spp:example:tv-001","language":"en","links":[{"href":"https://example.com/posts/tv-001","rel":"canonical"}],"media":[],"published_at":"2025-01-10T15:30:00Z","sections":[],"summary":"Minimal MVSL artifact","topics":["Testing"],"provenance":{"capture_method":"rss","captured_at":"2025-01-10T16:01:00Z","mode":"reconstructed","reconstruction_confidence":0.8,"source_url":"https://example.com/posts/tv-001"},"title":"Test Vector One","type":"article","updated_at":"2025-01-10T16:00:00Z","version":1}}
 ```
 
 **SHA‑256 of canonical bytes (hex):**
@@ -765,11 +765,11 @@ sequenceDiagram
 
   Pub->>Reg: POST /v1/adoptions {hashes|manifest}
   Reg-->>Pub: 202 Accepted (adopted)
-  Reg->>Con: Expose in /v1/artefacts (state=adopted)
+  Reg->>Con: Expose in /v1/artifacts (state=adopted)
 
-  Pub->>Reg: POST /v1/artefacts (signed feed)
+  Pub->>Reg: POST /v1/artifacts (signed feed)
   Reg-->>Pub: 202 Accepted (authoritative)
-  Con->>Reg: GET /v1/artefacts/{id}
+  Con->>Reg: GET /v1/artifacts/{id}
   Reg-->>Con: 200 + signature
   Con->>Pub: (optional) GET /.well-known/spp.json (key confirm)
 ```
@@ -799,7 +799,7 @@ sequenceDiagram
   RegA-->>Pub: Signed deletion receipt
   RegA->>RegB: WebSub/event: deletion notice with proof
   RegB-->>RegA: 202 Accepted
-  RegB->>RegB: Remove artefact; append to deletion log
+  RegB->>RegB: Remove artifact; append to deletion log
 ```
 
 ---
@@ -838,9 +838,9 @@ components:
               detail: { type: string }
               instance: { type: string }
 paths:
-  /v1/artefacts:
+  /v1/artifacts:
     get:
-      summary: Search artefacts
+      summary: Search artifacts
       parameters:
         - in: query
           name: q
@@ -861,7 +861,7 @@ paths:
               schema: { type: object }
         '429': { $ref: '#/components/responses/Problem' }
     post:
-      summary: Ingest artefact
+      summary: Ingest artifact
       requestBody:
         required: true
         content:
@@ -870,9 +870,9 @@ paths:
       responses:
         '202': { description: Accepted }
         '422': { $ref: '#/components/responses/Problem' }
-  /v1/artefacts/{id}:
+  /v1/artifacts/{id}:
     get:
-      summary: Get artefact by ID
+      summary: Get artifact by ID
       parameters:
         - in: path
           name: id
@@ -901,7 +901,7 @@ paths:
         - in: query
           name: id
           required: true
-          schema: { type: string, description: artefact content_hash }
+          schema: { type: string, description: artifact content_hash }
       responses:
         '200':
           description: OK
@@ -919,5 +919,5 @@ paths:
 - `POST /v1/adoptions` **SHOULD** be idempotent for identical manifests/hashes.
 
 ### Payload Limits
-- Servers **MUST** reject payloads exceeding **512 KiB** for artefact JSON with `413 Payload Too Large` and a Problem Details body.
+- Servers **MUST** reject payloads exceeding **512 KiB** for artifact JSON with `413 Payload Too Large` and a Problem Details body.
 - Arrays **SHOULD** be bounded: `authors` ≤ 32, `media` ≤ 64, `topics` ≤ 128.

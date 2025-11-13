@@ -106,10 +106,10 @@ Registries that support the Enrichment Layer MUST follow these rules:
   - optional `content.chunks[]` (text and/or embeddings)
   - optional `version.diff`
   - `provenance` fields (etag, lastModified, crawler)
-- Manifests SHOULD be retrievable via `GET /v1/artefacts/{id}/versions/{v}/manifest`.
+- Manifests SHOULD be retrievable via `GET /v1/artifacts/{id}/versions/{v}/manifest`.
 
 ### Discovery
-- The default `GET /v1/artefacts/{id}` returns the **latest** version.
+- The default `GET /v1/artifacts/{id}` returns the **latest** version.
 - Agents MAY request historical versions via the versioned endpoints.
 
 ### Retention

@@ -4,7 +4,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/core/app.json",
   "title": "Application",
-  "description": "Schema for application-type artefacts (mobile, web, desktop, embedded) in the Semantic Publishing Protocol",
+  "description": "Schema for application-type artifacts (mobile, web, desktop, embedded) in the Semantic Publishing Protocol",
   "$comment": "vNext: integrate with app store APIs for validation, include SBOM metadata, support multi-platform builds, and allow dependency vulnerability status.",
   "type": "object",
   "allOf": [

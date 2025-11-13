@@ -1,10 +1,10 @@
 {
-  "artefact": {
-    "id": "urn:spp:invalid:canonical-http",
+  "artifact": {
+    "id": "urn:spp:invalid:bad-lang",
     "type": "article",
-    "title": "HTTP canonical",
-    "summary": "Canonical URL must be HTTPS",
-    "language": "en",
+    "title": "Bad lang code",
+    "summary": "Uses ISO-639-2 instead of 639-1",
+    "language": "eng",
     "authors": [{ "name": "Test" }],
     "published_at": "2025-08-11T12:00:00Z",
     "updated_at": "2025-08-11T12:00:00Z",
@@ -12,10 +12,10 @@
     "sections": [],
     "media": [],
     "content": { "format": "markdown", "value": "…" },
-    "links": [{ "rel": "canonical", "href": "http://example.com/posts/3" }],
+    "links": [{ "rel": "canonical", "href": "https://example.com/posts/4" }],
     "provenance": {
       "mode": "reconstructed",
-      "source_url": "https://example.com/posts/3",
+      "source_url": "https://example.com/posts/4",
       "captured_at": "2025-08-11T12:05:00Z",
       "capture_method": "manual",
       "content_hash": "sha256:1234"

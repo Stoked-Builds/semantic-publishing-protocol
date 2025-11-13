@@ -1,12 +1,12 @@
 {
-  "artefact": {
-    "protocolVersion": "1.0.0",
-    "id": "conformance:artefact:full",
+  "artifact": {
+    "id": "conformance:artifact:full",
     "type": "video",
-    "title": "Full Registry Artefact Example",
-    "summary": "A complete artefact with all optional fields for conformance testing.",
+    "title": "Full Registry Artifact Example",
+    "summary": "A complete artifact with all optional fields for conformance testing.",
+    "spec_version": "0.4.0",
     "language": "en",
-    "author": { "name": "Lead Author" },
+    "authors": [{ "name": "Lead Author" }],
     "published_at": "2025-07-01T10:00:00Z",
     "updated_at": "2025-08-10T08:30:00Z",
     "topics": ["Tech", "AI"],
@@ -30,7 +30,7 @@
     ],
     "content": {
       "format": "markdown",
-      "value": "## Overview\n\nThis is a rich artefact used to test registry conformance."
+      "value": "## Overview\n\nThis is a rich artifact used to test registry conformance."
     },
     "links": [
       { "rel": "canonical", "href": "https://example.com/video/full" },

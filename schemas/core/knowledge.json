@@ -4,7 +4,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/core/knowledge.json",
   "title": "Knowledge",
-  "description": "Schema for knowledge-type artefacts (how-tos, FAQs, guides, reference) in the Semantic Publishing Protocol",
+  "description": "Schema for knowledge-type artifacts (how-tos, FAQs, guides, reference) in the Semantic Publishing Protocol",
   "$comment": "vNext: cross-document dependency graph, automated testable examples, executable notebooks, and structural validation of steps against code blocks.",
   "type": "object",
   "allOf": [
@@ -141,7 +141,7 @@
 
         "related_items": {
           "type": "array",
-          "description": "Related artefact IDs or URLs",
+          "description": "Related artifact IDs or URLs",
           "minItems": 0,
           "uniqueItems": true,
           "items": { "type": "string", "minLength": 1 }

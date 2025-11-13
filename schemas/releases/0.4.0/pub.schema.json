@@ -3,7 +3,7 @@
   "$id": "https://spp.dev/schemas/pub.schema.json",
   "title": "Publication Item Schema",
   "description": "Schema for each item in the pubs[] array representing individual publications",
-  "$comment": "vNext: enforce dateModified >= datePublished via custom assertion; prefer HTTPS for canonical/url; consider mapping contentType to MVSL types and deprecating this shim when artefacts are fully MVSL.",
+  "$comment": "vNext: enforce dateModified >= datePublished via custom assertion; prefer HTTPS for canonical/url; consider mapping contentType to MVSL types and deprecating this shim when artifacts are fully MVSL.",
   "type": "object",
   "required": [
     "id",

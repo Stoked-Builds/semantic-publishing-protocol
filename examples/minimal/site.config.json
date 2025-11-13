@@ -1,20 +1,18 @@
 {
   "protocolVersion": "1.0.0",
-  "version": "0.2",
-  "publisher": {
-    "id": "publisher:minimal-example",
+  "siteMetadata": {
     "name": "Minimal Example Site",
-    "uri": "https://example.minimal"
-  },
-  "updated": "2025-01-28T00:00:00Z",
-  "stories": [
-    {
-      "id": "hello",
-      "title": "Hello World",
-      "lang": "en",
-      "semantic": "./pubs/hello/meta.jsonld",
-      "canonical": "https://example.minimal/hello/"
+    "url": "https://example.minimal",
+    "language": "en",
+    "publisher": {
+      "name": "Minimal Example Site"
     }
-  ],
-  "topics": "https://example.minimal/topics.json"
+  },
+  "publishingSettings": {
+    "defaultContentType": "article"
+  },
+  "trustSettings": {
+    "verificationLevel": "basic",
+    "allowEndorsements": true
+  }
 }

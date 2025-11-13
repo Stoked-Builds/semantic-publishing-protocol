@@ -1,10 +1,9 @@
 {
-  "artefact": {
-    "id": "urn:spp:invalid:bad-lang",
+  "artifact": {
+    "id": "urn:spp:invalid:missing-required",
     "type": "article",
-    "title": "Bad lang code",
-    "summary": "Uses ISO-639-2 instead of 639-1",
-    "language": "eng",
+    "title": "Missing bits",
+    "summary": "Intentionally incomplete",
     "authors": [{ "name": "Test" }],
     "published_at": "2025-08-11T12:00:00Z",
     "updated_at": "2025-08-11T12:00:00Z",
@@ -12,13 +11,12 @@
     "sections": [],
     "media": [],
     "content": { "format": "markdown", "value": "…" },
-    "links": [{ "rel": "canonical", "href": "https://example.com/posts/4" }],
+    "links": [],
     "provenance": {
       "mode": "reconstructed",
-      "source_url": "https://example.com/posts/4",
+      "source_url": "https://example.com/posts/1",
       "captured_at": "2025-08-11T12:05:00Z",
-      "capture_method": "manual",
-      "content_hash": "sha256:1234"
+      "capture_method": "manual"
     },
     "version": 1
   }

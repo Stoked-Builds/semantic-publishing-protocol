@@ -2,7 +2,7 @@
   "id": "conformance:minimal",
   "type": "article",
   "title": "Minimal Conformance Test Content",
-  "summary": "Baseline artefact used for schema smoke testing.",
+  "summary": "Baseline artifact used for schema smoke testing.",
   "spec_version": "0.4.0",
   "language": "en",
   "authors": [

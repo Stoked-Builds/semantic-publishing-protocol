@@ -9,7 +9,7 @@ assignees: []
 ## Proposal Overview
 - **Requestor:** <!-- GitHub handle or team -->
 - **Target Decision Date:** <!-- YYYY-MM-DD -->
-- **Affected Artefacts:** <!-- specs, schemas, docs, implementations -->
+- **Affected Artifacts:** <!-- specs, schemas, docs, implementations -->
 
 ## Change Summary
 Provide a concise description of the change, the problem it solves, and why it matters. Link to design docs or PRs where relevant.

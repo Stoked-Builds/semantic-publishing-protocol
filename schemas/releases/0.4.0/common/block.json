@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spp.dev/schemas/common/block.json",
   "title": "Semantic Block",
-  "description": "Schema for a semantic content block within an SPS artefact",
+  "description": "Schema for a semantic content block within an SPS artifact",
   "$comment": "vNext: enforce payload structure per 'type' using $ref to specific block schemas; support versioning of block content and change tracking.",
   "type": "object",
   "additionalProperties": false,

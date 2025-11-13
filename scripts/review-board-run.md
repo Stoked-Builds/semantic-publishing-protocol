@@ -4,7 +4,7 @@ This document specifies the behaviour for a future CLI helper that mirrors the R
 
 ## Goals
 - Allow maintainers to seed or rerun Review Board deliberations locally without invoking n8n.
-- Produce artefacts identical to the automated pipeline so repo history remains deterministic.
+- Produce artifacts identical to the automated pipeline so repo history remains deterministic.
 
 ## Expected Behaviour
 1. Accept flags for `--proposal <id>`, `--round <initial|adjustment|final>`, `--persona <name>`, and `--dry-run`.

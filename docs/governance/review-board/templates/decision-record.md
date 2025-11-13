@@ -27,10 +27,10 @@
 - **Reason:** <summary>
 - **Next Review Date:** <optional>
 
-## Artefact Index
+## Artifact Index
 - Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
 - Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
 - Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
 - Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
 
-> Commit this record alongside the supporting artefacts in the proposal archive.
+> Commit this record alongside the supporting artifacts in the proposal archive.

@@ -7,7 +7,7 @@
 - **Target Decision Date:** <YYYY-MM-DD>
 - **Summary:** <one-paragraph context>
 
-## Artefacts & References
+## Artifacts & References
 - Specs / schemas: <links>
 - OpenAPI / API references: <links>
 - Prior board rulings: <links>

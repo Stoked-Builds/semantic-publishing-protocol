@@ -1,6 +1,6 @@
 # Processing Pipeline (v0.4+)
 
-This document specifies the **reference, modular pipeline** for producing enriched, versioned artefacts. It is split into three services — **Ingest**, **Enrichment**, and **Embeddings** — which communicate via message queues. Each stage is idempotent and writes to Postgres and MinIO/S3.
+This document specifies the **reference, modular pipeline** for producing enriched, versioned artifacts. It is split into three services — **Ingest**, **Enrichment**, and **Embeddings** — which communicate via message queues. Each stage is idempotent and writes to Postgres and MinIO/S3.
 
 ## Stages
 
@@ -49,7 +49,7 @@ This document specifies the **reference, modular pipeline** for producing enrich
 ## Error Handling
 - Network/timeouts → retry with exponential backoff.
 - Invalid dates → omit field (never throw); log with `code/errno/syscall`.
-- Parser failure → mark artefact `invalid` with reason; do not retry endlessly.
+- Parser failure → mark artifact `invalid` with reason; do not retry endlessly.
 
 ## DB Sketch
 - `artifacts(id PK, url UNIQUE, domain, first_seen, latest_version, status)`

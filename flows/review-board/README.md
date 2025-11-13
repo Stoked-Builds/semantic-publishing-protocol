@@ -8,7 +8,7 @@ This document outlines the automation used to coordinate Review Board deliberati
 
 ## Workflow Stages
 1. **Bootstrap**
-   - Validate issue payload against required fields (title, summary, impacted artefacts, target decision date).
+   - Validate issue payload against required fields (title, summary, impacted artifacts, target decision date).
    - Create working folder `docs/governance/review-board/archive/<proposal-id>/` if it does not exist.
    - Commit the initial dossier template populated with issue metadata.
 2. **Briefing Assembly**
@@ -27,13 +27,13 @@ This document outlines the automation used to coordinate Review Board deliberati
    - If acceptance criteria not met, generate adjustment prompts for another round (max three). Include peer objections and score deltas to inform compromise.
 6. **Decision Publication**
    - When criteria satisfied or rounds exhausted, prompt the Chair persona to produce the decision record.
-   - Update `CHANGELOG.md`, push all artefacts, and post final outcome comment to the issue/linked PR.
+   - Update `CHANGELOG.md`, push all artifacts, and post final outcome comment to the issue/linked PR.
 7. **Escalation Handling**
    - If consensus fails, raise a task for the human steward (Mark) with a succinct risk/opportunity summary.
 
 ## Configuration Notes
 - Store API keys and model configuration as n8n credentials; do not hard-code in the workflow.
-- Provide a dry-run switch so maintainers can test locally without committing artefacts.
+- Provide a dry-run switch so maintainers can test locally without committing artifacts.
 - Ensure automations respect branch protections by creating PRs instead of direct pushes when necessary.
 
 ## Future Enhancements

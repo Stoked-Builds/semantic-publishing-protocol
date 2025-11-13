@@ -1,15 +1,15 @@
-# semantic.json – Canonical Artefact Envelope
+# semantic.json – Canonical Artifact Envelope
 
 **Version:** 0.4  
-**Type:** Canonical Machine Artefact  
+**Type:** Canonical Machine Artifact  
 **Status:** Draft – Implementation Aligned  
-**Applies to:** Any artefact exported or exchanged under the Semantic Publishing Protocol
+**Applies to:** Any artifact exported or exchanged under the Semantic Publishing Protocol
 
 ---
 
 ## Purpose
 
-`semantic.json` is the canonical machine-readable record for a published artefact. It travels with the human-friendly `story.md`, powers registry ingestion, and anchors downstream trust decisions. This document describes the normative field set, validation rules, and version-negotiation expectations for producers, registries, and consuming agents.
+`semantic.json` is the canonical machine-readable record for a published artifact. It travels with the human-friendly `story.md`, powers registry ingestion, and anchors downstream trust decisions. This document describes the normative field set, validation rules, and version-negotiation expectations for producers, registries, and consuming agents.
 
 ---
 
@@ -18,10 +18,10 @@
 | Field | Type | Req | Notes |
 | --- | --- | --- | --- |
 | `id` | string | ✅ | Stable identifier (slug, UUID, URN). MUST be unique per publisher. |
-| `type` | string | ✅ | Artefact classification (e.g. `article`, `video`, `knowledge`). |
+| `type` | string | ✅ | Artifact classification (e.g. `article`, `video`, `knowledge`). |
 | `title` | string | ✅ | Human-readable title. |
 | `summary` | string | ▫️ | Short synopsis suitable for cards / previews. |
-| `spec_version` | string | ✅ | Semantic Publishing Protocol revision that produced the artefact (SemVer with optional pre-release tag). |
+| `spec_version` | string | ✅ | Semantic Publishing Protocol revision that produced the artifact (SemVer with optional pre-release tag). |
 | `language` | string | ✅ | BCP 47 language tag. Lowercase ISO 639-1 language codes are preferred (`en`, `es-MX`). |
 | `authors[]` | array<object> | ▫️ | Each entry MUST include `name`; MAY include `url`. |
 | `published_at` | string (date-time) | ▫️ | Original publication timestamp. |
@@ -34,7 +34,7 @@
 | `provenance` | object | ✅ | Crawl, adoption, and lineage metadata. See [Provenance](#provenance). |
 | `signatures[]` | array<object> | ✅ | Registry-signed statements. See [Signatures](#signatures). |
 | `endorsements[]` | array<object> | ▫️ | Downstream endorsements. Optional in v0.4. |
-| `version` | integer ≥ 1 | ✅ | Monotonic artefact version number controlled by the publisher. |
+| `version` | integer ≥ 1 | ✅ | Monotonic artifact version number controlled by the publisher. |
 | `extensions` | object | ▫️ | Namespaced vendor or experimental fields. Keys SHOULD follow reverse-DNS (`com.example.foo`). |
 
 ▸ **Legend:** ✅ required, ▫️ optional.
@@ -103,15 +103,15 @@
 
 ## `spec_version` Semantics
 
-- `spec_version` records the highest SPP revision the artefact complies with. Use SemVer (`MAJOR.MINOR.PATCH`) and optional pre-release identifiers (`-draft.3`).
+- `spec_version` records the highest SPP revision the artifact complies with. Use SemVer (`MAJOR.MINOR.PATCH`) and optional pre-release identifiers (`-draft.3`).
 - Producers **MUST NOT** advertise a version they do not fully implement.
-- Registries **MUST** publish the range they support (see [Registry Negotiation](#registry-negotiation)) and **MUST** return `406 Not Acceptable` with Problem Details when an artefact declares a higher `spec_version`.
-- Consumers **SHOULD** down-negotiate by requesting artefacts at a mutually supported version where available.
-- For pre-release values (e.g., `1.0.0-rc.1`), registries MAY treat them as opt-in. Artefacts using pre-release tags SHOULD only be accepted by registries explicitly signalling support.
+- Registries **MUST** publish the range they support (see [Registry Negotiation](#registry-negotiation)) and **MUST** return `406 Not Acceptable` with Problem Details when an artifact declares a higher `spec_version`.
+- Consumers **SHOULD** down-negotiate by requesting artifacts at a mutually supported version where available.
+- For pre-release values (e.g., `1.0.0-rc.1`), registries MAY treat them as opt-in. Artifacts using pre-release tags SHOULD only be accepted by registries explicitly signalling support.
 
 ---
 
-## Example Artefact
+## Example Artifact
 
 ```json
 {
@@ -161,7 +161,7 @@
 
 ## Validation Rules
 
-- Artefacts **MUST** validate against the canonical schema at [`schemas/semantic.json`](../../schemas/semantic.json).
+- Artifacts **MUST** validate against the canonical schema at [`schemas/semantic.json`](../../schemas/semantic.json).
 - `version` is a positive integer and **MUST** increase monotonically with each significant content change.
 - `links` **MUST** contain at least one entry with a resolvable `href`.
 - `language` SHOULD remain lowercase for primary sub-tags; additional subtags MAY use case conventions required by BCP 47.
@@ -173,10 +173,10 @@
 ## Registry Negotiation
 
 - Registries advertise their supported `spec_version` range via `.well-known/spp/registry.json` (see [`specs/registry/federation.md`](../registry/federation.md)).
-- During ingestion, registries **MUST** compare the artefact’s `spec_version` to their supported range:
-  - If the artefact declares a higher MAJOR version, respond with `406` and Problem Details (`type`: `https://spp.dev/problems/spec-version/unsupported`).
-  - If the artefact declares an unsupported MINOR or pre-release, registries MAY offer downgrades or staged queues.
-- Producers should maintain backward-compatible pipelines where feasible so they can emit artefacts for older registry partners until support converges.
+- During ingestion, registries **MUST** compare the artifact’s `spec_version` to their supported range:
+  - If the artifact declares a higher MAJOR version, respond with `406` and Problem Details (`type`: `https://spp.dev/problems/spec-version/unsupported`).
+  - If the artifact declares an unsupported MINOR or pre-release, registries MAY offer downgrades or staged queues.
+- Producers should maintain backward-compatible pipelines where feasible so they can emit artifacts for older registry partners until support converges.
 
 ---
 

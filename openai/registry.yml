@@ -4,7 +4,7 @@ info:
   version: 1.0.0-draft
   description: |
     HTTP/JSON API for the SPP Registry. Media types:
-      - application/spp+json;v=1 (artefacts and harvest payloads)
+      - application/spp+json;v=1 (artifacts and harvest payloads)
       - application/spp.sth+json;v=1 (Signed Tree Heads)
 servers:
   - url: https://{host}
@@ -60,7 +60,7 @@ components:
       schema:
         type: string
         enum: [reconstructed, claimed, adopted, authoritative]
-    ArtefactID:
+    ArtifactID:
       name: id
       in: path
       required: true
@@ -69,7 +69,7 @@ components:
       name: id
       in: query
       required: true
-      description: Artefact content_hash (e.g., sha256:…)
+      description: Artifact content_hash (e.g., sha256:…)
       schema: { type: string }
   headers:
     Link:
@@ -107,7 +107,7 @@ components:
     NotModified:
       description: Not modified
   schemas:
-    Artefact:
+    Artifact:
       $ref: ../schemas/semantic.json
     TransparencySTH:
       $ref: ../schemas/transparency-sth.json
@@ -123,9 +123,9 @@ components:
       $ref: ../schemas/ownership.json
 
 paths:
-  /v1/artefacts:
+  /v1/artifacts:
     get:
-      summary: Search/browse artefacts
+      summary: Search/browse artifacts
       parameters:
         - $ref: '#/components/parameters/Q'
         - $ref: '#/components/parameters/PublisherDID'
@@ -149,19 +149,19 @@ paths:
                 properties:
                   items:
                     type: array
-                    items: { $ref: '#/components/schemas/Artefact' }
+                    items: { $ref: '#/components/schemas/Artifact' }
                   next_cursor: { type: string }
         '304': { $ref: '#/components/responses/NotModified' }
         '400': { $ref: '#/components/responses/Problem' }
         '429': { $ref: '#/components/responses/Problem' }
     post:
-      summary: Ingest artefact (signed)
+      summary: Ingest artifact (signed)
       security: [{ didSig: [] }]
       requestBody:
         required: true
         content:
           application/spp+json;v=1:
-            schema: { $ref: '#/components/schemas/Artefact' }
+            schema: { $ref: '#/components/schemas/Artifact' }
       responses:
         '202': { description: Accepted }
         '400': { $ref: '#/components/responses/Problem' }
@@ -169,17 +169,17 @@ paths:
         '413': { $ref: '#/components/responses/Problem' }
         '422': { $ref: '#/components/responses/Problem' }
 
-  /v1/artefacts/{id}:
+  /v1/artifacts/{id}:
     get:
-      summary: Retrieve artefact by ID
+      summary: Retrieve artifact by ID
       parameters:
-        - $ref: '#/components/parameters/ArtefactID'
+        - $ref: '#/components/parameters/ArtifactID'
       responses:
         '200':
           description: OK
           content:
             application/spp+json;v=1:
-              schema: { $ref: '#/components/schemas/Artefact' }
+              schema: { $ref: '#/components/schemas/Artifact' }
         '404': { $ref: '#/components/responses/Problem' }
 
   /v1/claims:
@@ -201,7 +201,7 @@ paths:
 
   /v1/adoptions:
     post:
-      summary: Adopt artefacts by hash or manifest
+      summary: Adopt artifacts by hash or manifest
       security: [{ didSig: [] }]
       requestBody:
         required: true
@@ -263,7 +263,7 @@ paths:
                 properties:
                   items:
                     type: array
-                    items: { $ref: '#/components/schemas/Artefact' }
+                    items: { $ref: '#/components/schemas/Artifact' }
                   next_cursor: { type: string }
         '400': { $ref: '#/components/responses/Problem' }
 
@@ -277,7 +277,7 @@ paths:
           description: OK
           content:
             application/spp+json;v=1:
-              schema: { $ref: '#/components/schemas/Artefact' }
+              schema: { $ref: '#/components/schemas/Artifact' }
         '404': { $ref: '#/components/responses/Problem' }
 
   /ct/sth:
@@ -339,7 +339,7 @@ paths:
     get:
       summary: Ownership lookup (optional feature)
       parameters:
-        - name: artefact_hash
+        - name: artifact_hash
           in: query
           required: true
           schema: { type: string }
@@ -368,11 +368,11 @@ paths:
         '400': { $ref: '#/components/responses/Problem' }
         '401': { $ref: '#/components/responses/Problem' }
 
-  /v1/artefacts/{id}/versions:
+  /v1/artifacts/{id}/versions:
     get:
-      summary: List versions for an artefact
+      summary: List versions for an artifact
       parameters:
-        - $ref: '#/components/parameters/ArtefactID'
+        - $ref: '#/components/parameters/ArtifactID'
       responses:
         '200':
           description: OK
@@ -390,11 +390,11 @@ paths:
                         created_at: { type: string, format: date-time }
         '404': { $ref: '#/components/responses/Problem' }
 
-  /v1/artefacts/{id}/versions/{version}/manifest:
+  /v1/artifacts/{id}/versions/{version}/manifest:
     get:
       summary: Retrieve per-version manifest pointers
       parameters:
-        - $ref: '#/components/parameters/ArtefactID'
+        - $ref: '#/components/parameters/ArtifactID'
         - name: version
           in: path
           required: true

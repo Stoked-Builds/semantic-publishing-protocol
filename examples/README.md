@@ -1,6 +1,6 @@
 # 📁 Examples
 
-Canonical artefact examples for the Semantic Publishing Protocol.  
+Canonical artifact examples for the Semantic Publishing Protocol.  
 These are fully structured content folders and documents that demonstrate compliance with v0.4 core specs.
 
 ---
@@ -50,7 +50,7 @@ examples/
 |--------|-------------|
 | `stoked.dev/` | **Full example** with 2 pubs and complete site configuration for reference implementation. |
 | `minimal/` | **Minimal example** showing the smallest valid drop site with 1 pub. |
-| `stories/` | Complete artefact folder with `story.md`, extracted `semantic.json`, and `topics.json`. |
+| `stories/` | Complete artifact folder with `story.md`, extracted `semantic.json`, and `topics.json`. |
 | `endorsement/` | Sample endorsement object using verifiable structure. |
 | `review-chain/` | Example of an editorial review chain attached to a story. |
 | `publisher/` | Publisher metadata including trust model and supported topics. |

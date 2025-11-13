@@ -7,7 +7,7 @@ info:
     federation, transparency logs, and ownership management.
     
     This is a HTTP/DNS-native registry (no blockchain) that stores and serves 
-    SPP artefacts with provenance states: reconstructed → claimed → adopted → authoritative.
+    SPP artifacts with provenance states: reconstructed → claimed → adopted → authoritative.
   contact:
     name: SPP Registry API Support
     url: https://spp.dev
@@ -46,7 +46,7 @@ components:
             registry:read: Read access to registry
             registry:write: Write access to registry
             registry:claim: Submit namespace claims
-            registry:adopt: Adopt artefacts
+            registry:adopt: Adopt artifacts
     
     HMACWebSub:
       type: http
@@ -67,16 +67,16 @@ components:
                 type: "https://spp.dev/problems/validation-error"
                 title: "Validation Error"
                 status: 400
-                detail: "The submitted artefact is missing required fields"
-                instance: "/v1/artefacts"
+                detail: "The submitted artifact is missing required fields"
+                instance: "/v1/artifacts"
             NotFound:
               summary: Resource not found
               value:
                 type: "https://spp.dev/problems/not-found"
                 title: "Not Found"
                 status: 404
-                detail: "The requested artefact was not found"
-                instance: "/v1/artefacts/unknown-id"
+                detail: "The requested artifact was not found"
+                instance: "/v1/artifacts/unknown-id"
   
   schemas:
     ProblemDetails:
@@ -104,9 +104,9 @@ components:
           description: URI reference that identifies the specific occurrence
       additionalProperties: true
     
-    Artefact:
+    Artifact:
       type: object
-      description: SPP Artefact schema placeholder - references semantic.json
+      description: SPP Artifact schema placeholder - references semantic.json
       properties:
         id:
           type: string
@@ -149,7 +149,7 @@ components:
       type: object
       description: SPP Adoption schema placeholder - references adoption.json
       properties:
-        artefact_hashes:
+        artifact_hashes:
           type: array
           items:
             type: string
@@ -201,7 +201,7 @@ components:
       type: object
       description: SPP Transparency Log Entry schema placeholder - references transparency-log-entry.json
       properties:
-        artefact_hash:
+        artifact_hash:
           type: string
           pattern: "^sha256:[0-9a-f]{64}$"
         publisher_did:
@@ -215,7 +215,7 @@ components:
         registry_did:
           type: string
       required:
-        - artefact_hash
+        - artifact_hash
         - publisher_did
         - provenance_mode
         - timestamp
@@ -238,13 +238,13 @@ components:
         - endpoints
       additionalProperties: true
     
-    ArtefactList:
+    ArtifactList:
       type: object
       properties:
-        artefacts:
+        artifacts:
           type: array
           items:
-            $ref: "#/components/schemas/Artefact"
+            $ref: "#/components/schemas/Artifact"
         pagination:
           type: object
           properties:
@@ -261,7 +261,7 @@ components:
             has_more:
               type: boolean
       required:
-        - artefacts
+        - artifacts
         - pagination
     
     HarvestIdentifier:
@@ -287,7 +287,7 @@ components:
         header:
           $ref: "#/components/schemas/HarvestIdentifier"
         metadata:
-          $ref: "#/components/schemas/Artefact"
+          $ref: "#/components/schemas/Artifact"
       required:
         - header
         - metadata
@@ -316,13 +316,13 @@ components:
 
 paths:
   # Discovery and Search Endpoints
-  /v1/artefacts:
+  /v1/artifacts:
     get:
-      summary: Search and browse artefacts
+      summary: Search and browse artifacts
       description: |
-        Search for artefacts in the registry with optional filtering by various criteria.
-        Returns paginated results with metadata about each artefact.
-      operationId: listArtefacts
+        Search for artifacts in the registry with optional filtering by various criteria.
+        Returns paginated results with metadata about each artifact.
+      operationId: listArtifacts
       tags:
         - Discovery
       parameters:
@@ -333,7 +333,7 @@ paths:
             type: string
         - name: type
           in: query
-          description: Filter by artefact type
+          description: Filter by artifact type
           schema:
             type: string
         - name: topic
@@ -369,16 +369,16 @@ paths:
             default: 20
       responses:
         '200':
-          description: List of artefacts matching the search criteria
+          description: List of artifacts matching the search criteria
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ArtefactList"
+                $ref: "#/components/schemas/ArtifactList"
               examples:
                 BasicSearch:
                   summary: Basic search results
                   value:
-                    artefacts:
+                    artifacts:
                       - id: "article-123"
                         type: "article"
                         title: "Understanding SPP"
@@ -407,11 +407,11 @@ paths:
           $ref: "#/components/responses/Problem"
     
     post:
-      summary: Ingest artefact
+      summary: Ingest artifact
       description: |
-        Submit a new artefact to the registry. The artefact must be signed and
+        Submit a new artifact to the registry. The artifact must be signed and
         will be validated before being accepted into the registry.
-      operationId: ingestArtefact
+      operationId: ingestArtifact
       tags:
         - Ingest
       security:
@@ -422,10 +422,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Artefact"
+              $ref: "#/components/schemas/Artifact"
             examples:
               ArticleIngest:
-                summary: Article artefact submission
+                summary: Article artifact submission
                 value:
                   id: "article-456"
                   type: "article"
@@ -446,7 +446,7 @@ paths:
                   version: "1.0"
       responses:
         '201':
-          description: Artefact successfully ingested
+          description: Artifact successfully ingested
           content:
             application/json:
               schema:
@@ -454,11 +454,11 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: Registry-assigned artefact ID
+                    description: Registry-assigned artifact ID
                   hash:
                     type: string
                     pattern: "^sha256:[0-9a-f]{64}$"
-                    description: Content hash of the artefact
+                    description: Content hash of the artifact
                   status:
                     type: string
                     enum: [accepted, pending_validation]
@@ -483,48 +483,48 @@ paths:
         '401':
           $ref: "#/components/responses/Problem"
         '409':
-          description: Artefact already exists
+          description: Artifact already exists
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
               examples:
                 Conflict:
-                  summary: Artefact already exists
+                  summary: Artifact already exists
                   value:
                     type: "https://spp.dev/problems/conflict"
                     title: "Conflict"
                     status: 409
-                    detail: "An artefact with this hash already exists"
+                    detail: "An artifact with this hash already exists"
         '500':
           $ref: "#/components/responses/Problem"
 
-  /v1/artefacts/{id}:
+  /v1/artifacts/{id}:
     get:
-      summary: Retrieve artefact by ID
+      summary: Retrieve artifact by ID
       description: |
-        Get a specific artefact from the registry by its identifier.
-        Returns the full artefact metadata and content.
-      operationId: getArtefact
+        Get a specific artifact from the registry by its identifier.
+        Returns the full artifact metadata and content.
+      operationId: getArtifact
       tags:
         - Discovery
       parameters:
         - name: id
           in: path
           required: true
-          description: Unique identifier of the artefact
+          description: Unique identifier of the artifact
           schema:
             type: string
       responses:
         '200':
-          description: Artefact details
+          description: Artifact details
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Artefact"
+                $ref: "#/components/schemas/Artifact"
               examples:
                 ArticleDetail:
-                  summary: Complete article artefact
+                  summary: Complete article artifact
                   value:
                     id: "article-123"
                     type: "article"
@@ -554,7 +554,7 @@ paths:
       summary: Submit namespace claim proof
       description: |
         Submit proof that a publisher controls a specific namespace (domain).
-        This allows the publisher to later adopt artefacts from that namespace.
+        This allows the publisher to later adopt artifacts from that namespace.
       operationId: submitClaim
       tags:
         - Claims
@@ -653,12 +653,12 @@ paths:
   # Adoption Endpoint
   /v1/adoptions:
     post:
-      summary: Adopt artefacts by hash or manifest
+      summary: Adopt artifacts by hash or manifest
       description: |
-        Publisher acknowledges ownership/authorship of artefacts by providing
-        their content hashes or a manifest URL. This transitions artefacts from
+        Publisher acknowledges ownership/authorship of artifacts by providing
+        their content hashes or a manifest URL. This transitions artifacts from
         'claimed' to 'adopted' or 'authoritative' provenance state.
-      operationId: adoptArtefacts
+      operationId: adoptArtifacts
       tags:
         - Adoption
       security:
@@ -674,7 +674,7 @@ paths:
               HashAdoption:
                 summary: Adopt by content hashes
                 value:
-                  artefact_hashes:
+                  artifact_hashes:
                     - "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
                     - "sha256:b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3"
                   signature:
@@ -698,7 +698,7 @@ paths:
                   adoption_id:
                     type: string
                     description: Unique identifier for this adoption
-                  adopted_artefacts:
+                  adopted_artifacts:
                     type: array
                     items:
                       type: object
@@ -721,14 +721,14 @@ paths:
                     format: date-time
                 required:
                   - adoption_id
-                  - adopted_artefacts
+                  - adopted_artifacts
                   - timestamp
               examples:
                 SuccessfulAdoption:
-                  summary: Artefacts successfully adopted
+                  summary: Artifacts successfully adopted
                   value:
                     adoption_id: "adoption-456"
-                    adopted_artefacts:
+                    adopted_artifacts:
                       - hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
                         previous_state: "claimed"
                         new_state: "adopted"
@@ -738,7 +738,7 @@ paths:
         '401':
           $ref: "#/components/responses/Problem"
         '403':
-          description: Not authorized to adopt these artefacts
+          description: Not authorized to adopt these artifacts
           content:
             application/problem+json:
               schema:
@@ -750,7 +750,7 @@ paths:
                     type: "https://spp.dev/problems/not-authorized"
                     title: "Not Authorized"
                     status: 403
-                    detail: "Publisher does not have verified claims for the namespace of these artefacts"
+                    detail: "Publisher does not have verified claims for the namespace of these artifacts"
         '500':
           $ref: "#/components/responses/Problem"
 
@@ -759,7 +759,7 @@ paths:
     get:
       summary: Harvest identifiers (cursored)
       description: |
-        List identifiers of artefacts available for harvesting.
+        List identifiers of artifacts available for harvesting.
         Implements OAI-PMH ListIdentifiers verb with cursor-based pagination.
       operationId: harvestListIdentifiers
       tags:
@@ -833,7 +833,7 @@ paths:
     get:
       summary: Harvest records (cursored)
       description: |
-        List complete artefact records available for harvesting.
+        List complete artifact records available for harvesting.
         Implements OAI-PMH ListRecords verb with cursor-based pagination.
       operationId: harvestListRecords
       tags:
@@ -921,7 +921,7 @@ paths:
     get:
       summary: Fetch a single record
       description: |
-        Retrieve a single artefact record by identifier.
+        Retrieve a single artifact record by identifier.
         Implements OAI-PMH GetRecord verb.
       operationId: harvestGetRecord
       tags:
@@ -1005,8 +1005,8 @@ paths:
     get:
       summary: Inclusion proof
       description: |
-        Get an inclusion proof for a specific artefact in the transparency log.
-        Proves that an artefact with the given hash is included in the Merkle tree.
+        Get an inclusion proof for a specific artifact in the transparency log.
+        Proves that an artifact with the given hash is included in the Merkle tree.
       operationId: getInclusionProof
       tags:
         - Transparency
@@ -1014,13 +1014,13 @@ paths:
         - name: id
           in: query
           required: true
-          description: Artefact hash to get proof for
+          description: Artifact hash to get proof for
           schema:
             type: string
             pattern: "^sha256:[0-9a-f]{64}$"
       responses:
         '200':
-          description: Inclusion proof for the specified artefact
+          description: Inclusion proof for the specified artifact
           content:
             application/json:
               schema:
@@ -1037,19 +1037,19 @@ paths:
         '400':
           $ref: "#/components/responses/Problem"
         '404':
-          description: Artefact not found in transparency log
+          description: Artifact not found in transparency log
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
               examples:
                 NotInLog:
-                  summary: Artefact not in transparency log
+                  summary: Artifact not in transparency log
                   value:
                     type: "https://spp.dev/problems/not-in-log"
                     title: "Not In Log"
                     status: 404
-                    detail: "The specified artefact hash is not present in the transparency log"
+                    detail: "The specified artifact hash is not present in the transparency log"
         '500':
           $ref: "#/components/responses/Problem"
 
@@ -1058,7 +1058,7 @@ paths:
     get:
       summary: Ownership lookup
       description: |
-        Look up ownership records for artefacts by hash.
+        Look up ownership records for artifacts by hash.
         This is an optional feature that may be feature-flagged.
       operationId: lookupOwnership
       tags:
@@ -1067,13 +1067,13 @@ paths:
         - name: hash
           in: query
           required: true
-          description: Artefact hash to look up ownership for
+          description: Artifact hash to look up ownership for
           schema:
             type: string
             pattern: "^sha256:[0-9a-f]{64}$"
       responses:
         '200':
-          description: Ownership record for the artefact
+          description: Ownership record for the artifact
           content:
             application/json:
               schema:
@@ -1085,7 +1085,7 @@ paths:
                     ownership:
                       id: "ownership-123"
                       subject:
-                        artefact_hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                        artifact_hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
                       claims:
                         role: "copyright"
                         grants: ["distribute", "modify"]
@@ -1100,7 +1100,7 @@ paths:
                           sig: "base64url-encoded-signature"
                       created_at: "2024-01-20T10:00:00Z"
         '404':
-          description: No ownership record found for this artefact
+          description: No ownership record found for this artifact
           content:
             application/problem+json:
               schema:
@@ -1112,7 +1112,7 @@ paths:
                     type: "https://spp.dev/problems/no-ownership"
                     title: "No Ownership Record"
                     status: 404
-                    detail: "No ownership record exists for the specified artefact hash"
+                    detail: "No ownership record exists for the specified artifact hash"
         '501':
           description: Ownership feature not implemented
           content:
@@ -1133,7 +1133,7 @@ paths:
     post:
       summary: Submit ownership object
       description: |
-        Submit an ownership record for an artefact.
+        Submit an ownership record for an artifact.
         This is an optional feature that may be feature-flagged.
       operationId: submitOwnership
       tags:
@@ -1153,7 +1153,7 @@ paths:
                 value:
                   ownership:
                     subject:
-                      artefact_hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                      artifact_hash: "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
                     claims:
                       role: "copyright"
                       grants: ["distribute"]
@@ -1218,15 +1218,15 @@ paths:
 
 tags:
   - name: Adoption
-    description: Publisher adoption of artefacts
+    description: Publisher adoption of artifacts
   - name: Claims
     description: Namespace claim verification and management
   - name: Discovery
-    description: Search and browse artefacts in the registry
+    description: Search and browse artifacts in the registry
   - name: Federation
     description: Inter-registry harvesting and federation
   - name: Ingest
-    description: Submit new artefacts to the registry
+    description: Submit new artifacts to the registry
   - name: Ownership
     description: Optional ownership record management
   - name: Transparency

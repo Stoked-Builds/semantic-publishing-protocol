@@ -1,9 +1,9 @@
 {
-  "artefact": {
-    "id": "urn:spp:invalid:bad-hash-format",
+  "artifact": {
+    "id": "urn:spp:invalid:canonical-http",
     "type": "article",
-    "title": "Bad hash",
-    "summary": "Hash uses md5 and not prefixed correctly",
+    "title": "HTTP canonical",
+    "summary": "Canonical URL must be HTTPS",
     "language": "en",
     "authors": [{ "name": "Test" }],
     "published_at": "2025-08-11T12:00:00Z",
@@ -12,13 +12,13 @@
     "sections": [],
     "media": [],
     "content": { "format": "markdown", "value": "…" },
-    "links": [{ "rel": "canonical", "href": "https://example.com/posts/2" }],
+    "links": [{ "rel": "canonical", "href": "http://example.com/posts/3" }],
     "provenance": {
       "mode": "reconstructed",
-      "source_url": "https://example.com/posts/2",
+      "source_url": "https://example.com/posts/3",
       "captured_at": "2025-08-11T12:05:00Z",
       "capture_method": "manual",
-      "content_hash": "md5:deadbeef"
+      "content_hash": "sha256:1234"
     },
     "version": 1
   }

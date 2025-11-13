@@ -1,0 +1,400 @@
+{
+  "name": "Review Board Meeting",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        0
+      ],
+      "id": "2b1659e0-e92e-4c33-8db5-9af46c22fa5a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "phi3:mini",
+          "mode": "list",
+          "cachedResultName": "phi3:mini"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.title }}\n\n{{ $json.body }}"
+            }
+          ]
+        },
+        "options": {
+          "system": "You generate review-board proposal slugs. Return exactly one lowercase kebab-case string (letters, digits, hyphens), <26 characters, no prefixes like “plaintext”, no newlines, no version tags (e.g. “v05”), and do not wrap the slug in markdown or backticks. Separate words with single hyphens only, reflecting the issue’s core topic. Output nothing else, just the slug."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.ollama",
+      "typeVersion": 1,
+      "position": [
+        272,
+        0
+      ],
+      "id": "0bf21dcb-8d94-47dc-9eda-d46e6a66dc26",
+      "name": "Generate a Slug",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "ollamaApi": {
+          "id": "vvtVArVXPNboYI6r",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const issueNumber = $('Get a Review Issue').first().json.number;\nconst slug = $input.first().json.content\n      .trim()\n      .replace(/```[\\s\\S]*?```/, '')               // drop fenced wrappers\n      .replace(/[^\\w-]/g, '')                      // keep only letters/digits/hyphen\n      .replace(/-+/g, '-')                         // collapse repeated hyphens\n      .replace(/^-|-$|v\\d+$/g, '')                 // trim stray hyphen/version suffix\n\nreturn [\n    {\n      json: {\n        slug: `proposal-${issueNumber}-${slug}`,\n      },\n    },\n  ];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        0
+      ],
+      "id": "90b00bf9-63cc-49bd-884d-c15d1a451ad7",
+      "name": "clean slug",
+      "executeOnce": true,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "createComment",
+        "owner": {
+          "__rl": true,
+          "value": "Stoked-Builds",
+          "mode": "list",
+          "cachedResultName": "Stoked-Builds",
+          "cachedResultUrl": "https://github.com/Stoked-Builds"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "semantic-publishing-protocol",
+          "mode": "list",
+          "cachedResultName": "semantic-publishing-protocol",
+          "cachedResultUrl": "https://github.com/Stoked-Builds/semantic-publishing-protocol"
+        },
+        "issueNumber": "={{ $('Get a Review Issue').item.json.number }}",
+        "body": "=Request received.\n\nSlug:  `{{ $json.slug }}`"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2816,
+        0
+      ],
+      "id": "196732d3-0369-4e0d-a7a7-b51441b5b33d",
+      "name": "Create a comment on an issue",
+      "webhookId": "67dc3c51-f835-4be8-8cb5-5ec523d3851f",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "Stoked-Builds",
+          "mode": "list",
+          "cachedResultName": "Stoked-Builds",
+          "cachedResultUrl": "https://github.com/Stoked-Builds"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "semantic-publishing-protocol",
+          "mode": "list",
+          "cachedResultName": "semantic-publishing-protocol",
+          "cachedResultUrl": "https://github.com/Stoked-Builds/semantic-publishing-protocol"
+        },
+        "issueNumber": 138
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "a309ae32-9962-4f8c-bcab-6b466915892b",
+      "name": "Get a Review Issue",
+      "webhookId": "1e1bd6b1-8789-444f-beef-edbb057e054c",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.github.com/repos/Stoked-Builds/semantic-publishing-protocol/git/refs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"ref\": \"refs/heads/review-board/proposal-{{ $('Get a Review Issue').item.json.number }}\",\n  \"sha\": \"{{ $json.object.sha }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        944,
+        0
+      ],
+      "id": "1b4b1f3f-fe01-4dcd-98de-ccad9a4325b2",
+      "name": "Create branch",
+      "executeOnce": true,
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        0
+      ],
+      "id": "c6c4fbd2-7ea1-4ac9-bcb4-b5b5ab511540",
+      "name": "Checkout branch"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2384,
+        0
+      ],
+      "id": "bdb9faf3-3ca7-4d68-b98c-4863162e842d",
+      "name": "Create review folder on branch"
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/Stoked-Builds/semantic-publishing-protocol/git/ref/heads/main",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        800,
+        0
+      ],
+      "id": "55541004-a9c1-4fe7-ac1c-00dea8d3c2cd",
+      "name": "Get main sha"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/Stoked-Builds/semantic-publishing-protocol/git/refs/heads/review-board/proposal-{{ $('Get a Review Issue').item.json.number }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "4c1d3ba0-0a9d-4cd8-b957-16cd088c8aba",
+      "name": "Get new branch",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "Stoked-Builds",
+          "mode": "list",
+          "cachedResultName": "Stoked-Builds",
+          "cachedResultUrl": "https://github.com/Stoked-Builds"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "semantic-publishing-protocol",
+          "mode": "list",
+          "cachedResultName": "semantic-publishing-protocol",
+          "cachedResultUrl": "https://github.com/Stoked-Builds/semantic-publishing-protocol"
+        },
+        "filePath": "=docs/governance/review-board/archive/{{ $('clean slug').item.json.slug }}/.gitkeep",
+        "fileContent": "{|  \"message\": \"chore: stub review board archive folder\",  \"content\": \"\",  \"branch\": \"review-board/{{ $('clean slug').item.json.slug }}\"}",
+        "commitMessage": "Create review folder",
+        "additionalParameters": {
+          "branch": {
+            "branch": "={{ $json.ref }}"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1296,
+        0
+      ],
+      "id": "35ee4ad5-9ce9-47f4-90dd-3854970c9c47",
+      "name": "Create a file",
+      "webhookId": "1c2e4a84-c092-44e5-9fde-56fc6ad5431f",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a Review Issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a Slug": {
+      "main": [
+        [
+          {
+            "node": "clean slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean slug": {
+      "main": [
+        [
+          {
+            "node": "Get main sha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a Review Issue": {
+      "main": [
+        [
+          {
+            "node": "Generate a Slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create branch": {
+      "main": [
+        [
+          {
+            "node": "Get new branch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get new branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checkout branch": {
+      "main": [
+        [
+          {
+            "node": "Create review folder on branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create review folder on branch": {
+      "main": [
+        [
+          {
+            "node": "Create a comment on an issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get main sha": {
+      "main": [
+        [
+          {
+            "node": "Create branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get new branch": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Checkout branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5dd2d8a3-4273-4595-a88c-4dcf2f9c3bab",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c9ff78efe37162af9c518b22bfed5e620ff041b0132d2a23c8363a9ba169ec9"
+  },
+  "id": "TU9bTy5gRvPq0cxE",
+  "tags": []
+}

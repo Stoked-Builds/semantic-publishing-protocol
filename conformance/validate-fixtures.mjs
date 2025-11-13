@@ -27,7 +27,7 @@ const fixturesDir = path.join(repoRoot, 'conformance', 'fixtures');
 const invalidDir = path.join(fixturesDir, 'invalid');
 
 const SEMANTIC_ID = 'https://spp.dev/schemas/semantic.json';
-const ARTEIACT_ALIAS_ID = 'https://spp.dev/schemas/artifact.json';
+const ARTIFACT_ALIAS_ID = 'https://spp.dev/schemas/artifact.json';
 
 /**
  * Utility: read all .json files recursively under a directory.
@@ -58,6 +58,14 @@ function loadSchemas(ajv, dir) {
       console.warn(`↷ Skipping non-schema file in examples: ${path.relative(repoRoot, file)}`);
       continue;
     }
+    if (file.includes(`${path.sep}extensions${path.sep}`)) {
+      console.warn(`↷ Skipping non-schema extension file: ${path.relative(repoRoot, file)}`);
+      continue;
+    }
+    if (file.includes(`${path.sep}releases${path.sep}`)) {
+      console.warn(`↷ Skipping release snapshot: ${path.relative(repoRoot, file)}`);
+      continue;
+    }
     try {
       const raw = fs.readFileSync(file, 'utf8');
       const schema = JSON.parse(raw);
@@ -73,6 +81,11 @@ function loadSchemas(ajv, dir) {
       const key = typeof schema.$id === 'string' && schema.$id.trim() !== ''
         ? schema.$id
         : `file://${file}`;
+
+      if (ajv.getSchema(key)) {
+        console.warn(`↷ Schema already loaded, skipping: ${key}`);
+        continue;
+      }
 
       ajv.addSchema(schema, key);
     } catch (e) {
@@ -99,7 +112,7 @@ function selectSchemaForFixture(obj, filePath) {
   }
 
   // --- Ownership (wrapper or flat) ---
-  if (obj && typeof obj === 'object' && (obj.ownership || obj.artefact_hash)) {
+  if (obj && typeof obj === 'object' && (obj.ownership || obj.artifact_hash)) {
     return { schemaKey: 'https://spp.dev/schemas/ownership.json', resolve: (o) => (o.ownership ? o : { ownership: o }) };
   }
 
@@ -109,7 +122,7 @@ function selectSchemaForFixture(obj, filePath) {
   }
 
   // --- Adoption ---
-  if (obj && typeof obj === 'object' && (obj.artefact_hashes || obj.manifest_url)) {
+  if (obj && typeof obj === 'object' && (obj.artifact_hashes || obj.manifest_url)) {
     return { schemaKey: 'https://spp.dev/schemas/adoption.json', resolve: (o) => o };
   }
 
@@ -120,8 +133,8 @@ function selectSchemaForFixture(obj, filePath) {
 
   // --- Filename fallbacks for invalid fixtures ---
   const lower = filePath.toLowerCase();
-  if (lower.includes('artefact') || lower.includes('semantic')) {
-    return { schemaKey: SEMANTIC_ID, resolve: (o) => (o.artefact ?? o) };
+  if (lower.includes('artifact') || lower.includes('semantic')) {
+    return { schemaKey: SEMANTIC_ID, resolve: (o) => (o.artifact ?? o) };
   }
   if (lower.includes('ownership')) {
     return { schemaKey: 'https://spp.dev/schemas/ownership.json', resolve: (o) => (o.ownership ? o : { ownership: o }) };
@@ -154,8 +167,8 @@ async function main() {
 
   loadSchemas(ajv, schemasDir);
 
-  if (ajv.getSchema(ARTEFACT_ALIAS_ID)) {
-    console.warn('⚠️  Deprecation: artefact.json is loaded as an alias. Prefer semantic.json. Alias will be removed in a future minor release.');
+  if (ajv.getSchema(ARTIFACT_ALIAS_ID)) {
+    console.warn('⚠️  Deprecation: artifact.json is loaded as an alias. Prefer semantic.json. Alias will be removed in a future minor release.');
   }
 
   const validFiles = listJsonFiles(fixturesDir).filter(f => !f.includes(`${path.sep}invalid${path.sep}`));

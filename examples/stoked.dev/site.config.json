@@ -1,34 +1,48 @@
 {
   "protocolVersion": "1.0.0",
-  "version": "0.2",
-  "publisher": {
-    "id": "publisher:stoked-dev",
+  "siteMetadata": {
     "name": "Stoked.dev",
-    "uri": "https://stoked.dev"
-  },
-  "updated": "2025-01-28T00:00:00Z",
-  "stories": [
-    {
-      "id": "first-post",
-      "title": "Getting Started with Semantic Publishing",
-      "lang": "en",
-      "semantic": "./pubs/first-post/meta.jsonld",
-      "canonical": "https://stoked.dev/posts/first-post/"
+    "url": "https://stoked.dev",
+    "description": "Sample SPP site showcasing artifact workflows and registry integration.",
+    "language": "en",
+    "publisher": {
+      "name": "Stoked.dev",
+      "url": "https://stoked.dev",
+      "organizationType": "company"
     },
+    "topics": [
+      "semantic-publishing",
+      "registries",
+      "ai"
+    ],
+    "license": "CC-BY-4.0"
+  },
+  "publishingSettings": {
+    "defaultContentType": "article",
+    "feedUrl": "https://stoked.dev/feed.json",
+    "sitemapUrl": "https://stoked.dev/semantic-sitemap.json",
+    "enableAnalytics": true,
+    "enableComments": false
+  },
+  "trustSettings": {
+    "verificationLevel": "verified",
+    "allowEndorsements": true,
+    "trustedSources": [
+      "https://stoked.dev",
+      "https://semantic-publishing.org"
+    ]
+  },
+  "extensions": [
     {
-      "id": "second-post", 
-      "title": "Advanced Semantic Publishing Techniques",
-      "lang": "en",
-      "semantic": "./pubs/second-post/meta.jsonld",
-      "canonical": "https://stoked.dev/posts/second-post/"
-    }
-  ],
-  "topics": "https://stoked.dev/topics.json",
-  "authors": [
-    {
-      "id": "author:stoked-team",
-      "name": "Stoked Development Team",
-      "uri": "https://stoked.dev/about/team"
+      "id": "com.stoked.dev.stories",
+      "version": "1.0.0",
+      "config": {
+        "sampleStoryIds": [
+          "first-post",
+          "second-post"
+        ],
+        "lastUpdated": "2025-01-28T00:00:00Z"
+      }
     }
   ]
 }

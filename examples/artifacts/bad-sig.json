@@ -1,20 +1,20 @@
 {
   "id": "urn:spp:demo.publisher:bad-signature",
   "type": "article",
-  "title": "Demo artefact with invalid signature",
+  "title": "Demo artifact with invalid signature",
   "summary": "Used to illustrate signature verification failures.",
   "spec_version": "0.4.0",
   "language": "en",
   "content": {
     "format": "markdown",
-    "value": "This artefact intentionally ships with an invalid signature for testing."
+    "value": "This artifact intentionally ships with an invalid signature for testing."
   },
   "links": [
-    { "rel": "canonical", "href": "https://demo.publisher.example/artefacts/bad-signature" }
+    { "rel": "canonical", "href": "https://demo.publisher.example/artifacts/bad-signature" }
   ],
   "provenance": {
     "mode": "adopted",
-    "source_url": "https://demo.publisher.example/artefacts/bad-signature",
+    "source_url": "https://demo.publisher.example/artifacts/bad-signature",
     "collected_at": "2025-09-27T12:45:00Z",
     "registry_id": "registry.example.org",
     "adapter_id": "demo.crawler/2.0.0",

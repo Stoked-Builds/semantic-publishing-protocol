@@ -1,0 +1,45 @@
+{
+  "artifact": {
+    "id": "conformance:artifact:minimal",
+    "type": "article",
+    "title": "Minimal Registry Artifact",
+    "summary": "A minimal but valid artifact for registry conformance testing.",
+    "spec_version": "0.4.0",
+    "language": "en",
+    "authors": [{ "name": "Test Author" }],
+    "published_at": "2025-08-11T12:00:00Z",
+    "updated_at": "2025-08-11T12:00:00Z",
+    "topics": [],
+    "sections": [],
+    "media": [],
+    "content": {
+      "format": "markdown",
+      "value": "Hello from a minimal artifact."
+    },
+    "links": [
+      {
+        "rel": "canonical",
+        "href": "https://example.com/posts/minimal"
+      }
+    ],
+    "provenance": {
+      "mode": "reconstructed",
+      "source_url": "https://example.com/posts/minimal",
+      "captured_at": "2025-08-11T12:05:00Z",
+      "collected_at": "2025-08-11T12:06:00Z",
+      "capture_method": "manual",
+      "reconstruction_confidence": 0.9,
+      "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "registry_id": "registry.example.net",
+      "adapter_id": "manual.capture/1.0.0"
+    },
+    "signatures": [
+      {
+        "signer": "registry.example.net",
+        "sig": "base64url-placeholder",
+        "signedAt": "2025-08-11T12:06:05Z"
+      }
+    ],
+    "version": 1
+  }
+}

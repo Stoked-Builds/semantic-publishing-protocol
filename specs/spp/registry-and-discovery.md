@@ -138,19 +138,19 @@ SPP discovery is modular, decentralised, and designed for agents—not crawlers.
 No scraping. No clickbait. Just structured, trusted, user-consented knowledge exchange.
 
 
-## 📦 Versioned Artefacts (v0.4)
+## 📦 Versioned Artifacts (v0.4)
 
-SPP registries MAY expose **version-aware discovery** for enriched artefacts (see `specs/spp/enrichment-and-versioning.md`). This allows agents to fetch historical states, diffs, and chunk manifests.
+SPP registries MAY expose **version-aware discovery** for enriched artifacts (see `specs/spp/enrichment-and-versioning.md`). This allows agents to fetch historical states, diffs, and chunk manifests.
 
 ### Registry requirements (SHOULD)
-- Persist `content.raw.sha256` per artefact version and use it for idempotency.
-- Expose a versions listing for each artefact.
+- Persist `content.raw.sha256` per artifact version and use it for idempotency.
+- Expose a versions listing for each artifact.
 - Expose a **per-version manifest** that points to `raw`, `clean`, `chunks`, optional `diff`, and `provenance`.
 
 ### API surface
 Implementations SHOULD provide the following endpoints (path shapes are normative; details in OpenAPI):
-- `GET /v1/artefacts/{id}/versions` → `[ { version, created_at } ]`
-- `GET /v1/artefacts/{id}/versions/{version}/manifest` → pointer map (storage `href`s + hashes)
+- `GET /v1/artifacts/{id}/versions` → `[ { version, created_at } ]`
+- `GET /v1/artifacts/{id}/versions/{version}/manifest` → pointer map (storage `href`s + hashes)
 
 ### Client behaviour
 - Prefer the **latest** unless a specific version is requested.

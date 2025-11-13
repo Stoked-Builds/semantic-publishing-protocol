@@ -1,4 +1,4 @@
-# 📁 `publishing/` — Content Artefact Specifications
+# 📁 `publishing/` — Content Artifact Specifications
 
 This folder contains all specifications related to **semantic content publishing** within the Semantic Publishing Protocol (SPP). These define how stories, metadata, endorsements, and semantic layers are authored, structured, and exposed for AI-native discovery.
 
@@ -8,7 +8,7 @@ This folder contains all specifications related to **semantic content publishing
 
 | Spec | Summary |
 |------|---------|
-| [`story-spec.md`](./story-spec.md) | Canonical human-writable artefact format for all published content (Markdown + frontmatter). |
+| [`story-spec.md`](./story-spec.md) | Canonical human-writable artifact format for all published content (Markdown + frontmatter). |
 | [`topics.md`](./topics.md) | Defines how sites declare their topic vocabulary, including multilingual labels and optional ontology links. |
 | [`semantic-json.md`](./semantic-json.md) | Machine-readable semantic representation extracted from `story.md` — used by agents, endorsers, and search. |
 
@@ -21,7 +21,7 @@ This folder contains all specifications related to **semantic content publishing
 | [`publisher-metadata.md`](./publisher-metadata.md) | Describes how a publisher exposes identity, capabilities, and attribution metadata. |
 | [`review-chain.md`](./review-chain.md) | Defines a verifiable trail of review, moderation, or editorial oversight. |
 | [`semantic-blocks.md`](./semantic-blocks.md) | (Experimental) Defines inline semantic markers for structuring story body content. |
-| [`html-compatibility.md`](./html-compatibility.md) | Describes how to render semantic artefacts into HTML while preserving structure. |
+| [`html-compatibility.md`](./html-compatibility.md) | Describes how to render semantic artifacts into HTML while preserving structure. |
 | [`publisher-rating.md`](./publisher-rating.md) | Defines mechanisms for public trust scores, ratings, and assertions about publishers. |
 
 ---
@@ -47,7 +47,7 @@ This folder contains all specifications related to **semantic content publishing
 ## 🔗 Related Folders
 
 - [`identity/`](../identity/) — specs for author and publisher identity (DID/WebID/etc.)
-- [`agent-interface/`](../agent-interface/) — how AI browsers interact with published artefacts
+- [`agent-interface/`](../agent-interface/) — how AI browsers interact with published artifacts
 - [`core/`](../core/) — protocol-wide canonical definitions
 
 ---

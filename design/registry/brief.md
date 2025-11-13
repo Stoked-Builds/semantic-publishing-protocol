@@ -1,12 +1,12 @@
 # SPP Registry — Brief (Source of Truth)
 
 ## Problem
-Agents need a trustworthy index of web content (SPP artefacts). Publishers must be able to claim namespaces and adopt reconstructed items so they become authoritative. Registries must be discoverable, verifiable, and interoperable without a central gatekeeper.
+Agents need a trustworthy index of web content (SPP artifacts). Publishers must be able to claim namespaces and adopt reconstructed items so they become authoritative. Registries must be discoverable, verifiable, and interoperable without a central gatekeeper.
 
 ## Goals (v1, MUST)
 - HTTP/DNS-native registry (no blockchain).
-- Store and serve SPP artefacts with provenance states: reconstructed → claimed → adopted → authoritative.
-- Let publishers prove control of a domain/channel and adopt artefacts.
+- Store and serve SPP artifacts with provenance states: reconstructed → claimed → adopted → authoritative.
+- Let publishers prove control of a domain/channel and adopt artifacts.
 - Expose search + harvest APIs for other registries/indexers.
 - Provide a transparency log (CT-style Merkle tree) with signed tree heads and inclusion proofs.
 
@@ -16,16 +16,16 @@ Agents need a trustworthy index of web content (SPP artefacts). Publishers must 
 - No private content crawling or paywall bypass.
 
 ## Core Objects (glossary)
-- **Artefact**: SPP content object + metadata + provenance.
+- **Artifact**: SPP content object + metadata + provenance.
 - **Publisher**: DID + keys + namespaces + adoption policy.
 - **Claim**: Proof a publisher controls a namespace (DNS + well-known).
-- **Adoption**: Publisher acknowledges an artefact (by content hash/manifest).
-- **Transparency Log**: Append-only Merkle log of artefact events.
-- **Ownership**: (Optional) off-chain record linking rights to an artefact hash.
+- **Adoption**: Publisher acknowledges an artifact (by content hash/manifest).
+- **Transparency Log**: Append-only Merkle log of artifact events.
+- **Ownership**: (Optional) off-chain record linking rights to an artifact hash.
 
 ## Required APIs (surface only)
-- Search/Read: `GET /v1/artefacts`, `GET /v1/artefacts/{id}`
-- Ingest: `POST /v1/artefacts`
+- Search/Read: `GET /v1/artifacts`, `GET /v1/artifacts/{id}`
+- Ingest: `POST /v1/artifacts`
 - Claims: `POST /v1/claims`
 - Adoption: `POST /v1/adoptions`
 - Harvest: `GET /v1/harvest/ListIdentifiers`, `GET /v1/harvest/ListRecords`, `GET /v1/harvest/GetRecord`
@@ -37,7 +37,7 @@ Agents need a trustworthy index of web content (SPP artefacts). Publishers must 
 - `.well-known/spp.json` (publisher) and `.well-known/spp/registry.json` (registry).
 
 ## Security (MUST)
-- Ed25519 signatures for artefacts and Signed Tree Heads.
+- Ed25519 signatures for artifacts and Signed Tree Heads.
 - DNSSEC preferred when available; HTTPS well-known is authoritative.
 - Rate limits, robots.txt politeness; store URLs for third-party media (no hotlink scraping beyond metadata).
 

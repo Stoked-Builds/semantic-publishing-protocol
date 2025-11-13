@@ -1,21 +1,21 @@
 # story.md
 
 **Version:** 0.2  
-**Type:** Core Artefact Format  
+**Type:** Core Artifact Format  
 **Status:** MVP-Ready  
-**Applies to:** All published story artefacts (news, features, opinion, etc.)
+**Applies to:** All published story artifacts (news, features, opinion, etc.)
 
 ---
 
 ## 🎯 Purpose
 
-This spec defines the **canonical source format** for a content artefact in the Semantic Publishing Protocol. `story.md` is intended to be human-writable, versionable, portable, and extractable into semantic JSON for machine consumption.
+This spec defines the **canonical source format** for a content artifact in the Semantic Publishing Protocol. `story.md` is intended to be human-writable, versionable, portable, and extractable into semantic JSON for machine consumption.
 
 ---
 
 ## 📦 File Structure
 
-Each story artefact lives in its own directory, named after the `id`.
+Each story artifact lives in its own directory, named after the `id`.
 
 ```
 stories/
@@ -49,7 +49,7 @@ source: "Reuters"                     # Optional. Syndication source or citation
 license: "CC-BY-4.0"                  # Optional. Defaults to site-level license if omitted.
 canonical: "https://example.com/stories/ai-firms-licensing-treaty"  # Optional. Helps deduplication.
 endorsements: []                      # Optional. Reserved for v0.3+ endorsement network.
-archived: false                       # Optional. If true, this artefact is frozen in time.
+archived: false                       # Optional. If true, this artifact is frozen in time.
 ---
 ```
 
@@ -124,7 +124,7 @@ A `story.md` file is valid if:
 ## 🔗 Related Specs
 
 - [topics.json](./topics.json) – Topic vocabularies and multilingual labels
-- [semantic.json](./semantic-json.md) – Agent-facing structured artefact
+- [semantic.json](./semantic-json.md) – Agent-facing structured artifact
 - [endorsement.json](./endorsement.md) – (Upcoming) Distributed trust declarations
 
 ---

@@ -1,5 +1,5 @@
 {
-  "artefact_hash": "sha256:0000",
+  "artifact_hash": "sha256:0000",
   "owners": [
     { "did": "did:key:z6MkOwner1", "role": "primary", "from": "2025-01-01T00:00:00Z", "until": "2025-12-31T23:59:59Z" },
     { "did": "did:key:z6MkOwner2", "role": "primary", "from": "2025-06-01T00:00:00Z", "until": "2025-12-31T23:59:59Z" }

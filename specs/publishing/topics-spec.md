@@ -3,13 +3,13 @@
 **Version:** 0.2  
 **Type:** Core Vocabulary File  
 **Status:** MVP-Ready  
-**Applies to:** All publishers implementing multi-topic semantic artefacts
+**Applies to:** All publishers implementing multi-topic semantic artifacts
 
 ---
 
 ## 🎯 Purpose
 
-This spec defines the format of `topics.json`, the **site-defined topic vocabulary** used to semantically label stories, features, editorials, or other published artefacts. This list:
+This spec defines the format of `topics.json`, the **site-defined topic vocabulary** used to semantically label stories, features, editorials, or other published artifacts. This list:
 
 - Provides machine-readable context for `topics` in `story.md`
 - Enables multilingual rendering of topic names

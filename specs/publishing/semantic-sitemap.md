@@ -3,16 +3,16 @@
 **Version:** 0.2  
 **Type:** Discovery Index  
 **Status:** MVP-Ready  
-**Applies to:** All publishers exposing semantic artefacts for discovery by agents, search tools, or endorsers.
+**Applies to:** All publishers exposing semantic artifacts for discovery by agents, search tools, or endorsers.
 
 ---
 
 ## 🎯 Purpose
 
 The `semantic-sitemap.json` file serves as a **decentralised discovery manifest**.  
-It provides a machine-readable index of all semantic artefacts available for a site or publisher, including:
+It provides a machine-readable index of all semantic artifacts available for a site or publisher, including:
 
-- Published `story.md` artefacts
+- Published `story.md` artifacts
 - Topic vocabularies
 - Semantic metadata files (`semantic.json`)
 - Author or publisher identity files
@@ -59,10 +59,10 @@ It must be hosted at the well-known path:
 | `version`   | string    | ✅       | Sitemap schema version. |
 | `publisher` | object    | ✅       | Info about the publishing entity. |
 | `updated`   | string    | ✅       | ISO 8601 timestamp of last update. |
-| `stories`   | array     | ✅       | List of story artefact entries. |
+| `stories`   | array     | ✅       | List of story artifact entries. |
 | `topics`    | string    | ✅       | Link to site’s `topics.json` file. |
 | `authors`   | array     | ❌       | Optional links to DID/author documents. |
-| `media`     | array     | ❌       | Optional media files used in semantic artefacts. |
+| `media`     | array     | ❌       | Optional media files used in semantic artifacts. |
 
 ---
 

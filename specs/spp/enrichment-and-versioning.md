@@ -2,7 +2,7 @@
 
 **Spec Code:** spp/enrichment-and-versioning  
 **Status:** Draft for implementation  
-**Applies to:** Artefacts registered in SPP registries and/or published alongside content (e.g., `.well-known/semantic/`)
+**Applies to:** Artifacts registered in SPP registries and/or published alongside content (e.g., `.well-known/semantic/`)
 
 ---
 
@@ -23,13 +23,13 @@ Goals:
 - **Raw Snapshot**: The exact bytes fetched from the source (HTML/JSON/RSS/etc.), typically gzipped at rest.
 - **Clean Text**: Boilerplate-stripped text content derived from the raw snapshot.
 - **Chunk**: A bounded text span (e.g., ~800–1200 tokens) with stable `chunkId`, suitable for vector indexing.
-- **Version**: Monotonic integer per artefact (`1,2,3,...`) created only when raw content changes.
+- **Version**: Monotonic integer per artifact (`1,2,3,...`) created only when raw content changes.
 - **Provenance**: Fields describing how/when/with-what the content was observed.
 
 ---
 
 ## 3. `semantic.json` — Schema Extensions
-These fields are **optional** but RECOMMENDED for enriched artefacts. They extend the base `semantic.json` without breaking existing producers.
+These fields are **optional** but RECOMMENDED for enriched artifacts. They extend the base `semantic.json` without breaking existing producers.
 
 ```jsonc
 {
@@ -99,7 +99,7 @@ These fields are **optional** but RECOMMENDED for enriched artefacts. They exten
 
 ### 3.2 Processing Architecture (Recommended)
 
-Implementations MAY separate artefact processing into three idempotent stages that communicate via queues/events:
+Implementations MAY separate artifact processing into three idempotent stages that communicate via queues/events:
 
 | Stage       | Input                         | Output              | Core responsibility |
 |-------------|-------------------------------|---------------------|---------------------|
@@ -139,7 +139,7 @@ Writes MUST be idempotent: same `(artifactId, version)` and same `raw.sha256` MU
 - `rawHash`: duplicate of `content.raw.sha256` for quick lookup.
 
 **Signatures & Endorsements**  
-When producing endorsements or signatures over artefacts, include:
+When producing endorsements or signatures over artifacts, include:
 - `id`, `canonical`, `version.number`, `content.raw.sha256`
 This binds trust objects to a specific immutable content state.
 
@@ -170,7 +170,7 @@ All fields in this extension are optional. Producers without enrichment remain v
 
 ## 9. Security & Robots
 - Respect `robots.txt` and `Cache-Control: no-archive` where policy requires; document site-level exceptions.
-- Rate-limit per domain; handle legal takedown by tombstoning the artefact (retain hash and provenance).
+- Rate-limit per domain; handle legal takedown by tombstoning the artifact (retain hash and provenance).
 
 ---
 
