@@ -1,10 +1,10 @@
 # Punk Forge — Review Board Workflow (n8n v1)
 
-This document defines the first pass at an automated Specification Review Board workflow in n8n for Punk Forge feature and spec-alignment requests. It uses the open issue `issues/spp-spec-and-schema-alignment.md` (“Require \`spec_version\`”) as the seed use-case, but the flow is reusable for future proposals. Archive folders follow `<proposalId>-<proposalSlug>` so IDs remain deterministic while names stay legible.
+This document defines the first pass at an automated Specification Review Board workflow in n8n for Punk Forge feature and spec-alignment requests. It uses the open issue `issues/spp-spec-and-schema-alignment.md` (“Require \`spec_version\`”) as the seed use-case, but the flow is reusable for future proposals. Archive folders follow `proposal-<issueNumber>` so IDs remain deterministic and tooling can look them up without slug context.
 
 ## Objectives
 - Create a deterministic, replayable approval path that mirrors the Review Board process already described in `flows/review-board/README.md`.
-- Provide a structured artifact trail inside `docs/governance/review-board/archive/<proposalId>-<proposalSlug>/`.
+- Provide a structured artifact trail inside `docs/governance/review-board/archive/<proposalId>/`.
 - Give the requester actionable outcomes: **Approved**, **Changes Requested**, or **Denied**, with clear persona-sourced reasoning.
 - Keep the workflow in n8n so it can run on the existing self-hosted instance alongside other Punk Forge automations.
 
@@ -14,14 +14,13 @@ This document defines the first pass at an automated Specification Review Board 
 | GitHub Issue (`proposal/review-board` template) | Primary trigger payload (`title`, `body`, `labels`, `links`). |
 | n8n Workflow | Orchestrates dossier creation, persona prompting, scoring, and outcomes. |
 | Persona LLMs (Innovation, Ethics, Finance, DevX, Adoption, Chair) | Generate structured responses and scores. Default to local Ollama models configured via n8n credentials. |
-| Storage (`docs/governance/review-board/archive/<proposalId>-<proposalSlug>/`) | Dossier, transcripts, scorecards, decision records. |
+| Storage (`docs/governance/review-board/archive/<proposalId>/`) | Dossier, transcripts, scorecards, decision records. |
 | Notifications (Matrix/Slack/Email) | Inform stakeholders at each major state change. |
 
 ## Data Model
 ```jsonc
 {
   "proposalId": "proposal-247",
-  "proposalSlug": "spec-version-align",
   "issueNumber": 247,
   "title": "Spec & Schema Alignment: Require `spec_version`",
   "requestor": "markstokes",
@@ -62,13 +61,13 @@ Changes Requested  Final Approval  Denial / Escalation
 ### 1. Trigger (GitHub Issue Webhook)
 - **Node:** `Webhook` (n8n GitHub App or personal token).
 - **Filter:** `action in ["opened","labeled"]` AND label `proposal/review-board`.
-- **Init:** Set `proposalId = "proposal-" + issue.number`. Generate a companion `proposalSlug` (≤25 chars, lowercase, kebab case) via an AI helper node seeded with the issue title/summary; default to the title slug if generation fails.
+- **Init:** Set `proposalId = "proposal-" + issue.number`. Human-readable slugs can still power status comments, but folders and branches stay fixed to the proposal ID.
 - **Side effect:** Create a lightweight status comment acknowledging automation start.
 
 ### 2. Bootstrap Intake
 - **Nodes:** `Function` + `File` operations.
 - Validate required fields (`title`, `body`, `target decision date` block in issue body).
-- Ensure archive folder exists: `docs/governance/review-board/archive/<proposalId>-<proposalSlug>/` (fall back to just `proposalId` if slug generation fails).
+- Ensure archive folder exists: `docs/governance/review-board/archive/<proposalId>/`.
 - Copy dossier template and inject issue metadata (use `n8n-nodes-base.template` or `Function`).
 - Create feature branch `review-board/proposal-<issueNumber>` and stage the dossier plus archive folder; never operate directly on `main`.
 - Commit via `Git` node and keep branch reference in workflow context for later PR creation.
@@ -121,6 +120,13 @@ Changes Requested  Final Approval  Denial / Escalation
   - `PF_GIT_USER`, `PF_GIT_EMAIL`.
   - `OLLAMA_BASE_URL` or remote LLM credentials per persona.
   - `REVIEW_BOARD_ARCHIVE_PATH` (default `docs/governance/review-board/archive`).
+- **AI Agent orchestration:**  
+  - Use an `AI Agent` node to coordinate the steps. The System Message should declare the Review Board persona, list the tools (helper workflow, persona runners, score aggregator, commenter, PR creator, etc.), and spell out rules (helper runs first, track slug/branch, enforce blended score ≥75 with domain floors, up to three rounds, final Chair decision, structured logging).  
+  - Declare helper workflow `flows/review-board/n8n-review-board-helper-create-review.json` as a callable tool that seeds `review-board/proposal-<issueNumber>`, creates the slug, and returns the branch/dossier path.  
+  - Add persona tools (Innovation, Ethics, Finance, DevX, Adoption, Chair) that consume the dossier context, emit `{score, justification, blockers, actions, transcriptPath}`, and persist transcripts in `archive/<proposalId>/transcripts/`.  
+  - The agent should invoke the score aggregator/tool after each round to compute weights, check domain floors (Ethics & Finance ≥70), update the scorecard, and determine `in_review`, `changes_requested`, `approved`, or `denied`.  
+  - Issue comments opened by the agent must reference the slug, branch, dossier path, round status, personas run, and next steps. Once approved, trigger the PR creation tool to open/refresh the branch PR before merging.
+- **Tooling roadmap:** Document the future human-in-the-loop notifier as a phase 2 tool for escalations when rounds exhaust without consensus.
 - **Testing:** Add a manual trigger node that loads fixture payloads from `flows/review-board/fixtures/*.json`.
 - **Dry Run Toggle:** Boolean input that skips git commits and instead stores artifacts under `/tmp/review-board`.
 - **Error Handling:** Global `Error` workflow that posts failure comment and pings steward.

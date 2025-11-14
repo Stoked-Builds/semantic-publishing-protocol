@@ -1,0 +1,528 @@
+{
+  "name": "Agent - Innovation",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "IssueID"
+            },
+            {
+              "name": "RoundName"
+            },
+            {
+              "name": "AcceptanceCriteria"
+            },
+            {
+              "name": "Organisation"
+            },
+            {
+              "name": "Repo"
+            },
+            {
+              "name": "Persona"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "ccd45d87-12a7-482a-86c3-937d309aaaac",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Input').item.json.Organisation }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Input').item.json.Repo }}",
+          "mode": "name"
+        },
+        "filePath": "={{ $('Input').item.json.DossierPath }}",
+        "additionalParameters": {
+          "reference": "={{ $('Input').item.json.Branch }}"
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0ebd9b2d-00aa-4db9-8e3c-8e78b5201df1",
+      "name": "Get Dossier",
+      "webhookId": "7b6e8d18-7900-4ed5-96fe-7a30f82653f8",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        368,
+        0
+      ],
+      "id": "f66e4e5e-dfb4-4283-9f91-d700c97cd970",
+      "name": "Dossier"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f01a66b-f63f-4d0c-83f1-4280de00c7b2",
+              "name": "text",
+              "value": "=## Proposal\n{{ $('Issue').item.json.title }}\n\n### Issue Summary\n{{ $('Issue').item.json.body }}\n\n### Dossier Extact\n{{ $('Dossier').item.json.data }}\n\n### Round\n{{ $('Input').item.json.RoundName }}\n\n### Acceptance Criteria\n{{ $('Input').item.json.AcceptanceCriteria }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        0
+      ],
+      "id": "e1caa48b-89e2-4a24-bb7f-dcaeaca1005d",
+      "name": "prompt"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "933f056e-b830-49ae-95a5-eaed299eb631",
+              "name": "Organisation",
+              "value": "={{ $json.Organisation }}",
+              "type": "string"
+            },
+            {
+              "id": "2545745a-c180-4da8-89db-7710f22b0db7",
+              "name": "Repo",
+              "value": "={{ $json.Repo }}",
+              "type": "string"
+            },
+            {
+              "id": "42b0e2fd-c8c2-4194-9ac3-229c9dc71d26",
+              "name": "IssueID",
+              "value": "={{ $json.IssueID }}",
+              "type": "number"
+            },
+            {
+              "id": "93dd53e8-71e9-477b-b179-622e7403374a",
+              "name": "APIUrl",
+              "value": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/git",
+              "type": "string"
+            },
+            {
+              "id": "54bc024c-06bf-4627-9ecb-28be20c88779",
+              "name": "ContentURL",
+              "value": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/contents",
+              "type": "string"
+            },
+            {
+              "id": "e9bfedfa-28d1-4d9b-ac0a-d6e9ebde6803",
+              "name": "Branch",
+              "value": "=review-board/proposal-{{ $json.IssueID }}",
+              "type": "string"
+            },
+            {
+              "id": "44844d0d-4ff1-4b48-bc73-671d28732900",
+              "name": "Folder",
+              "value": "=proposal-{{ $json.IssueID }}",
+              "type": "string"
+            },
+            {
+              "id": "dfe65671-a16e-4095-b333-28f74469eff8",
+              "name": "DossierPath",
+              "value": "=docs/governance/review-board/archive/proposal-{{ $json.IssueID }}/dossier.md",
+              "type": "string"
+            },
+            {
+              "id": "77777917-0445-482e-b07a-1c743282a517",
+              "name": "RoundName",
+              "value": "={{ $json.RoundName }}",
+              "type": "string"
+            },
+            {
+              "id": "6f33e3ac-4ea1-4e65-8760-2b9b977463fe",
+              "name": "AcceptanceCriteria",
+              "value": "={{ $json.AcceptanceCriteria }}",
+              "type": "string"
+            },
+            {
+              "id": "c1548a3f-6212-4b01-aa5e-9a34f2afe81f",
+              "name": "Persona",
+              "value": "={{ $json.Persona }}",
+              "type": "string"
+            },
+            {
+              "id": "04f99d2d-d38a-46d7-b89a-9c14e09761ad",
+              "name": "TranscriptPath",
+              "value": "=docs/governance/review-board/archive/proposal-{{ $json.IssueID }}/transcripts/{{ $json.Persona }}-{{ $json.RoundName }}.md",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "bf6db669-a9eb-4435-9a56-1db715bcb9b3",
+      "name": "Input",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $json.Organisation }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $json.Repo }}",
+          "mode": "name"
+        },
+        "issueNumber": "={{ $json.IssueID }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        0
+      ],
+      "id": "e4108189-aff8-4f56-9c1c-e03e7d0efd41",
+      "name": "Issue",
+      "webhookId": "83ff3e91-f80c-4ae8-a3a8-54304fbee9f9",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "## Your charter:\nYou represent the Innovation seat on the Review Board. Your mandate is to assess how the proposal advances the Semantic Publishing Protocol’s evolution.\n\nFocus on:\n- Strategic differentiation for Punk Forge/SPP vs incumbents.\n- Architectural leverage: reuse of shared components, composability, forward-compatibility.\n- Acceleration of developer or publisher workflows through automation or novel primitives.\n- Risk of stagnation if we reject the idea (what future capabilities do we block?).\n- Opportunity cost: is there a more impactful innovation we should prioritise instead?\n\nAlways cite concrete evidence from the dossier or issue. Call out trade-offs plainly; optimism without data is a fail.\n\n--------------------------\n\n## Scoring Guidance:\nScore on a 0–100 scale.\n50 = neutral (no meaningful innovation).\n75+ means the change clearly pushes the protocol forward and is worth the execution cost.\nScores below 60 flag concern\nbelow 50 indicate you would block the proposal unless major revisions happen.\n\nEnforce the mission hierarchy:\n1. Safeguard long-term protocol health (future-proof schemas, interoperability).\n2. Amplify developer velocity (automation, reusable tooling).\n3. Expand ecosystem adoption (clear upgrade paths, reducing churn).\n\nWhen in doubt, penalise vague novelty and reward concrete, testable improvements. List at least one blocker if you score under 75.\n\n--------------------------\n\n## Required JSON Output Schema:\nReturn a single JSON object with exactly these keys and types:\n  {\n    \"persona\": \"<Personal Name>\",\n    \"round\": \"<initial|adjustment|final>\",\n    \"score\": <number 0-100>,\n    \"justification\": \"<2-3 sentences referencing the dossier>\",\n    \"blockers\": [\"<actionable blocker, empty array allowed>\"],\n    \"recommendedActions\": [\"<the precise next steps>\"],\n    \"transcript\": \"<markdown narrative>\"\n  }\n  Do not add or rename keys. Do not embed dossier metadata under `persona`. Respond with JSON only—no prose outside the object."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        768,
+        0
+      ],
+      "id": "b985a98e-54f9-40fa-b0fe-709b6b040553",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"persona\": \"<Personal Name>\",\n  \"round\": \"<initial|adjustment|final>\",\n  \"score\": 50,\n  \"justification\": \"<2-3 sentences referencing dossier evidence>\",\n  \"blockers\": [\"<actionable blocker or empty array>\"],\n  \"recommendedActions\": [\"<steps the requester should take next>\"],\n  \"transcript\": \"<markdown narrative that will be written to the archive>\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        928,
+        176
+      ],
+      "id": "69e4c5f5-7cb7-4b45-80e7-dfd09df2ed9d",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output;\nconst input = $('Input').first().json;\nconst transcriptPath = input.TranscriptPath;\n// @ts-ignore\nconst transcriptContent = Buffer.from(output.transcript, 'utf8').toString('base64');\nreturn [{\n  json: {\n    persona: input.Persona,\n    round: input.RoundName,\n    score: output.score,\n    justification: output.justification,\n    blockers: output.blockers,\n    recommendedActions: output.recommendedActions,\n    transcriptPath,\n    transcriptContent,\n    organisation: input.Organisation,\n    repo: input.Repo,\n    branch: input.Branch\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        0
+      ],
+      "id": "f0cb04c2-c20c-4ce2-b357-996058bd0ea1",
+      "name": "Prepare Persona Output"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Input').item.json.ContentURL }}/{{ $('Input').item.json.TranscriptPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore: add {{ $('Input').item.json.Persona }} transcript {{ $('Input').item.json.RoundName }}\",\n  \"content\": \"{{ $json.transcriptContent }}\",\n  \"branch\": \"{{ $json.branch }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1376,
+        0
+      ],
+      "id": "bf32aa1d-4bfb-4cbc-b921-296a7ca4b6b8",
+      "name": "Write Transcript",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "persona",
+              "value": "={{ $('Prepare Persona Output').item.json.persona }}",
+              "type": "string",
+              "id": "0015e8ba-3707-48ca-8ad1-fd2722768016"
+            },
+            {
+              "name": "round",
+              "value": "={{ $('Prepare Persona Output').item.json.round }}",
+              "type": "string",
+              "id": "58fe00dd-90d9-4a7f-ba38-f8b8dfe07246"
+            },
+            {
+              "name": "score",
+              "value": "={{ $('Prepare Persona Output').item.json.score }}",
+              "type": "number",
+              "id": "5dea3153-457f-4b61-a63f-3893a7769700"
+            },
+            {
+              "name": "justification",
+              "value": "={{ $('Prepare Persona Output').item.json.justification }}",
+              "type": "string",
+              "id": "8650f52d-0a1f-4c65-9764-d81261d2aa35"
+            },
+            {
+              "name": "blockers",
+              "value": "={{ $('Prepare Persona Output').item.json.blockers }}",
+              "type": "json",
+              "id": "7370a913-a323-4348-b445-18859519c0ee"
+            },
+            {
+              "name": "recommendedActions",
+              "value": "={{ $('Prepare Persona Output').item.json.recommendedActions }}",
+              "type": "json",
+              "id": "ec2b8a19-cdd5-44e6-82bb-5bf21e811fc0"
+            },
+            {
+              "name": "transcriptPath",
+              "value": "={{ $('Prepare Persona Output').item.json.transcriptPath }}",
+              "type": "string",
+              "id": "00b9781f-b719-4f2b-9657-fa6cdefa350e"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1616,
+        0
+      ],
+      "id": "f6d29df6-be2a-4ea9-b6ca-f4b17bfd50c5",
+      "name": "Return Persona Output"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        736,
+        176
+      ],
+      "id": "756dbe9a-a6f0-49b6-a6da-4f611a1321ff",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OXWubsGTTCNuaDf2",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Dossier": {
+      "main": [
+        [
+          {
+            "node": "Dossier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dossier": {
+      "main": [
+        [
+          {
+            "node": "prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Issue": {
+      "main": [
+        [
+          {
+            "node": "Get Dossier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prompt": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Persona Output": {
+      "main": [
+        [
+          {
+            "node": "Write Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Transcript": {
+      "main": [
+        [
+          {
+            "node": "Return Persona Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Prepare Persona Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c3beb46e-cda5-46e7-ae61-02d6bd4b21d7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c9ff78efe37162af9c518b22bfed5e620ff041b0132d2a23c8363a9ba169ec9"
+  },
+  "id": "Ac0PJa5XmgDuVhlE",
+  "tags": []
+}

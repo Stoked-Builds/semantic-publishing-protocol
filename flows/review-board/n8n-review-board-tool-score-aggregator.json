@@ -1,0 +1,490 @@
+{
+  "name": "Score Aggregator Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "ProposalID"
+            },
+            {
+              "name": "PersonaResults",
+              "type": "array"
+            },
+            {
+              "name": "RoundName"
+            },
+            {
+              "name": "MaxRounds"
+            },
+            {
+              "name": "CurrentRoundIndex"
+            },
+            {
+              "name": "Organisation"
+            },
+            {
+              "name": "Repo"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        2176
+      ],
+      "id": "0d537a8a-642e-4ee1-89ae-55c1ce428754",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "ProposalID",
+              "value": "={{ $json.ProposalID }}",
+              "type": "string"
+            },
+            {
+              "name": "organisation",
+              "value": "={{ $json.Organisation }}",
+              "type": "string"
+            },
+            {
+              "name": "repo",
+              "value": "={{ $json.Repo }}",
+              "type": "string"
+            },
+            {
+              "name": "branch",
+              "value": "=review-board/proposal-{{ $json.ProposalID }}",
+              "type": "string"
+            },
+            {
+              "name": "scorecardPath",
+              "value": "=docs/governance/review-board/archive/proposal-{{ $json.ProposalID }}/scorecard.md",
+              "type": "string"
+            },
+            {
+              "name": "contentUrl",
+              "value": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/contents",
+              "type": "string"
+            },
+            {
+              "name": "PersonaResultsRaw",
+              "value": "={{ $json.PersonaResults }}",
+              "type": "string"
+            },
+            {
+              "name": "RoundName",
+              "value": "={{ $json.RoundName }}",
+              "type": "string"
+            },
+            {
+              "name": "MaxRounds",
+              "value": "={{ $json.MaxRounds || 3 }}",
+              "type": "number"
+            },
+            {
+              "name": "CurrentRoundIndex",
+              "value": "={{ $json.CurrentRoundIndex || 1 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        2176
+      ],
+      "id": "478e9a51-f7c3-44d4-be62-9e92a76d51d2",
+      "name": "Prepare Inputs"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.PersonaResultsRaw;\nlet parsed = raw;\nif (typeof parsed === 'string') {\n  try {\n    parsed = JSON.parse(parsed);\n  } catch (err) {\n    throw new Error(`Invalid PersonaResults JSON: ${err.message}`);\n  }\n}\nif (!Array.isArray(parsed)) {\n  throw new Error('PersonaResults must be an array');\n}\nconst required = ['Innovation', 'Ethics', 'Finance', 'DevX', 'Adoption'];\nconst missing = required.filter((p) => !parsed.some((entry) => entry.persona === p));\nif (missing.length) {\n  throw new Error(`Missing persona outputs: ${missing.join(', ')}`);\n}\nreturn [{ json: { ...$input.first().json, PersonaResults: parsed } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        736,
+        2176
+      ],
+      "id": "3b268412-5a3b-4e78-ad61-15e076fd7049",
+      "name": "Parse Persona Results"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst weights = { Innovation: 0.25, Ethics: 0.15, Finance: 0.2, DevX: 0.2, Adoption: 0.2 };\nlet blendedScore = 0;\nconst personaSummaries = input.PersonaResults.map((entry) => {\n  const score = Number(entry.score || 0);\n  blendedScore += score * (weights[entry.persona] || 0);\n  return {\n    persona: entry.persona,\n    score,\n    justification: entry.justification || '',\n    blockers: entry.blockers || [],\n    recommendedActions: entry.recommendedActions || [],\n    transcriptPath: entry.transcriptPath || '',\n  };\n});\nconst ethicsScore = personaSummaries.find((p) => p.persona === 'Ethics')?.score || 0;\nconst financeScore = personaSummaries.find((p) => p.persona === 'Finance')?.score || 0;\nconst floorEthics = input.FloorEthics !== undefined ? input.FloorEthics : 70;\nconst floorFinance = input.FloorFinance !== undefined ? input.FloorFinance : 70;\nconst floorsPassed = ethicsScore >= floorEthics && financeScore >= floorFinance;\nconst maxRounds = Number(input.MaxRounds || 3);\nconst roundIndex = Number(input.CurrentRoundIndex || 1);\nlet status;\nif (floorsPassed && blendedScore >= 75) {\n  status = 'approved';\n} else if (roundIndex >= maxRounds) {\n  status = 'denied';\n} else {\n  status = 'changes_requested';\n}\nreturn [{ json: { ...input, personaSummaries, blendedScore, floorsPassed, status } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        2176
+      ],
+      "id": "3f164d4c-2ff0-489d-8c1d-3e5a41cae2ef",
+      "name": "Compute Blended Score"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/{{ $json.organisation }}/{{ $json.repo }}/contents/{{ $json.scorecardPath }}?ref={{ $json.branch }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        864,
+        1952
+      ],
+      "id": "0aaf2a37-33d9-417d-82f1-1bced1d44140",
+      "name": "Fetch Scorecard",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst response = $items('Fetch Scorecard')[0];\nlet existingText = '';\nlet existingSha;\nif (!response.json?.error) {\n  const content = response.json.content;\n  existingSha = response.json.sha;\n  if (content) {\n    existingText = Buffer.from(content, 'base64').toString('utf8');\n  }\n}\nreturn [{ json: { ...input, scorecardText: existingText, scorecardSha: existingSha } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        2160
+      ],
+      "id": "0d2fbd43-9f0d-4a1f-84cf-c327e7e9611b",
+      "name": "Process Scorecard",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst existingMarkdown = (input.scorecardText || '').trimEnd();\nconst round = input.RoundName || 'initial';\nconst blendedScore = Number(input.blendedScore || 0).toFixed(1);\nconst floorsPassed = input.floorsPassed ? '✅ Passed' : '❌ Failed';\nconst floorEthics = input.FloorEthics !== undefined ? input.FloorEthics : 70;\nconst floorFinance = input.FloorFinance !== undefined ? input.FloorFinance : 70;\nconst personaWeights = [\n  { persona: 'Innovation', label: 'Innovation Lead', focus: 'Ambition & capability expansion' },\n  { persona: 'Ethics', label: 'Ethics Steward', focus: 'Ethics, rights, compliance' },\n  { persona: 'Finance', label: 'Financial Controller', focus: 'Cost, sustainability' },\n  { persona: 'DevX', label: 'Implementation & DevX', focus: 'Delivery feasibility' },\n  { persona: 'Adoption', label: 'Adoption & Community', focus: 'Ecosystem alignment' }\n];\nconst personaLookup = {};\n(input.personaSummaries || []).forEach((entry) => {\n  personaLookup[entry.persona] = entry;\n});\nconst personaRows = personaWeights\n  .map(({ persona, label, focus }) => {\n    const entry = personaLookup[persona] || {};\n    const score = entry.score !== undefined ? entry.score : '';\n    let floorStatus = 'n/a';\n    if (persona === 'Ethics' && score !== '') {\n      floorStatus = score >= floorEthics ? 'Yes' : 'No';\n    } else if (persona === 'Finance' && score !== '') {\n      floorStatus = score >= floorFinance ? 'Yes' : 'No';\n    }\n    const justification = (entry.justification || '').replace(/\\n+/g, ' ').trim();\n    return `| ${label} | ${focus} | ${round} | ${score} | ${floorStatus} | ${justification} |`;\n  })\n  .join('\\n');\nconst roundSection = [\n  `## Round: ${round}`,\n  '',\n  '| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |',\n  '|---------|---------------|-------|---------------|------------------|-------------------|',\n  personaRows,\n  '',\n  `**Blended Score:** ${blendedScore}`,\n  `**Floor Check:** ${floorsPassed}`,\n  ''\n].join('\\n');\nconst roundIndex = Number(input.CurrentRoundIndex || 1);\nlet nextContent;\nif (!existingMarkdown || roundIndex === 1) {\n  nextContent = roundSection;\n} else {\n  nextContent = `${existingMarkdown}\\n\\n${roundSection}`;\n}\nreturn [{ json: { ...input, updatedScorecard: nextContent.trimEnd() } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        2160
+      ],
+      "id": "693fd480-c379-466c-8650-15e95c551aee",
+      "name": "Build Scorecard Markdown",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst base64Content = Buffer.from(input.updatedScorecard, 'utf8').toString('base64');\nreturn [{ json: { ...input, base64Content } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1856,
+        2160
+      ],
+      "id": "25f3f1a0-d894-4a68-869c-e4a36ab25424",
+      "name": "Encode Scorecard",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Prepare Inputs').item.json.contentUrl }}/{{ $('Prepare Inputs').item.json.scorecardPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore: update scorecard (round )\",\n  \"content\": \"{{ $json.base64Content }}\",\n  \"branch\": \"{{ $('Prepare Inputs').item.json.branch }}\",\n  \"sha\": \"{{ $('Process Scorecard').item.json.scorecardSha }}\",\n  \"committer\": {\n    \"name\": \"n8n Review Bot\",\n    \"email\": \"n8n@punk.forge\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2064,
+        2160
+      ],
+      "id": "d59803e5-ae91-4a30-9607-4f49ec24cc92",
+      "name": "Write Scorecard",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "status",
+              "value": "={{ $json.status }}",
+              "type": "string"
+            },
+            {
+              "name": "blendedScore",
+              "value": "={{ $json.blendedScore }}",
+              "type": "number"
+            },
+            {
+              "name": "floorsPassed",
+              "value": "={{ $json.floorsPassed }}",
+              "type": "boolean"
+            },
+            {
+              "name": "personaSummaries",
+              "value": "={{ $json.personaSummaries }}",
+              "type": "json"
+            },
+            {
+              "name": "RoundName",
+              "value": "={{ $json.RoundName }}",
+              "type": "string"
+            },
+            {
+              "name": "scorecardPath",
+              "value": "={{ $json.scorecardPath }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2256,
+        2160
+      ],
+      "id": "1345b6be-8547-48b3-935e-8f43b11fce1b",
+      "name": "Return Summary"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1296,
+        2160
+      ],
+      "id": "7fc080bf-5a21-4177-a264-ddb9a78a3e22",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "ProposalID": 138,
+          "PersonaResults": [
+            {
+              "persona": "Innovation",
+              "round": "initial",
+              "score": 82,
+              "justification": "Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries.",
+              "blockers": [],
+              "recommendedActions": [
+                "Coordinate schema bundle release with registry team",
+                "Publish migration script template for timeline seeding"
+              ],
+              "transcriptPath": "docs/governance/review-board/archive/proposal-247/transcripts/innovation-initial.md"
+            },
+            {
+              "persona": "Ethics",
+              "round": "initial",
+              "score": 78,
+              "justification": "Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability.",
+              "blockers": [
+                "Document explicit opt-out for per-registry enrichment storage"
+              ],
+              "recommendedActions": [
+                "Add consent workflow guidance for registries storing timelines"
+              ],
+              "transcriptPath": "docs/governance/review-board/archive/proposal-247/transcripts/ethics-initial.md"
+            },
+            {
+              "persona": "Finance",
+              "round": "initial",
+              "score": 76,
+              "justification": "Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks.",
+              "blockers": [],
+              "recommendedActions": [
+                "Validate storage cost projections for preview assets"
+              ],
+              "transcriptPath": "docs/governance/review-board/archive/proposal-247/transcripts/finance-initial.md"
+            },
+            {
+              "persona": "DevX",
+              "round": "initial",
+              "score": 80,
+              "justification": "Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding.",
+              "blockers": [],
+              "recommendedActions": [
+                "Ship example adapters showing new fields end-to-end"
+              ],
+              "transcriptPath": "docs/governance/review-board/archive/proposal-247/transcripts/devx-initial.md"
+            },
+            {
+              "persona": "Adoption",
+              "round": "initial",
+              "score": 79,
+              "justification": "Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn.",
+              "blockers": [],
+              "recommendedActions": [
+                "Prepare public launch brief with before/after artifact examples"
+              ],
+              "transcriptPath": "docs/governance/review-board/archive/proposal-247/transcripts/adoption-initial.md"
+            }
+          ],
+          "RoundName": 1,
+          "MaxRounds": 3,
+          "CurrentRoundIndex": 1,
+          "Organisation": "Stoked-Builds",
+          "Repo": "semantic-publishing-protocol"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Prepare Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Inputs": {
+      "main": [
+        [
+          {
+            "node": "Parse Persona Results",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Scorecard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Persona Results": {
+      "main": [
+        [
+          {
+            "node": "Compute Blended Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Blended Score": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fetch Scorecard": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Scorecard": {
+      "main": [
+        [
+          {
+            "node": "Build Scorecard Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Scorecard Markdown": {
+      "main": [
+        [
+          {
+            "node": "Encode Scorecard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encode Scorecard": {
+      "main": [
+        [
+          {
+            "node": "Write Scorecard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Scorecard": {
+      "main": [
+        [
+          {
+            "node": "Return Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Process Scorecard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1740f4c1-64c6-4c1b-aa9a-b85a80823a35",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c9ff78efe37162af9c518b22bfed5e620ff041b0132d2a23c8363a9ba169ec9"
+  },
+  "id": "NKrKrVWJRlYqOsU7",
+  "tags": []
+}

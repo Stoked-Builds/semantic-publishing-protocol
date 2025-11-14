@@ -1,0 +1,506 @@
+{
+  "name": "Decision Record Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Organisation"
+            },
+            {
+              "name": "Repo"
+            },
+            {
+              "name": "IssueNumber"
+            },
+            {
+              "name": "ProposalTitle"
+            },
+            {
+              "name": "Outcome"
+            },
+            {
+              "name": "ChairJustification"
+            },
+            {
+              "name": "ChairBlockers",
+              "type": "array"
+            },
+            {
+              "name": "ChairActions",
+              "type": "array"
+            },
+            {
+              "name": "BlendedScore"
+            },
+            {
+              "name": "PersonaSummaries",
+              "type": "array"
+            },
+            {
+              "name": "RoundName"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -640,
+        80
+      ],
+      "id": "trigger",
+      "name": "When Called"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Organisation",
+              "value": "={{ $json.Organisation }}",
+              "type": "string"
+            },
+            {
+              "name": "Repo",
+              "value": "={{ $json.Repo }}",
+              "type": "string"
+            },
+            {
+              "name": "IssueNumber",
+              "value": "={{ $json.IssueNumber }}",
+              "type": "number"
+            },
+            {
+              "name": "Branch",
+              "value": "=review-board/proposal-{{ $json.IssueNumber }}",
+              "type": "string"
+            },
+            {
+              "name": "ProposalTitle",
+              "value": "={{ $json.ProposalTitle }}",
+              "type": "string"
+            },
+            {
+              "name": "Outcome",
+              "value": "={{ $json.Outcome }}",
+              "type": "string"
+            },
+            {
+              "name": "ChairJustification",
+              "value": "={{ $json.ChairJustification }}",
+              "type": "string"
+            },
+            {
+              "name": "ChairBlockers",
+              "value": "={{ $json.ChairBlockers }}",
+              "type": "json"
+            },
+            {
+              "name": "ChairActions",
+              "value": "={{ $json.ChairActions }}",
+              "type": "json"
+            },
+            {
+              "name": "BlendedScore",
+              "value": "={{ $json.BlendedScore }}",
+              "type": "number"
+            },
+            {
+              "name": "PersonaSummaries",
+              "value": "={{ $json.PersonaSummaries }}",
+              "type": "json"
+            },
+            {
+              "name": "RoundName",
+              "value": "={{ $json.RoundName }}",
+              "type": "string"
+            },
+            {
+              "name": "DecisionPath",
+              "value": "=docs/governance/review-board/archive/proposal-{{ $json.IssueNumber }}/decision-record.md",
+              "type": "string"
+            },
+            {
+              "name": "ChangelogPath",
+              "value": "=docs/governance/review-board/CHANGELOG.md",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -424,
+        80
+      ],
+      "id": "prepare",
+      "name": "Prepare Inputs"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst input = $input.first().json;\nconst personaRows = (input.PersonaSummaries || [])\n  .map((p) => {\n    const justification = (p.justification || '').replace(/\\n+/g, ' ').trim();\n    return `| ${p.persona} | ${p.score ?? ''} | ${justification} |`;\n  })\n  .join('\\n');\nconst blockers = (input.ChairBlockers || []).length\n  ? (input.ChairBlockers || []).map((b) => `- ${b}`).join('\\n')\n  : '- None';\nconst actions = (input.ChairActions || []).length\n  ? (input.ChairActions || []).map((a) => `- ${a}`).join('\\n')\n  : '- None';\nconst decision = [\n  `# Review Board Decision \u2014 proposal-${input.IssueNumber}`,\n  '',\n  `**Title:** ${input.ProposalTitle || 'n/a'}`,\n  `**Outcome:** ${input.Outcome || 'pending'}`,\n  `**Round:** ${input.RoundName || 'final'}`,\n  `**Blended Score:** ${input.BlendedScore ?? ''}`,\n  '',\n  '## Chair Summary',\n  input.ChairJustification || '_pending_',\n  '',\n  '## Required Blockers',\n  blockers,\n  '',\n  '## Recommended Actions',\n  actions,\n  '',\n  '## Persona Scores',\n  '| Persona | Score | Key Points |',\n  '| --- | --- | --- |',\n  personaRows || '| _pending_ | | |',\n  ''\n].join('\\n');\nreturn [{ json: { ...input, decisionMarkdown: decision } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        80
+      ],
+      "id": "formatDecision",
+      "name": "Format Decision"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/contents/{{ $json.DecisionPath }}?ref={{ $json.Branch }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "responseFormat": "json"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        0,
+        192
+      ],
+      "id": "getDecision",
+      "name": "Fetch Existing Decision",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const formatData = $items('Format Decision')[0].json;\nconst fileItem = $input.first();\nconst fileJson = (fileItem && fileItem.json) ? fileItem.json : (fileItem || {});\nconst decisionSha = fileJson && !fileJson.error ? fileJson.sha : undefined;\nconst base64Decision = Buffer.from(formatData.decisionMarkdown || '', 'utf8').toString('base64');\nreturn [{ json: { ...formatData, decisionSha, decisionBase64: base64Decision } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        80
+      ],
+      "id": "prepareDecisionWrite",
+      "name": "Prepare Decision Write"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/contents/{{ $json.DecisionPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"docs: add decision record for proposal-{{ $json.IssueNumber }}\",\n  \"content\": \"{{ $json.decisionBase64 }}\",\n  \"branch\": \"{{ $json.Branch }}\"\n  {{ $json.decisionSha ? ',\\n  \\\"sha\\\": \\\"' + $json.decisionSha + '\\\"' : '' }}\n}",
+        "responseFormat": "json"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        432,
+        80
+      ],
+      "id": "writeDecision",
+      "name": "Write Decision",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/contents/{{ $json.ChangelogPath }}?ref={{ $json.Branch }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "responseFormat": "json"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        -128
+      ],
+      "id": "fetchChangelog",
+      "name": "Fetch Changelog",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst response = $items(\"Fetch Changelog\")[0];\nlet changelogText = '';\nlet changelogSha;\nif (response && !response.json?.error) {\n  changelogSha = response.json.sha;\n  if (response.json.content) {\n    changelogText = Buffer.from(response.json.content, 'base64').toString('utf8');\n  }\n}\nreturn [{ json: { ...input, changelogText, changelogSha } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -128
+      ],
+      "id": "prepareChangelog",
+      "name": "Prepare Changelog"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst input = $input.first().json;\nconst existing = (input.changelogText || '').trim();\nconst date = new Date().toISOString().split('T')[0];\nconst followUps = (input.ChairActions || []).length ? input.ChairActions.join('; ') : 'None';\nconst entry = [\n  `## ${date} \u2014 proposal-${input.IssueNumber} \u2014 ${input.Outcome || 'pending'}`,\n  `- Title: ${input.ProposalTitle || 'n/a'}`,\n  `- Decision: ${input.Outcome || 'pending'}`,\n  `- Summary: ${input.ChairJustification?.replace(/\\n+/g, ' ').slice(0, 280) || 'n/a'}`,\n  `- Follow-ups: ${followUps}`,\n  ''\n].join('\\n');\nconst header = existing.startsWith('# Review Board Decision Log')\n  ? ''\n  : '# Review Board Decision Log\\n';\nconst nextContent = `${header}${entry}${existing ? existing + '\\n' : ''}`.trimEnd();\nreturn [{ json: { ...input, changelogUpdated: nextContent } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        -128
+      ],
+      "id": "updateChangelog",
+      "name": "Update Changelog"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst base64 = Buffer.from(input.changelogUpdated || '', 'utf8').toString('base64');\nreturn [{ json: { ...input, changelogBase64: base64 } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        -128
+      ],
+      "id": "encodeChangelog",
+      "name": "Encode Changelog"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/contents/{{ $json.ChangelogPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\\n  \\\"message\\\": \\\"docs: log decision for proposal-{{ $json.IssueNumber }}\\\",\\n  \\\"content\\\": \\\"{{ $json.changelogBase64 }}\\\",\\n  \\\"branch\\\": \\\"{{ $json.Branch }}\\\"\\n  {{ $json.changelogSha ? ',\\\\n  \\\\\\\"sha\\\\\\\": \\\\\\\"' + $json.changelogSha + '\\\\\\\"' : '' }}\\n}",
+        "responseFormat": "json"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        824,
+        -128
+      ],
+      "id": "writeChangelog",
+      "name": "Write Changelog",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByIndex",
+        "options": {
+          "waitForBothInputs": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1064,
+        -16
+      ],
+      "id": "complete",
+      "name": "Complete"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "DecisionPath",
+              "value": "={{ $json.DecisionPath }}",
+              "type": "string"
+            },
+            {
+              "name": "ChangelogPath",
+              "value": "={{ $json.ChangelogPath }}",
+              "type": "string"
+            },
+            {
+              "name": "Outcome",
+              "value": "={{ $json.Outcome }}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1256,
+        -16
+      ],
+      "id": "summary",
+      "name": "Return Summary"
+    }
+  ],
+  "connections": {
+    "When Called": {
+      "main": [
+        [
+          {
+            "node": "Prepare Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Inputs": {
+      "main": [
+        [
+          {
+            "node": "Format Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Decision": {
+      "main": [
+        [
+          {
+            "node": "Fetch Existing Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Existing Decision": {
+      "main": [
+        [
+          {
+            "node": "Prepare Decision Write",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Decision Write": {
+      "main": [
+        [
+          {
+            "node": "Write Decision",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Changelog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Changelog": {
+      "main": [
+        [
+          {
+            "node": "Prepare Changelog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Changelog": {
+      "main": [
+        [
+          {
+            "node": "Update Changelog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Changelog": {
+      "main": [
+        [
+          {
+            "node": "Encode Changelog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Encode Changelog": {
+      "main": [
+        [
+          {
+            "node": "Write Changelog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Decision": {
+      "main": [
+        [
+          {
+            "node": "Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Changelog": {
+      "main": [
+        [
+          {
+            "node": "Complete",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Complete": {
+      "main": [
+        [
+          {
+            "node": "Return Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "07b15ef5-6af2-4bb9-a464-0035e86ac681",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c9ff78efe37162af9c518b22bfed5e620ff041b0132d2a23c8363a9ba169ec9"
+  },
+  "id": "SXNYaK1tCfrw9qP7",
+  "tags": []
+}

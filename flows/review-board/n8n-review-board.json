@@ -1,0 +1,848 @@
+{
+  "name": "Review Board",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are Daemon, the Semantic Publishing Protocol Specification Review Board orchestrator. You run the entire review workflow deterministically, round by round, using the tools provided in this n8n workflow. Follow the sequence exactly:\n\n1. Intake\n      - Assume input includes GitHub issue metadata (IssueID, title, body, labels) describing a proposal labeled proposal/review-board.\n      - Start each run by calling the Get or Create Review tool. This returns the canonical fields: proposalId (proposal-<IssueID>), branch (review-board/proposal-<IssueID>), folder, dossierPath, scorecardPath, and related metadata. Do NOT call any other tool until this succeeds.\n      - Cache proposalId, branch, folder, dossierPath, and scorecardPath in memory for the rest of the session.\n\n2. Artefacts & Branch\n      - Never touch main. All commits go to the returned branch.\n      - All artefacts live under docs/governance/review-board/archive/<proposalId>/.\n\n3. Persona Rounds\n      - Rounds occur in order: initial, optional adjustment, then final. Maximum three rounds.\n      - For each round, call persona tools in this set: Innovation Agent, Ethics Agent, Finance Agent, Developer Experience Agent, Adoption Agent.\n      - Pass them the dossier path, issue summary, mission hierarchy, acceptance criteria (blended score ≥75; Ethics & Finance floors ≥70).\n      - Expect each persona tool to return JSON { persona, round, score, justification, blockers, recommendedActions, transcriptPath }. Persisted transcripts already live under the archive folder; reference them in comments.\n      - If a persona tool fails, re-call it or stop execution with an error message.\n\n4. Scoring\n      - After every round, call the score-aggregator tool with the full array of persona outputs.\n      - This tool updates the scorecard, applies weights (Innovation 25%, Ethics 15%, Finance 20%, DevX 20%, Adoption 20), enforces floors, and returns { blendedScore, floorsPassed, status } where status ∈ in_review, changes_requested,\n        approved, denied.\n      - Respect that status when deciding next actions.\n\n5. Comments & State\n      - Use the issue-comment tool to post:\n        • After helper run (acknowledgement with slug/branch/folder + upcoming personas).\n        • After each scoring pass (round name, persona scores, blockers, next steps).\n        • After final decision (approved/changes requested/denied plus links to dossier, scorecard, decision record, and PR if opened).\n      - Comments must include proposalId, branch, archive folder path, current round, persona score matrix, and recommended actions.\n\n6. Iteration Logic\n      - If status = changes_requested AND rounds < 3: capture blockers, post comment, halt until rerun. Do not advance to Chair.\n      - If status = approved: proceed to Finalisation.\n      - If status = denied or rounds exhausted without approval: trigger Finalisation with a rejection decision. If a human escalation tool exists, prepare to call it (currently phase 2—leave a note in the final comment).\n\n7. Finalisation\n      - When ready to conclude, call the Chair persona tool with dossier + score summary to draft the decision narrative.\n      - Create/update decision-record.md and docs/governance/review-board/CHANGELOG.md using the appropriate file-writing tools (the helper or additional workflow nodes). Ensure files live under the proposal archive and branch.\n      - Call the create-pr tool to open/update a PR from review-board/proposal-<IssueID> into main. Include dossier, scorecard, and decision links in the PR body.\n      - Post the final issue comment summarising decision, PR URL, follow-up tasks, and (if relevant) escalation instructions.\n\n8. Determinism & Logging\n      - Always reference concrete file paths (docs/governance/review-board/archive/proposal-<IssueID>/…) and branch names in tool outputs.\n      - If any tool returns unexpected data, request the tool again or stop execution with a clear error message.\n      - Output structured JSON in your final response summarising: proposalId, round, status, personaScores, blendedScore, actionsTaken, nextSteps.\n      - Never guess missing data; if required fields are absent, stop and report the missing piece.\n\n9. Scope\n      - You may only use registered tools (helper workflow, persona tools, score aggregator, issue comment, PR creator, chair/decision writer). Do not fabricate tool outputs.\n      - Human-in-loop escalation is not yet available; note in the final comment if it would have been triggered.\n\nStay concise, deterministic, and auditable.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "93495e5d-8ed9-402f-ac34-dac352ec83c7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=proposal-{{ $json.IssueID }}",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        272
+      ],
+      "id": "3b07b660-972e-461f-90b2-077e58822904",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e1241fef-86a4-4b4e-bfd6-7e72d7acf458",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a2e2d342-0797-47e1-ab23-3751f850176e",
+              "name": "IssueID",
+              "value": "138",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "215ae681-7129-4886-8d8f-23e05baa84c8",
+      "name": "Set IssueID"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "TU9bTy5gRvPq0cxE",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/TU9bTy5gRvPq0cxE",
+          "cachedResultName": "Get or Create Review"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "IssueID": 138,
+            "Organisation": "Stoked-Builds",
+            "Repo": "semantic-publishing-protocol"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "IssueID",
+              "displayName": "IssueID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "Organisation",
+              "displayName": "Organisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Repo",
+              "displayName": "Repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        272
+      ],
+      "id": "23d73a5c-d759-41f2-bbc3-2aeb44b0e436",
+      "name": "Get or Create Review Content"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        448,
+        272
+      ],
+      "id": "7f031af2-fe80-4a9c-af33-cd18eb6a8b04",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "vvtVArVXPNboYI6r",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to ask the Innovation Agent to perform a review of the proposal.",
+        "workflowId": {
+          "__rl": true,
+          "value": "Ac0PJa5XmgDuVhlE",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Ac0PJa5XmgDuVhlE",
+          "cachedResultName": "Agent - Innovation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "IssueID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('IssueID', `This is the GitHub Issue ID`, 'string') }}",
+            "RoundName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoundName', `The current round for the agents to assess.`, 'string') }}",
+            "AcceptanceCriteria": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AcceptanceCriteria', `This is the acceptance criteria for the Agent to adhere to.`, 'string') }}",
+            "Organisation": "Stoked-Builds",
+            "Repo": "semantic-publishing-protocol",
+            "Persona": "innovation"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "IssueID",
+              "displayName": "IssueID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "RoundName",
+              "displayName": "RoundName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "AcceptanceCriteria",
+              "displayName": "AcceptanceCriteria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Organisation",
+              "displayName": "Organisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Repo",
+              "displayName": "Repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Branch",
+              "displayName": "Branch",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "Folder",
+              "displayName": "Folder",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "Persona",
+              "displayName": "Persona",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        400
+      ],
+      "id": "d406b883-2f18-4f6a-8f5d-b5739aec76ac",
+      "name": "Innovation Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to ask the Ethics Agent to perform a review of the proposal.",
+        "workflowId": {
+          "__rl": true,
+          "value": "CIATGQZC3bG1eusB",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/CIATGQZC3bG1eusB",
+          "cachedResultName": "Agent - Ethics"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "IssueID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('IssueID', `This is the GitHub Issue ID`, 'string') }}",
+            "RoundName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoundName', `The current round for the agents to assess.`, 'string') }}",
+            "AcceptanceCriteria": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AcceptanceCriteria', `This is the acceptance criteria for the Agent to adhere to.`, 'string') }}",
+            "Organisation": "Stoked-Builds",
+            "Repo": "semantic-publishing-protocol",
+            "Persona": "ethics"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "IssueID",
+              "displayName": "IssueID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "RoundName",
+              "displayName": "RoundName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "AcceptanceCriteria",
+              "displayName": "AcceptanceCriteria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Organisation",
+              "displayName": "Organisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Repo",
+              "displayName": "Repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Persona",
+              "displayName": "Persona",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        400
+      ],
+      "id": "d51d134b-b938-4f5e-b3c7-dd0637d75843",
+      "name": "Ethics Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to ask the Finance Agent to perform a review of the proposal.",
+        "workflowId": {
+          "__rl": true,
+          "value": "LSxP0BV76gp6Xvlp",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/LSxP0BV76gp6Xvlp",
+          "cachedResultName": "Agent - Finance"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "IssueID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('IssueID', `This is the GitHub Issue ID`, 'string') }}",
+            "RoundName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoundName', `The current round for the agents to assess.`, 'string') }}",
+            "AcceptanceCriteria": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AcceptanceCriteria', `This is the acceptance criteria for the Agent to adhere to.`, 'string') }}",
+            "Organisation": "Stoked-Builds",
+            "Repo": "semantic-publishing-protocol",
+            "Persona": "finance"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "IssueID",
+              "displayName": "IssueID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "RoundName",
+              "displayName": "RoundName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "AcceptanceCriteria",
+              "displayName": "AcceptanceCriteria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Organisation",
+              "displayName": "Organisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Repo",
+              "displayName": "Repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Persona",
+              "displayName": "Persona",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1088,
+        400
+      ],
+      "id": "4dcfa8c2-abd7-45b9-bbd4-163c13a993cd",
+      "name": "Finance Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to ask the Adoption Agent to perform a review of the proposal.",
+        "workflowId": {
+          "__rl": true,
+          "value": "iussStx3xbTlSVIf",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/iussStx3xbTlSVIf",
+          "cachedResultName": "Agent - Adoption"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "IssueID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('IssueID', `This is the GitHub Issue ID`, 'string') }}",
+            "RoundName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoundName', `The current round for the agents to assess.`, 'string') }}",
+            "AcceptanceCriteria": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AcceptanceCriteria', `This is the acceptance criteria for the Agent to adhere to.`, 'string') }}",
+            "Organisation": "Stoked-Builds",
+            "Repo": "semantic-publishing-protocol",
+            "Persona": "adoption"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "IssueID",
+              "displayName": "IssueID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "RoundName",
+              "displayName": "RoundName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "AcceptanceCriteria",
+              "displayName": "AcceptanceCriteria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Organisation",
+              "displayName": "Organisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Repo",
+              "displayName": "Repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Persona",
+              "displayName": "Persona",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1216,
+        400
+      ],
+      "id": "0cca73d0-2432-422d-af06-1138fd781608",
+      "name": "Adoption Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to ask the Developer Experience Agent to perform a review of the proposal.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ORhWNZIpJjGob9dI",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ORhWNZIpJjGob9dI",
+          "cachedResultName": "Agent - DevX"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "IssueID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('IssueID', `This is the GitHub Issue ID`, 'string') }}",
+            "RoundName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoundName', `The current round for the agents to assess.`, 'string') }}",
+            "AcceptanceCriteria": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AcceptanceCriteria', `This is the acceptance criteria for the Agent to adhere to.`, 'string') }}",
+            "Organisation": "Stoked-Builds",
+            "Repo": "semantic-publishing-protocol",
+            "Persona": "devx"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "IssueID",
+              "displayName": "IssueID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "RoundName",
+              "displayName": "RoundName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "AcceptanceCriteria",
+              "displayName": "AcceptanceCriteria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Organisation",
+              "displayName": "Organisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Repo",
+              "displayName": "Repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Persona",
+              "displayName": "Persona",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        384
+      ],
+      "id": "9c1687dd-499c-4e46-a3df-5186b4a8844b",
+      "name": "Developer Experience Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to ask the Chair to make a final decision on the propsal",
+        "workflowId": {
+          "__rl": true,
+          "value": "k68F4yOhobQJv0Rn",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/k68F4yOhobQJv0Rn",
+          "cachedResultName": "Agent - Chair"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "IssueID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('IssueID', `This is the GitHub Issue ID`, 'string') }}",
+            "RoundName": "decision",
+            "AcceptanceCriteria": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AcceptanceCriteria', `This is the acceptance criteria for the Agent to adhere to.`, 'string') }}",
+            "Organisation": "Stoked-Builds",
+            "Repo": "semantic-publishing-protocol",
+            "Persona": "chair"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "IssueID",
+              "displayName": "IssueID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "RoundName",
+              "displayName": "RoundName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "AcceptanceCriteria",
+              "displayName": "AcceptanceCriteria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Organisation",
+              "displayName": "Organisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Repo",
+              "displayName": "Repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Persona",
+              "displayName": "Persona",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1504,
+        400
+      ],
+      "id": "9a525214-d431-4053-adb2-f801ca670119",
+      "name": "Chair"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set IssueID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set IssueID": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get or Create Review Content": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Innovation Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ethics Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finance Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adoption Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Developer Experience Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chair": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c23d93b0-8cc7-4590-b9bd-d4ecc58ee30d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c9ff78efe37162af9c518b22bfed5e620ff041b0132d2a23c8363a9ba169ec9"
+  },
+  "id": "jJJ3kU0Hs7u3S5Pi",
+  "tags": []
+}

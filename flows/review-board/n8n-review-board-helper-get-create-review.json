@@ -1,0 +1,669 @@
+{
+  "name": "Get or Create Review",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $json.Organisation }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $json.Repo }}",
+          "mode": "name"
+        },
+        "issueNumber": "={{ $json.IssueID }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        0
+      ],
+      "id": "a309ae32-9962-4f8c-bcab-6b466915892b",
+      "name": "Get a Review Issue",
+      "webhookId": "1e1bd6b1-8789-444f-beef-edbb057e054c",
+      "executeOnce": true,
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Input').item.json.api_url }}/refs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"ref\": \"refs/heads/{{ $('Issue').item.json.branch }}\",\n  \"sha\": \"{{ $('Issue').item.json.main_sha }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        944,
+        0
+      ],
+      "id": "1b4b1f3f-fe01-4dcd-98de-ccad9a4325b2",
+      "name": "Create branch",
+      "executeOnce": true,
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Input').item.json.content_url }}/docs/governance/review-board/archive/{{ $('Issue').item.json.folder }}/.gitkeep",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore: stub review board archive folder\",\n  \"content\": \"\",\n  \"branch\": \"{{ $('Issue').item.json.branch }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1392,
+        0
+      ],
+      "id": "1281008c-a716-4d64-ab93-1003fa753d70",
+      "name": "Create content folder",
+      "executeOnce": true,
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Issue').item.json.Organisation }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Issue').item.json.Repo }}",
+          "mode": "name"
+        },
+        "filePath": "docs/governance/review-board/templates/dossier.md",
+        "additionalParameters": {
+          "reference": "main"
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1664,
+        0
+      ],
+      "id": "ee738459-e70d-4731-a4e2-65de318b4176",
+      "name": "Get dossier.md template",
+      "webhookId": "4c9fa44b-ba9f-4b7a-ac80-08ff2f49a48d",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Input').item.json.content_url }}/docs/governance/review-board/archive/{{ $('Issue').item.json.folder }}/dossier.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore: update dossier\",\n  \"content\": \"{{ $json.data }}\",\n  \"branch\": \"{{ $('Issue').item.json.branch }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2016,
+        0
+      ],
+      "id": "fcf9b934-e17c-4bf1-a05b-b2e517b0a6e8",
+      "name": "Create dossier.md file",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        0
+      ],
+      "id": "d0107e88-e940-416c-9dfd-ec04d339c4ab",
+      "name": "Convert to Base 64"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('Issue').item.json.Organisation }}"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Issue').item.json.Repo }}",
+          "mode": "name"
+        },
+        "filePath": "docs/governance/review-board/templates/scorecard.md",
+        "additionalParameters": {
+          "reference": "main"
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2416,
+        0
+      ],
+      "id": "3f0433e0-9eab-4a07-ab47-10363b162dee",
+      "name": "Get scorecard.md template",
+      "webhookId": "4c9fa44b-ba9f-4b7a-ac80-08ff2f49a48d",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "UW1kgrkxa9QIFntv",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        2576,
+        0
+      ],
+      "id": "d197eb00-39e0-475f-aed1-24b0a2ff94fd",
+      "name": "Convert to Base64"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Input').item.json.content_url }}/docs/governance/review-board/archive/{{ $('Issue').item.json.folder }}/scorecard.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore: update scorecard\",\n  \"content\": \"{{ $json.data }}\",\n  \"branch\": \"{{ $('Issue').item.json.branch }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2752,
+        0
+      ],
+      "id": "e5e18c2a-403d-4421-8807-88d65981040e",
+      "name": "Create scorecard.md file",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f2d964f-8ec6-47e1-b843-c7f43e1a14b2",
+              "name": "proposalId",
+              "value": "={{ $('Issue').item.json.IssueID }}",
+              "type": "number"
+            },
+            {
+              "id": "1211f098-9ac1-420a-9164-755dd5930b2b",
+              "name": "branch",
+              "value": "={{ $('Issue').item.json.branch }}",
+              "type": "string"
+            },
+            {
+              "id": "8d5fd297-54db-4dc0-a12c-58f34b11bc45",
+              "name": "folder",
+              "value": "=docs/governance/review-board/archive/{{ $('Issue').item.json.folder }}",
+              "type": "string"
+            },
+            {
+              "id": "da67899c-2931-455d-9386-e8304d361e59",
+              "name": "dossierPath",
+              "value": "=docs/governance/review-board/archive/{{ $('Issue').item.json.folder }}/dossier.md",
+              "type": "string"
+            },
+            {
+              "id": "9981f215-c232-4f7a-b2e7-ad99da2a08ee",
+              "name": "scorecardPath",
+              "value": "=docs/governance/review-board/archive/{{ $('Issue').item.json.folder }}/scorecard.md",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3120,
+        0
+      ],
+      "id": "d5fd27cb-c97c-4f98-b096-31fe28a15107",
+      "name": "response"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "IssueID",
+              "type": "number"
+            },
+            {
+              "name": "Organisation"
+            },
+            {
+              "name": "Repo"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -96,
+        -16
+      ],
+      "id": "61eba3f2-d86c-4a1b-9729-25e7ef30ad14",
+      "name": "Initiate"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.api_url }}/ref/heads/main",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        224,
+        128
+      ],
+      "id": "21be4e1a-8f0f-401b-9f0e-e66a15e08083",
+      "name": "Get main sha",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        528,
+        0
+      ],
+      "id": "1d50cc0a-4222-489e-ad67-53d8df2c5ee0",
+      "name": "Issue",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4d7f6ffb-e916-4d89-8e7d-ef1e855fe6a0",
+              "name": "main_sha",
+              "value": "={{ $json.object.sha }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        128
+      ],
+      "id": "c6c4fe88-c90a-4f7f-a0f6-a168fda2f40b",
+      "name": "main"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "933f056e-b830-49ae-95a5-eaed299eb631",
+              "name": "Organisation",
+              "value": "={{ $json.Organisation }}",
+              "type": "string"
+            },
+            {
+              "id": "2545745a-c180-4da8-89db-7710f22b0db7",
+              "name": "Repo",
+              "value": "={{ $json.Repo }}",
+              "type": "string"
+            },
+            {
+              "id": "42b0e2fd-c8c2-4194-9ac3-229c9dc71d26",
+              "name": "IssueID",
+              "value": "={{ $json.IssueID }}",
+              "type": "number"
+            },
+            {
+              "id": "93dd53e8-71e9-477b-b179-622e7403374a",
+              "name": "api_url",
+              "value": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/git",
+              "type": "string"
+            },
+            {
+              "id": "54bc024c-06bf-4627-9ecb-28be20c88779",
+              "name": "content_url",
+              "value": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/contents",
+              "type": "string"
+            },
+            {
+              "id": "e9bfedfa-28d1-4d9b-ac0a-d6e9ebde6803",
+              "name": "branch",
+              "value": "=review-board/proposal-{{ $json.IssueID }}",
+              "type": "string"
+            },
+            {
+              "id": "44844d0d-4ff1-4b48-bc73-671d28732900",
+              "name": "folder",
+              "value": "=proposal-{{ $json.IssueID }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -16
+      ],
+      "id": "93c27382-de2d-4060-bbc5-2e396d453657",
+      "name": "Input",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Input').item.json.api_url }}/refs/heads/{{ $('Issue').item.json.branch }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "4c1d3ba0-0a9d-4cd8-b957-16cd088c8aba",
+      "name": "Get proposal branch",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get a Review Issue": {
+      "main": [
+        [
+          {
+            "node": "Create branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create branch": {
+      "main": [
+        [
+          {
+            "node": "Get proposal branch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get proposal branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create content folder": {
+      "main": [
+        [
+          {
+            "node": "Get dossier.md template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get dossier.md template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get dossier.md template": {
+      "main": [
+        [
+          {
+            "node": "Convert to Base 64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create dossier.md file": {
+      "main": [
+        [
+          {
+            "node": "Get scorecard.md template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get scorecard.md template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Base 64": {
+      "main": [
+        [
+          {
+            "node": "Create dossier.md file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get scorecard.md template": {
+      "main": [
+        [
+          {
+            "node": "Convert to Base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Base64": {
+      "main": [
+        [
+          {
+            "node": "Create scorecard.md file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create scorecard.md file": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initiate": {
+      "main": [
+        [
+          {
+            "node": "Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get main sha": {
+      "main": [
+        [
+          {
+            "node": "main",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "main": {
+      "main": [
+        [
+          {
+            "node": "Issue",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Issue": {
+      "main": [
+        [
+          {
+            "node": "Get a Review Issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Get main sha",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get proposal branch": {
+      "main": [
+        [
+          {
+            "node": "Create content folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "030dce7a-4ac1-474c-8124-b10e8c94f878",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c9ff78efe37162af9c518b22bfed5e620ff041b0132d2a23c8363a9ba169ec9"
+  },
+  "id": "TU9bTy5gRvPq0cxE",
+  "tags": []
+}

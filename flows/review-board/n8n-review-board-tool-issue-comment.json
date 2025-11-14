@@ -1,0 +1,221 @@
+{
+  "name": "Issue Comment Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Organisation"
+            },
+            {
+              "name": "Repo"
+            },
+            {
+              "name": "IssueNumber"
+            },
+            {
+              "name": "RoundName"
+            },
+            {
+              "name": "Status"
+            },
+            {
+              "name": "PersonaSummaries",
+              "type": "array"
+            },
+            {
+              "name": "PrUrl"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -480,
+        0
+      ],
+      "id": "trigger",
+      "name": "When Called"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "Organisation",
+              "value": "={{ $json.Organisation }}",
+              "type": "string"
+            },
+            {
+              "name": "Repo",
+              "value": "={{ $json.Repo }}",
+              "type": "string"
+            },
+            {
+              "name": "IssueNumber",
+              "value": "={{ $json.IssueNumber }}",
+              "type": "number"
+            },
+            {
+              "name": "RoundName",
+              "value": "={{ $json.RoundName }}",
+              "type": "string"
+            },
+            {
+              "name": "Status",
+              "value": "={{ $json.Status }}",
+              "type": "string"
+            },
+            {
+              "name": "PersonaSummaries",
+              "value": "={{ $json.PersonaSummaries }}",
+              "type": "json"
+            },
+            {
+              "name": "PrUrl",
+              "value": "={{ $json.PrUrl }}",
+              "type": "string"
+            },
+            {
+              "name": "Branch",
+              "value": "=review-board/proposal-{{ $json.IssueNumber }}",
+              "type": "string"
+            },
+            {
+              "name": "DossierPath",
+              "value": "=docs/governance/review-board/archive/proposal-{{ $json.IssueNumber }}/dossier.md",
+              "type": "string"
+            },
+            {
+              "name": "ScorecardPath",
+              "value": "=docs/governance/review-board/archive/proposal-{{ $json.IssueNumber }}/scorecard.md",
+              "type": "string"
+            },
+            {
+              "name": "DecisionPath",
+              "value": "=docs/governance/review-board/archive/proposal-{{ $json.IssueNumber }}/decision-record.md",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "prepare",
+      "name": "Prepare Inputs"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst input = $input.first().json;\nconst pathOrLink = (path, label) => {\n  if (!path) return `- ${label}: _pending_`;\n  if (/^https?:\\/\\//.test(path)) return `- ${label}: ${path}`;\n  return `- ${label}: \\`${path}\\``;\n};\nconst personaRows = (input.PersonaSummaries || [])\n  .map((p) => {\n    const blockers = (p.blockers || []).length ? p.blockers.join('; ') : '\u2014';\n    const actions = (p.recommendedActions || []).length ? p.recommendedActions.join('; ') : '\u2014';\n    return `| ${p.persona} | ${p.score ?? ''} | ${blockers} | ${actions} |`;\n  })\n  .join('\\n');\nconst artefacts = [\n  pathOrLink(input.DossierPath, 'Dossier'),\n  pathOrLink(input.ScorecardPath, 'Scorecard'),\n  pathOrLink(input.DecisionPath, 'Decision Record'),\n  input.PrUrl ? `- PR: ${input.PrUrl}` : '- PR: _pending_'\n].join('\\n');\nconst comment = [\n  `### Review Board Update \u2014 proposal-${input.IssueNumber || ''}`,\n  `- Branch: \\`${input.Branch || ''}\\``,\n  `- Round: ${input.RoundName || 'initial'}`,\n  `- Status: **${(input.Status || '').replace(/_/g, ' ')}**`,\n  '',\n  '**Artefacts**',\n  artefacts,\n  '',\n  '| Persona | Score | Blockers | Recommended Actions |',\n  '| --- | --- | --- | --- |',\n  personaRows || '| _pending_ | | | |',\n  ''\n].join('\\n');\nreturn [{ json: { ...input, commentMarkdown: comment, commentEscaped: JSON.stringify(comment) } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "format",
+      "name": "Format Comment"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.github.com/repos/{{ $json.Organisation }}/{{ $json.Repo }}/issues/{{ $json.IssueNumber }}/comments",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"body\": {{ $json.commentEscaped }} }",
+        "responseFormat": "json"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        176,
+        0
+      ],
+      "id": "post",
+      "name": "Post Comment",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "nRgsFgPv3IYRblKF",
+          "name": "GitHub PAT - Stoked-Builds"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        384,
+        0
+      ],
+      "id": "done",
+      "name": "Done"
+    }
+  ],
+  "connections": {
+    "When Called": {
+      "main": [
+        [
+          {
+            "node": "Prepare Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Inputs": {
+      "main": [
+        [
+          {
+            "node": "Format Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Comment": {
+      "main": [
+        [
+          {
+            "node": "Post Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Comment": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "38fb6b1d-ec6d-446a-8b0e-0a2b21d40052",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c9ff78efe37162af9c518b22bfed5e620ff041b0132d2a23c8363a9ba169ec9"
+  },
+  "id": "B3a3bVGWJjsbSaUY",
+  "tags": []
+}
