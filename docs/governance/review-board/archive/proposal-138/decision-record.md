@@ -1,36 +1,26 @@
-# Decision Record — <proposal-id>
+# Review Board Decision — proposal-138
 
-- **Proposal Title:** <title>
-- **GitHub Issue:** <link>
-- **Decision Date:** <YYYY-MM-DD>
-- **Chair:** <name>
+**Title:** Spec & Schema Alignment: Require `spec_version`
+**Outcome:** approved
+**Round:** final
+**Blended Score:** 81.5
 
-## Final Determination
-- **Outcome:** <approved / approved with conditions / rejected / escalated>
-- **Blended Score:** <value>
-- **Floor Breaches:** <none or list>
-- **Conditions / Actions:**
-  - <condition or follow-up>
+## Chair Summary
+All five personas converged on the same adjustment plan and blended score exceeded 80. The board accepts the schema update contingent on the documented follow-ups.
 
-## Domain Summaries
-- **Innovation Lead:** <final position + rationale>
-- **Ethics Steward:** <final position + rationale>
-- **Financial Controller:** <final position + rationale>
-- **Implementation & DevX:** <final position + rationale>
-- **Adoption & Community:** <final position + rationale>
+## Required Blockers
+- Publish public migration guide including timeline seeding
+- Document enrichment consent/opt-out workflow in registry handbook
 
-## Dissent & Minority Reports
-- <persona + dissent summary>
+## Recommended Actions
+- Registry team to run dry-run migration before release
+- Comms working group to prep external announcement assets
 
-## Escalation (if applicable)
-- **Escalated To:** <name>
-- **Reason:** <summary>
-- **Next Review Date:** <optional>
-
-## Artefact Index
-- Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
-- Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
-- Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
-- Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
-
-> Commit this record alongside the supporting artefacts in the proposal archive.
+## Persona Scores
+| Persona | Score | Key Points |
+| --- | --- | --- |
+| Innovation | 82 | Adds deterministic enrichment/timeline primitives unlocking AI discovery. |
+| Ethics | 78 | Portable flag + provenance metadata mitigate bias risk. |
+| Finance | 76 | Bounded infra cost; migration scripts keep effort predictable. |
+| DevX | 80 | Standardised preview API reduces bespoke client logic. |
+| Adoption | 79 | Clear upgrade path before third-party registries launch. |
