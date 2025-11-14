@@ -1,0 +1,3139 @@
+From 0af8802a7415f5746a1fd13d075d2c0ada6bd551 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 12:58:11 +0000
+Subject: [PATCH 001/112] chore: stub review board archive folder
+
+---
+ docs/governance/review-board/archive/proposal-138/.gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+
+From 56bfc909cc48f9f9bc7a905b0905fdb0aa1641fd Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 13:23:08 +0000
+Subject: [PATCH 002/112] chore: update dossier
+
+---
+ .../archive/proposal-138/dossier.md           | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From 1a31c8d3e07548f7919540b545be1521fbd7a677 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 13:27:58 +0000
+Subject: [PATCH 003/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+new file mode 100644
+index 0000000..9dd82b9
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,18 @@
++# Review Board Scorecard — <proposal-id>
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | Initial | | | |
++| Ethics Steward | Ethics, rights, compliance | Initial | | | |
++| Financial Controller | Cost, sustainability | Initial | | | |
++| Implementation & DevX | Delivery feasibility | Initial | | | |
++| Adoption & Community | Ecosystem alignment | Initial | | | |
++
++## Blended Score Summary
++- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
++- **Round:** <Initial/Adjustment/Final>
++- **Weighted Average:** <value>
++- **Floors breached?:** <yes/no>
++- **Notes:** <cross-domain issues, dependencies, actions>
++
++> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From ad4a8b1dc6b6db4a452f572353eae072274c53e2 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 13:52:35 +0000
+Subject: [PATCH 004/112] Delete
+ docs/governance/review-board/archive/proposal-138 directory
+
+Remove folder for testing
+---
+ .../archive/proposal-138/.gitkeep             |  0
+ .../archive/proposal-138/dossier.md           | 29 -------------------
+ .../archive/proposal-138/scorecard.md         | 18 ------------
+ 3 files changed, 47 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+deleted file mode 100644
+index c6e0790..0000000
+--- a/docs/governance/review-board/archive/proposal-138/dossier.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Review Board Dossier — <proposal-id>
+-
+-## Proposal Overview
+-- **Title:** <title>
+-- **Requestor:** <name / team>
+-- **GitHub Issue:** <link>
+-- **Target Decision Date:** <YYYY-MM-DD>
+-- **Summary:** <one-paragraph context>
+-
+-## Artefacts & References
+-- Specs / schemas: <links>
+-- OpenAPI / API references: <links>
+-- Prior board rulings: <links>
+-- Community feedback / consultations: <links or summary>
+-- Metrics / telemetry: <data sources>
+-
+-## Impact Assessment
+-- **Scope:** <components impacted>
+-- **Benefits:** <structured bullets>
+-- **Risks:** <structured bullets>
+-- **Dependencies:** <teams, infrastructure, releases>
+-
+-## Stakeholder Signals
+-- **Advocates:** <names + rationale>
+-- **Concerns:** <names + rationale>
+-- **Public commentary:** <links to discussions>
+-
+-## Supporting Evidence
+-Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+deleted file mode 100644
+index 9dd82b9..0000000
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# Review Board Scorecard — <proposal-id>
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | Initial | | | |
+-| Ethics Steward | Ethics, rights, compliance | Initial | | | |
+-| Financial Controller | Cost, sustainability | Initial | | | |
+-| Implementation & DevX | Delivery feasibility | Initial | | | |
+-| Adoption & Community | Ecosystem alignment | Initial | | | |
+-
+-## Blended Score Summary
+-- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
+-- **Round:** <Initial/Adjustment/Final>
+-- **Weighted Average:** <value>
+-- **Floors breached?:** <yes/no>
+-- **Notes:** <cross-domain issues, dependencies, actions>
+-
+-> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From d525449789182fcc22002bb6adc36b0d75cbdfdd Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:06:29 +0000
+Subject: [PATCH 005/112] chore: stub review board archive folder
+
+---
+ docs/governance/review-board/archive/proposal-138/.gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+
+From beecfc6454a2581f1e403845e7d59f50e542dee9 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:06:57 +0000
+Subject: [PATCH 006/112] chore: update dossier
+
+---
+ .../archive/proposal-138/dossier.md           | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From 0091a49ed88dd2f6d707020d058bfc5a61c4e3e3 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:24:15 +0000
+Subject: [PATCH 007/112] chore: update dossier
+
+---
+ .../dossier.md                                | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md b/docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From f19eedd2b50c1999e095f71e39f0fa91d810a5ab Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:44:01 +0000
+Subject: [PATCH 008/112] Delete
+ docs/governance/review-board/archive/proposal-138-enrichment-and-version-control
+ directory
+
+---
+ .../dossier.md                                | 29 -------------------
+ 1 file changed, 29 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md b/docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md
+deleted file mode 100644
+index c6e0790..0000000
+--- a/docs/governance/review-board/archive/proposal-138-enrichment-and-version-control/dossier.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Review Board Dossier — <proposal-id>
+-
+-## Proposal Overview
+-- **Title:** <title>
+-- **Requestor:** <name / team>
+-- **GitHub Issue:** <link>
+-- **Target Decision Date:** <YYYY-MM-DD>
+-- **Summary:** <one-paragraph context>
+-
+-## Artefacts & References
+-- Specs / schemas: <links>
+-- OpenAPI / API references: <links>
+-- Prior board rulings: <links>
+-- Community feedback / consultations: <links or summary>
+-- Metrics / telemetry: <data sources>
+-
+-## Impact Assessment
+-- **Scope:** <components impacted>
+-- **Benefits:** <structured bullets>
+-- **Risks:** <structured bullets>
+-- **Dependencies:** <teams, infrastructure, releases>
+-
+-## Stakeholder Signals
+-- **Advocates:** <names + rationale>
+-- **Concerns:** <names + rationale>
+-- **Public commentary:** <links to discussions>
+-
+-## Supporting Evidence
+-Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From d07bbbf48e92bbfac7e4843a3577dc27dfc57cd9 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:44:12 +0000
+Subject: [PATCH 009/112] Delete
+ docs/governance/review-board/archive/proposal-138 directory
+
+---
+ .../archive/proposal-138/.gitkeep             |  0
+ .../archive/proposal-138/dossier.md           | 29 -------------------
+ 2 files changed, 29 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+deleted file mode 100644
+index c6e0790..0000000
+--- a/docs/governance/review-board/archive/proposal-138/dossier.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Review Board Dossier — <proposal-id>
+-
+-## Proposal Overview
+-- **Title:** <title>
+-- **Requestor:** <name / team>
+-- **GitHub Issue:** <link>
+-- **Target Decision Date:** <YYYY-MM-DD>
+-- **Summary:** <one-paragraph context>
+-
+-## Artefacts & References
+-- Specs / schemas: <links>
+-- OpenAPI / API references: <links>
+-- Prior board rulings: <links>
+-- Community feedback / consultations: <links or summary>
+-- Metrics / telemetry: <data sources>
+-
+-## Impact Assessment
+-- **Scope:** <components impacted>
+-- **Benefits:** <structured bullets>
+-- **Risks:** <structured bullets>
+-- **Dependencies:** <teams, infrastructure, releases>
+-
+-## Stakeholder Signals
+-- **Advocates:** <names + rationale>
+-- **Concerns:** <names + rationale>
+-- **Public commentary:** <links to discussions>
+-
+-## Supporting Evidence
+-Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From 03c6f3aee3ed53efb6f756c5f092bb031caab8d9 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:44:24 +0000
+Subject: [PATCH 010/112] chore: stub review board archive folder
+
+---
+ docs/governance/review-board/archive/proposal-138/.gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+
+From 052d1beb16731376811584f0f45956b1f99b7c26 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:44:25 +0000
+Subject: [PATCH 011/112] chore: update dossier
+
+---
+ .../archive/proposal-138/dossier.md           | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From 5ab8c50e9854e7942edd443dfbeff7ea175a8876 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 14:45:14 +0000
+Subject: [PATCH 012/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+new file mode 100644
+index 0000000..9dd82b9
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,18 @@
++# Review Board Scorecard — <proposal-id>
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | Initial | | | |
++| Ethics Steward | Ethics, rights, compliance | Initial | | | |
++| Financial Controller | Cost, sustainability | Initial | | | |
++| Implementation & DevX | Delivery feasibility | Initial | | | |
++| Adoption & Community | Ecosystem alignment | Initial | | | |
++
++## Blended Score Summary
++- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
++- **Round:** <Initial/Adjustment/Final>
++- **Weighted Average:** <value>
++- **Floors breached?:** <yes/no>
++- **Notes:** <cross-domain issues, dependencies, actions>
++
++> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From f1811de93d6ebda4d7cd23d50fe5c34f180dd0ff Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 17:21:17 +0000
+Subject: [PATCH 013/112] chore: add innovation transcript 1
+
+---
+ .../archive/proposal-138/transcripts/innovation-1.md       | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+new file mode 100644
+index 0000000..aa6bc05
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+@@ -0,0 +1,7 @@
++The proposal to enrich the artifact schema directly addresses a significant limitation in the current SPP design, which lacks mutable metadata dimensions and revision provenance. By adding the enrichment, timeline, and preview/attachment structures as optional and namespaced additions, it maintains backward compatibility, a key architectural leverage point. The proposed deterministic payloads and timeline event model provide strong primitives that enable not only improved search and classification but also auditability and media consistency—features that incumbent protocols or registries largely lack in an open, federated setting.
++
++The mitigation strategies for schema bloat and AI bias demonstrate foresight, reducing friction for minimalist clients and ensuring responsible AI insights handling. The proposal also anticipates dependency and migration concerns with clear operational plans, which improves developer velocity by reducing unknowns and integration churn.
++
++Rejecting this schema upgrade runs a high risk of SPP becoming fragmented as multiple registries might individually extend artifacts ad hoc, reducing interoperability and increasing maintenance overhead. It also stalls critical features needed for future federation phases that demand traceability and standard enrichment semantics.
++
++The opportunity cost appears low given the broad impact potential of this change, and no alternate innovation currently promises this level of ecosystem maturation and developer acceleration. Thus, this proposal strikes an effective balance between technical innovation, protocol health, and ecosystem adoption.
+\ No newline at end of file
+
+From efaae8481bd2e8ffacf0c9396975d502c7aa5e42 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 17:42:45 +0000
+Subject: [PATCH 014/112] Delete
+ docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+
+---
+ .../archive/proposal-138/transcripts/innovation-1.md       | 7 -------
+ 1 file changed, 7 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+deleted file mode 100644
+index aa6bc05..0000000
+--- a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
++++ /dev/null
+@@ -1,7 +0,0 @@
+-The proposal to enrich the artifact schema directly addresses a significant limitation in the current SPP design, which lacks mutable metadata dimensions and revision provenance. By adding the enrichment, timeline, and preview/attachment structures as optional and namespaced additions, it maintains backward compatibility, a key architectural leverage point. The proposed deterministic payloads and timeline event model provide strong primitives that enable not only improved search and classification but also auditability and media consistency—features that incumbent protocols or registries largely lack in an open, federated setting.
+-
+-The mitigation strategies for schema bloat and AI bias demonstrate foresight, reducing friction for minimalist clients and ensuring responsible AI insights handling. The proposal also anticipates dependency and migration concerns with clear operational plans, which improves developer velocity by reducing unknowns and integration churn.
+-
+-Rejecting this schema upgrade runs a high risk of SPP becoming fragmented as multiple registries might individually extend artifacts ad hoc, reducing interoperability and increasing maintenance overhead. It also stalls critical features needed for future federation phases that demand traceability and standard enrichment semantics.
+-
+-The opportunity cost appears low given the broad impact potential of this change, and no alternate innovation currently promises this level of ecosystem maturation and developer acceleration. Thus, this proposal strikes an effective balance between technical innovation, protocol health, and ecosystem adoption.
+\ No newline at end of file
+
+From a9ce77e2fe892d643499e436a4a37a3fdf414e41 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 17:43:00 +0000
+Subject: [PATCH 015/112] chore: add innovation transcript 1
+
+---
+ .../archive/proposal-138/transcripts/innovation-1.md             | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+new file mode 100644
+index 0000000..f162ddd
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+@@ -0,0 +1 @@
++This proposal offers a well-justified evolutionary leap by systematically including enrichment metadata, event timelines, and preview payloads within the artifact schema's vanilla namespace. This keeps backward compatibility and eases adoption paths for downstream consumers, addressing key architectural principles of composability and forward-compatibility. The addition of a 'portable' flag and strict provenance attribution anticipates AI bias risks while enabling federated enrichment reuse, a novel protocol primitive with strong future-proofing potential. By defining fixed contracts for deterministic preview and attachment payloads, the protocol reduces ad-hoc extensions and variability that impede ecosystem growth. The enclosed mitigation plans for schema bloat, migration, and storage overhead reflect thoughtful risk management. Rejecting this update risks ecosystem stagnation by locking artifacts into immutable, non-enrichable forms that limit innovation in automated content classification, provenance auditability, and media rendering, all crucial for semantic publishing workflows and discovery acceleration. While ambitious, the proposal prioritizes incremental rollout and backward compatibility, mitigating disruption and abdicates no other more impactful innovations. Thus, from an innovation standpoint, the proposal merits strong endorsement.
+\ No newline at end of file
+
+From f91e8e6f4ddcccb5ec8c0a34ee70e9cadbe267ae Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 17:59:34 +0000
+Subject: [PATCH 016/112] chore: add ethics transcript 1
+
+---
+ .../review-board/archive/proposal-138/transcripts/ethics-1.md    | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md b/docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md
+new file mode 100644
+index 0000000..28bfd96
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md
+@@ -0,0 +1 @@
++The proposal enables valuable artifact enrichment and versioned provenance visibility that significantly improve the system's transparency and analytic capabilities, key for innovation. They mitigate bias risks by requiring enrichment metadata such as 'generator_id' and a 'portable' flag, but do not fully address user consent or control of enriched personal or AI-derived data. Storage cost mitigations for snapshots defer to implementation, yet privacy and regulatory controls around data retention, auditability, and deletion eligibility remain unspecified, raising GDPR and ethical compliance concerns. Without explicit privacy, traceability, and user redress mechanisms, this upgrade risks undermining trust. Hence, conditional approval with blockers is advised to ensure ethical safeguards are built into the schema and registry workflows before broader implementation.
+\ No newline at end of file
+
+From 7c6f05bb390fbbd7bd1587561d85202312ac3a13 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:09:33 +0000
+Subject: [PATCH 017/112] chore: add innovation transcript 2
+
+---
+ .../archive/proposal-138/transcripts/innovation-2.md             | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+new file mode 100644
+index 0000000..6e6c991
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+@@ -0,0 +1 @@
++This proposal significantly advances artifact schema with enrichment, timeline, and preview attachments, enabling richer, auditable metadata without breaking backward compatibility. The mitigation strategies thoughtfully include a 'portable' flag and model provenance fields to reduce AI bias propagation risks. However, the dossier does not present explicit consent management or PII data minimisation controls, raising ethical concerns about user privacy and long-term governance. Effective privacy safeguards and accountability mechanisms must be embedded in the schema and implementation plans before approval, ensuring compliance with GDPR and preventing abuse, such as unauthorized AI profiling or storage bloat of sensitive data. Overall, the initiative is promising but requires clearly defined controls and transparency features to move forward ethically.
+\ No newline at end of file
+
+From edfcad83bbce2c9ce988de19df893e4bcd77e372 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:10:20 +0000
+Subject: [PATCH 018/112] chore: add ethics transcript 2
+
+---
+ .../review-board/archive/proposal-138/transcripts/ethics-2.md    | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md b/docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md
+new file mode 100644
+index 0000000..2c690a3
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md
+@@ -0,0 +1 @@
++This proposal to extend artifact schemas with enrichment, timeline, and preview structures supports improved auditability and richer metadata capabilities. The inclusion of provenance metadata fields addressing AI bias is a strong ethical control, enhancing transparency across registries. Allowing downstream systems to ignore unknown optional fields limits disruption for minimal clients. However, critical ethics components are currently deferred or vague: user consent for enrichment data use is not detailed, nor are audit or redress mechanisms for data corrections or disputes. There is risk that enriched AI annotations may propagate bias without robust user control or accountability measures. Additionally, storage of snapshot data via external URIs demands clear data retention and deletion policies to comply with regulations like GDPR. Before approving, the board must see concrete plans for consent management, audit trails, data deletion rights, and legal reviews to safeguard user privacy, fairness, and oversight. Without these controls, the proposal poses moderate ethical risks despite its technical benefits.
+\ No newline at end of file
+
+From b877316587bc843f99ae0301353b987be3746bba Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:10:40 +0000
+Subject: [PATCH 019/112] Delete
+ docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+
+---
+ .../archive/proposal-138/transcripts/innovation-2.md             | 1 -
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+deleted file mode 100644
+index 6e6c991..0000000
+--- a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
++++ /dev/null
+@@ -1 +0,0 @@
+-This proposal significantly advances artifact schema with enrichment, timeline, and preview attachments, enabling richer, auditable metadata without breaking backward compatibility. The mitigation strategies thoughtfully include a 'portable' flag and model provenance fields to reduce AI bias propagation risks. However, the dossier does not present explicit consent management or PII data minimisation controls, raising ethical concerns about user privacy and long-term governance. Effective privacy safeguards and accountability mechanisms must be embedded in the schema and implementation plans before approval, ensuring compliance with GDPR and preventing abuse, such as unauthorized AI profiling or storage bloat of sensitive data. Overall, the initiative is promising but requires clearly defined controls and transparency features to move forward ethically.
+\ No newline at end of file
+
+From ba1b7fb9172e5de748a020f90bad595c216b132c Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:12:10 +0000
+Subject: [PATCH 020/112] chore: add innovation transcript 2
+
+---
+ .../archive/proposal-138/transcripts/innovation-2.md             | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+new file mode 100644
+index 0000000..4c73261
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+@@ -0,0 +1 @@
++The proposal strategically differentiates Punk Forge/SPP by enabling deterministic, audit-capable artifact enrichment that incumbents lack in a non-breaking manner, ensuring minimal disruption while enhancing functionality. Architecturally, the reuse of a vanilla namespace and additive optional fields respects composability and forward compatibility, mitigating risks of forks and schema fragmentation. The timeline inclusion enables provenance tracking and historical reindexing vital for trust and discovery automation, while the standard preview/attachment schema reduces developer guesswork, directly accelerating publisher workflows. Rejecting this proposal risks stagnation by locking out advanced metadata use-cases like AI annotation portability and historical audits, which are increasingly critical. Opportunity cost is low given no superior alternative innovation is competing for immediate priority, and this lays foundational infrastructure for richer semantic publishing capabilities.
+\ No newline at end of file
+
+From 3b2489f838d66dc3805357d5ab0ad930856c0490 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:19:53 +0000
+Subject: [PATCH 021/112] chore: add innovation transcript 3
+
+---
+ .../archive/proposal-138/transcripts/innovation-3.md         | 5 +++++
+ 1 file changed, 5 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md
+new file mode 100644
+index 0000000..92f3b71
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md
+@@ -0,0 +1,5 @@
++This proposal notably strengthens the protocol's strategic differentiation by introducing a structured, portable enrichment layer that supports AI annotations and provenance timelines—features absent in the current minimal artifact schema. Architecturally, the additive approach respects backward compatibility through optional fields and a minor schema bump (0.5), thus preventing stagnation risks tied to schema rigidity. By standardizing previews and attachments, it also reduces ad-hoc client logic, streamlining developer workflows around artifact visualization and indexing.
++
++Risks such as AI bias leakage and schema bloat are thoughtfully mitigated with flags and optional nullability, and the migration path is well scoped to maintain protocol health and interoperability. From an innovation perspective, enabling timeline-based snapshots and provenance records unlocks future federation capabilities and richer graph queries, which are valuable for the ecosystem’s evolution. Rejecting this might stall key foundational capabilities, risking premature forks and limiting downstream automation and discovery.
++
++Given the well-articulated design, mitigation strategies, and alignment with registry operators, this proposal aligns strongly with the mission hierarchy. It balances technical feasibility, ecosystem growth, and forward-compatible design in a manner that significantly pushes the protocol beyond its current state. No critical blockers are identified; next steps should focus on coordinated implementation and adoption support.
+\ No newline at end of file
+
+From 9af84cb5a7e9d4bd539d749040e0b41710dbc109 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:21:52 +0000
+Subject: [PATCH 022/112] Delete
+ docs/governance/review-board/archive/proposal-138 directory
+
+---
+ .../archive/proposal-138/.gitkeep             |  0
+ .../archive/proposal-138/dossier.md           | 29 -------------------
+ .../archive/proposal-138/scorecard.md         | 18 ------------
+ .../proposal-138/transcripts/ethics-1.md      |  1 -
+ .../proposal-138/transcripts/ethics-2.md      |  1 -
+ .../proposal-138/transcripts/innovation-1.md  |  1 -
+ .../proposal-138/transcripts/innovation-2.md  |  1 -
+ .../proposal-138/transcripts/innovation-3.md  |  5 ----
+ 8 files changed, 56 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+deleted file mode 100644
+index c6e0790..0000000
+--- a/docs/governance/review-board/archive/proposal-138/dossier.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Review Board Dossier — <proposal-id>
+-
+-## Proposal Overview
+-- **Title:** <title>
+-- **Requestor:** <name / team>
+-- **GitHub Issue:** <link>
+-- **Target Decision Date:** <YYYY-MM-DD>
+-- **Summary:** <one-paragraph context>
+-
+-## Artefacts & References
+-- Specs / schemas: <links>
+-- OpenAPI / API references: <links>
+-- Prior board rulings: <links>
+-- Community feedback / consultations: <links or summary>
+-- Metrics / telemetry: <data sources>
+-
+-## Impact Assessment
+-- **Scope:** <components impacted>
+-- **Benefits:** <structured bullets>
+-- **Risks:** <structured bullets>
+-- **Dependencies:** <teams, infrastructure, releases>
+-
+-## Stakeholder Signals
+-- **Advocates:** <names + rationale>
+-- **Concerns:** <names + rationale>
+-- **Public commentary:** <links to discussions>
+-
+-## Supporting Evidence
+-Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+deleted file mode 100644
+index 9dd82b9..0000000
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# Review Board Scorecard — <proposal-id>
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | Initial | | | |
+-| Ethics Steward | Ethics, rights, compliance | Initial | | | |
+-| Financial Controller | Cost, sustainability | Initial | | | |
+-| Implementation & DevX | Delivery feasibility | Initial | | | |
+-| Adoption & Community | Ecosystem alignment | Initial | | | |
+-
+-## Blended Score Summary
+-- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
+-- **Round:** <Initial/Adjustment/Final>
+-- **Weighted Average:** <value>
+-- **Floors breached?:** <yes/no>
+-- **Notes:** <cross-domain issues, dependencies, actions>
+-
+-> Duplicate this table for each round. Preserve all iterations in the archived record.
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md b/docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md
+deleted file mode 100644
+index 28bfd96..0000000
+--- a/docs/governance/review-board/archive/proposal-138/transcripts/ethics-1.md
++++ /dev/null
+@@ -1 +0,0 @@
+-The proposal enables valuable artifact enrichment and versioned provenance visibility that significantly improve the system's transparency and analytic capabilities, key for innovation. They mitigate bias risks by requiring enrichment metadata such as 'generator_id' and a 'portable' flag, but do not fully address user consent or control of enriched personal or AI-derived data. Storage cost mitigations for snapshots defer to implementation, yet privacy and regulatory controls around data retention, auditability, and deletion eligibility remain unspecified, raising GDPR and ethical compliance concerns. Without explicit privacy, traceability, and user redress mechanisms, this upgrade risks undermining trust. Hence, conditional approval with blockers is advised to ensure ethical safeguards are built into the schema and registry workflows before broader implementation.
+\ No newline at end of file
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md b/docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md
+deleted file mode 100644
+index 2c690a3..0000000
+--- a/docs/governance/review-board/archive/proposal-138/transcripts/ethics-2.md
++++ /dev/null
+@@ -1 +0,0 @@
+-This proposal to extend artifact schemas with enrichment, timeline, and preview structures supports improved auditability and richer metadata capabilities. The inclusion of provenance metadata fields addressing AI bias is a strong ethical control, enhancing transparency across registries. Allowing downstream systems to ignore unknown optional fields limits disruption for minimal clients. However, critical ethics components are currently deferred or vague: user consent for enrichment data use is not detailed, nor are audit or redress mechanisms for data corrections or disputes. There is risk that enriched AI annotations may propagate bias without robust user control or accountability measures. Additionally, storage of snapshot data via external URIs demands clear data retention and deletion policies to comply with regulations like GDPR. Before approving, the board must see concrete plans for consent management, audit trails, data deletion rights, and legal reviews to safeguard user privacy, fairness, and oversight. Without these controls, the proposal poses moderate ethical risks despite its technical benefits.
+\ No newline at end of file
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
+deleted file mode 100644
+index f162ddd..0000000
+--- a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-1.md
++++ /dev/null
+@@ -1 +0,0 @@
+-This proposal offers a well-justified evolutionary leap by systematically including enrichment metadata, event timelines, and preview payloads within the artifact schema's vanilla namespace. This keeps backward compatibility and eases adoption paths for downstream consumers, addressing key architectural principles of composability and forward-compatibility. The addition of a 'portable' flag and strict provenance attribution anticipates AI bias risks while enabling federated enrichment reuse, a novel protocol primitive with strong future-proofing potential. By defining fixed contracts for deterministic preview and attachment payloads, the protocol reduces ad-hoc extensions and variability that impede ecosystem growth. The enclosed mitigation plans for schema bloat, migration, and storage overhead reflect thoughtful risk management. Rejecting this update risks ecosystem stagnation by locking artifacts into immutable, non-enrichable forms that limit innovation in automated content classification, provenance auditability, and media rendering, all crucial for semantic publishing workflows and discovery acceleration. While ambitious, the proposal prioritizes incremental rollout and backward compatibility, mitigating disruption and abdicates no other more impactful innovations. Thus, from an innovation standpoint, the proposal merits strong endorsement.
+\ No newline at end of file
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
+deleted file mode 100644
+index 4c73261..0000000
+--- a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-2.md
++++ /dev/null
+@@ -1 +0,0 @@
+-The proposal strategically differentiates Punk Forge/SPP by enabling deterministic, audit-capable artifact enrichment that incumbents lack in a non-breaking manner, ensuring minimal disruption while enhancing functionality. Architecturally, the reuse of a vanilla namespace and additive optional fields respects composability and forward compatibility, mitigating risks of forks and schema fragmentation. The timeline inclusion enables provenance tracking and historical reindexing vital for trust and discovery automation, while the standard preview/attachment schema reduces developer guesswork, directly accelerating publisher workflows. Rejecting this proposal risks stagnation by locking out advanced metadata use-cases like AI annotation portability and historical audits, which are increasingly critical. Opportunity cost is low given no superior alternative innovation is competing for immediate priority, and this lays foundational infrastructure for richer semantic publishing capabilities.
+\ No newline at end of file
+diff --git a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md b/docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md
+deleted file mode 100644
+index 92f3b71..0000000
+--- a/docs/governance/review-board/archive/proposal-138/transcripts/innovation-3.md
++++ /dev/null
+@@ -1,5 +0,0 @@
+-This proposal notably strengthens the protocol's strategic differentiation by introducing a structured, portable enrichment layer that supports AI annotations and provenance timelines—features absent in the current minimal artifact schema. Architecturally, the additive approach respects backward compatibility through optional fields and a minor schema bump (0.5), thus preventing stagnation risks tied to schema rigidity. By standardizing previews and attachments, it also reduces ad-hoc client logic, streamlining developer workflows around artifact visualization and indexing.
+-
+-Risks such as AI bias leakage and schema bloat are thoughtfully mitigated with flags and optional nullability, and the migration path is well scoped to maintain protocol health and interoperability. From an innovation perspective, enabling timeline-based snapshots and provenance records unlocks future federation capabilities and richer graph queries, which are valuable for the ecosystem’s evolution. Rejecting this might stall key foundational capabilities, risking premature forks and limiting downstream automation and discovery.
+-
+-Given the well-articulated design, mitigation strategies, and alignment with registry operators, this proposal aligns strongly with the mission hierarchy. It balances technical feasibility, ecosystem growth, and forward-compatible design in a manner that significantly pushes the protocol beyond its current state. No critical blockers are identified; next steps should focus on coordinated implementation and adoption support.
+\ No newline at end of file
+
+From cb948fa31320189f723e48f00f5b4b230845ce6d Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:22:46 +0000
+Subject: [PATCH 023/112] chore: stub review board archive folder
+
+---
+ docs/governance/review-board/archive/proposal-138/.gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+
+From 2b6d29168c2bc347e8cdb6a2b94ae735e3c11d24 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:22:47 +0000
+Subject: [PATCH 024/112] chore: update dossier
+
+---
+ .../archive/proposal-138/dossier.md           | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From 8f15330ee3e9d60feee848388596e0d7a2b46f9d Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:22:48 +0000
+Subject: [PATCH 025/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+new file mode 100644
+index 0000000..9dd82b9
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,18 @@
++# Review Board Scorecard — <proposal-id>
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | Initial | | | |
++| Ethics Steward | Ethics, rights, compliance | Initial | | | |
++| Financial Controller | Cost, sustainability | Initial | | | |
++| Implementation & DevX | Delivery feasibility | Initial | | | |
++| Adoption & Community | Ecosystem alignment | Initial | | | |
++
++## Blended Score Summary
++- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
++- **Round:** <Initial/Adjustment/Final>
++- **Weighted Average:** <value>
++- **Floors breached?:** <yes/no>
++- **Notes:** <cross-domain issues, dependencies, actions>
++
++> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From bd171cd55726a440f4d2b8ff1211b1a1e1f9fde4 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:23:13 +0000
+Subject: [PATCH 026/112] Delete
+ docs/governance/review-board/archive/proposal-138 directory
+
+---
+ .../archive/proposal-138/.gitkeep             |  0
+ .../archive/proposal-138/dossier.md           | 29 -------------------
+ .../archive/proposal-138/scorecard.md         | 18 ------------
+ 3 files changed, 47 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+deleted file mode 100644
+index c6e0790..0000000
+--- a/docs/governance/review-board/archive/proposal-138/dossier.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Review Board Dossier — <proposal-id>
+-
+-## Proposal Overview
+-- **Title:** <title>
+-- **Requestor:** <name / team>
+-- **GitHub Issue:** <link>
+-- **Target Decision Date:** <YYYY-MM-DD>
+-- **Summary:** <one-paragraph context>
+-
+-## Artefacts & References
+-- Specs / schemas: <links>
+-- OpenAPI / API references: <links>
+-- Prior board rulings: <links>
+-- Community feedback / consultations: <links or summary>
+-- Metrics / telemetry: <data sources>
+-
+-## Impact Assessment
+-- **Scope:** <components impacted>
+-- **Benefits:** <structured bullets>
+-- **Risks:** <structured bullets>
+-- **Dependencies:** <teams, infrastructure, releases>
+-
+-## Stakeholder Signals
+-- **Advocates:** <names + rationale>
+-- **Concerns:** <names + rationale>
+-- **Public commentary:** <links to discussions>
+-
+-## Supporting Evidence
+-Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+deleted file mode 100644
+index 9dd82b9..0000000
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# Review Board Scorecard — <proposal-id>
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | Initial | | | |
+-| Ethics Steward | Ethics, rights, compliance | Initial | | | |
+-| Financial Controller | Cost, sustainability | Initial | | | |
+-| Implementation & DevX | Delivery feasibility | Initial | | | |
+-| Adoption & Community | Ecosystem alignment | Initial | | | |
+-
+-## Blended Score Summary
+-- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
+-- **Round:** <Initial/Adjustment/Final>
+-- **Weighted Average:** <value>
+-- **Floors breached?:** <yes/no>
+-- **Notes:** <cross-domain issues, dependencies, actions>
+-
+-> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From 6087325b204dcdb05074f4ce0cc0c8df6d2166c8 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:23:24 +0000
+Subject: [PATCH 027/112] chore: stub review board archive folder
+
+---
+ docs/governance/review-board/archive/proposal-138/.gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+
+From 4e94f6eedbff57cc7fd6ec4ee68fd3074f286829 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:23:25 +0000
+Subject: [PATCH 028/112] chore: update dossier
+
+---
+ .../archive/proposal-138/dossier.md           | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From b8e5124d689ae2d5c4791f19b2d6bb1529771f3f Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:23:26 +0000
+Subject: [PATCH 029/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+new file mode 100644
+index 0000000..9dd82b9
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,18 @@
++# Review Board Scorecard — <proposal-id>
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | Initial | | | |
++| Ethics Steward | Ethics, rights, compliance | Initial | | | |
++| Financial Controller | Cost, sustainability | Initial | | | |
++| Implementation & DevX | Delivery feasibility | Initial | | | |
++| Adoption & Community | Ecosystem alignment | Initial | | | |
++
++## Blended Score Summary
++- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
++- **Round:** <Initial/Adjustment/Final>
++- **Weighted Average:** <value>
++- **Floors breached?:** <yes/no>
++- **Notes:** <cross-domain issues, dependencies, actions>
++
++> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From 8a8a21910797506965885d9b49a6c5d8a35e81f2 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:55:29 +0000
+Subject: [PATCH 030/112] Delete
+ docs/governance/review-board/archive/proposal-138 directory
+
+---
+ .../archive/proposal-138/.gitkeep             |  0
+ .../archive/proposal-138/dossier.md           | 29 -------------------
+ .../archive/proposal-138/scorecard.md         | 18 ------------
+ 3 files changed, 47 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+deleted file mode 100644
+index c6e0790..0000000
+--- a/docs/governance/review-board/archive/proposal-138/dossier.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Review Board Dossier — <proposal-id>
+-
+-## Proposal Overview
+-- **Title:** <title>
+-- **Requestor:** <name / team>
+-- **GitHub Issue:** <link>
+-- **Target Decision Date:** <YYYY-MM-DD>
+-- **Summary:** <one-paragraph context>
+-
+-## Artefacts & References
+-- Specs / schemas: <links>
+-- OpenAPI / API references: <links>
+-- Prior board rulings: <links>
+-- Community feedback / consultations: <links or summary>
+-- Metrics / telemetry: <data sources>
+-
+-## Impact Assessment
+-- **Scope:** <components impacted>
+-- **Benefits:** <structured bullets>
+-- **Risks:** <structured bullets>
+-- **Dependencies:** <teams, infrastructure, releases>
+-
+-## Stakeholder Signals
+-- **Advocates:** <names + rationale>
+-- **Concerns:** <names + rationale>
+-- **Public commentary:** <links to discussions>
+-
+-## Supporting Evidence
+-Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+deleted file mode 100644
+index 9dd82b9..0000000
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# Review Board Scorecard — <proposal-id>
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | Initial | | | |
+-| Ethics Steward | Ethics, rights, compliance | Initial | | | |
+-| Financial Controller | Cost, sustainability | Initial | | | |
+-| Implementation & DevX | Delivery feasibility | Initial | | | |
+-| Adoption & Community | Ecosystem alignment | Initial | | | |
+-
+-## Blended Score Summary
+-- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
+-- **Round:** <Initial/Adjustment/Final>
+-- **Weighted Average:** <value>
+-- **Floors breached?:** <yes/no>
+-- **Notes:** <cross-domain issues, dependencies, actions>
+-
+-> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From a0be1a1e9f25df776083e932d8bec8c05e828bd7 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:56:27 +0000
+Subject: [PATCH 031/112] chore: stub review board archive folder
+
+---
+ docs/governance/review-board/archive/proposal-138/.gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+
+From 8ac1b108a05f5f7870e28a69108a37cd5346e193 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:56:28 +0000
+Subject: [PATCH 032/112] chore: update dossier
+
+---
+ .../archive/proposal-138/dossier.md           | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From 150799a27e4e4993f44501a00bfc66929049190e Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 18:56:29 +0000
+Subject: [PATCH 033/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+new file mode 100644
+index 0000000..9dd82b9
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,18 @@
++# Review Board Scorecard — <proposal-id>
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | Initial | | | |
++| Ethics Steward | Ethics, rights, compliance | Initial | | | |
++| Financial Controller | Cost, sustainability | Initial | | | |
++| Implementation & DevX | Delivery feasibility | Initial | | | |
++| Adoption & Community | Ecosystem alignment | Initial | | | |
++
++## Blended Score Summary
++- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
++- **Round:** <Initial/Adjustment/Final>
++- **Weighted Average:** <value>
++- **Floors breached?:** <yes/no>
++- **Notes:** <cross-domain issues, dependencies, actions>
++
++> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From 61fd08f90fba58559c2bc75dbb1120d35f98f4df Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 19:23:53 +0000
+Subject: [PATCH 034/112] Delete
+ docs/governance/review-board/archive/proposal-138/scorecard.md
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ------------------
+ 1 file changed, 18 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+deleted file mode 100644
+index 9dd82b9..0000000
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# Review Board Scorecard — <proposal-id>
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | Initial | | | |
+-| Ethics Steward | Ethics, rights, compliance | Initial | | | |
+-| Financial Controller | Cost, sustainability | Initial | | | |
+-| Implementation & DevX | Delivery feasibility | Initial | | | |
+-| Adoption & Community | Ecosystem alignment | Initial | | | |
+-
+-## Blended Score Summary
+-- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
+-- **Round:** <Initial/Adjustment/Final>
+-- **Weighted Average:** <value>
+-- **Floors breached?:** <yes/no>
+-- **Notes:** <cross-domain issues, dependencies, actions>
+-
+-> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From 7df4b6b0e67db637c51ba67609180bb3573581f9 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 19:27:31 +0000
+Subject: [PATCH 035/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+new file mode 100644
+index 0000000..9dd82b9
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,18 @@
++# Review Board Scorecard — <proposal-id>
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | Initial | | | |
++| Ethics Steward | Ethics, rights, compliance | Initial | | | |
++| Financial Controller | Cost, sustainability | Initial | | | |
++| Implementation & DevX | Delivery feasibility | Initial | | | |
++| Adoption & Community | Ecosystem alignment | Initial | | | |
++
++## Blended Score Summary
++- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
++- **Round:** <Initial/Adjustment/Final>
++- **Weighted Average:** <value>
++- **Floors breached?:** <yes/no>
++- **Notes:** <cross-domain issues, dependencies, actions>
++
++> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From 93886c428ebd699f1b4c143145b4d9c2a63ef84f Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 20:59:37 +0000
+Subject: [PATCH 036/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md         | 25 ++++++++-----------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 9dd82b9..84f4800 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,18 +1,15 @@
+-# Review Board Scorecard — <proposal-id>
++# Review Board Scorecard — 138
++
++
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | Initial | | | |
+-| Ethics Steward | Ethics, rights, compliance | Initial | | | |
+-| Financial Controller | Cost, sustainability | Initial | | | |
+-| Implementation & DevX | Delivery feasibility | Initial | | | |
+-| Adoption & Community | Ecosystem alignment | Initial | | | |
+-
+-## Blended Score Summary
+-- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
+-- **Round:** <Initial/Adjustment/Final>
+-- **Weighted Average:** <value>
+-- **Floors breached?:** <yes/no>
+-- **Notes:** <cross-domain issues, dependencies, actions>
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-> Duplicate this table for each round. Preserve all iterations in the archived record.
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 24c1b284907e878b858df84f6abf44249d60d6f5 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 21:00:05 +0000
+Subject: [PATCH 037/112] chore: update scorecard
+
+
+From d7da4a9d372ed151a876fb27fa11489479260f70 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 21:00:29 +0000
+Subject: [PATCH 038/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md             | 15 ---------------
+ 1 file changed, 15 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 84f4800..e69de29 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,15 +0,0 @@
+-# Review Board Scorecard — 138
+-
+-
+-## Round: 1
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+-
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 838b4b354f1e49d9550a5e6742a178cfb16368d6 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 21:00:51 +0000
+Subject: [PATCH 039/112] chore: update scorecard
+
+
+From 48b4341ced2c97491fc11a4aad268aaea957952c Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 21:08:09 +0000
+Subject: [PATCH 040/112] Delete
+ docs/governance/review-board/archive/proposal-138 directory
+
+---
+ .../archive/proposal-138/.gitkeep             |  0
+ .../archive/proposal-138/dossier.md           | 29 -------------------
+ .../archive/proposal-138/scorecard.md         |  0
+ 3 files changed, 29 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+deleted file mode 100644
+index c6e0790..0000000
+--- a/docs/governance/review-board/archive/proposal-138/dossier.md
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# Review Board Dossier — <proposal-id>
+-
+-## Proposal Overview
+-- **Title:** <title>
+-- **Requestor:** <name / team>
+-- **GitHub Issue:** <link>
+-- **Target Decision Date:** <YYYY-MM-DD>
+-- **Summary:** <one-paragraph context>
+-
+-## Artefacts & References
+-- Specs / schemas: <links>
+-- OpenAPI / API references: <links>
+-- Prior board rulings: <links>
+-- Community feedback / consultations: <links or summary>
+-- Metrics / telemetry: <data sources>
+-
+-## Impact Assessment
+-- **Scope:** <components impacted>
+-- **Benefits:** <structured bullets>
+-- **Risks:** <structured bullets>
+-- **Dependencies:** <teams, infrastructure, releases>
+-
+-## Stakeholder Signals
+-- **Advocates:** <names + rationale>
+-- **Concerns:** <names + rationale>
+-- **Public commentary:** <links to discussions>
+-
+-## Supporting Evidence
+-Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+deleted file mode 100644
+index e69de29..0000000
+
+From 7899f7fca72c99b860f668be80feb58809c7017c Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 21:08:42 +0000
+Subject: [PATCH 041/112] chore: stub review board archive folder
+
+---
+ docs/governance/review-board/archive/proposal-138/.gitkeep | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/.gitkeep
+
+diff --git a/docs/governance/review-board/archive/proposal-138/.gitkeep b/docs/governance/review-board/archive/proposal-138/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+
+From 7620f9bac506774718c920ba255afec428846611 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 21:08:43 +0000
+Subject: [PATCH 042/112] chore: update dossier
+
+---
+ .../archive/proposal-138/dossier.md           | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/dossier.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/dossier.md b/docs/governance/review-board/archive/proposal-138/dossier.md
+new file mode 100644
+index 0000000..c6e0790
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/dossier.md
+@@ -0,0 +1,29 @@
++# Review Board Dossier — <proposal-id>
++
++## Proposal Overview
++- **Title:** <title>
++- **Requestor:** <name / team>
++- **GitHub Issue:** <link>
++- **Target Decision Date:** <YYYY-MM-DD>
++- **Summary:** <one-paragraph context>
++
++## Artefacts & References
++- Specs / schemas: <links>
++- OpenAPI / API references: <links>
++- Prior board rulings: <links>
++- Community feedback / consultations: <links or summary>
++- Metrics / telemetry: <data sources>
++
++## Impact Assessment
++- **Scope:** <components impacted>
++- **Benefits:** <structured bullets>
++- **Risks:** <structured bullets>
++- **Dependencies:** <teams, infrastructure, releases>
++
++## Stakeholder Signals
++- **Advocates:** <names + rationale>
++- **Concerns:** <names + rationale>
++- **Public commentary:** <links to discussions>
++
++## Supporting Evidence
++Attach or link any supporting documents (whitepapers, diagrams, simulations) relevant to the board deliberation.
+
+From bc07a9cca52445d15240bd29a358a832504d1657 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Thu, 13 Nov 2025 21:08:44 +0000
+Subject: [PATCH 043/112] chore: update scorecard
+
+---
+ .../archive/proposal-138/scorecard.md          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/scorecard.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+new file mode 100644
+index 0000000..9dd82b9
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,18 @@
++# Review Board Scorecard — <proposal-id>
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | Initial | | | |
++| Ethics Steward | Ethics, rights, compliance | Initial | | | |
++| Financial Controller | Cost, sustainability | Initial | | | |
++| Implementation & DevX | Delivery feasibility | Initial | | | |
++| Adoption & Community | Ecosystem alignment | Initial | | | |
++
++## Blended Score Summary
++- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
++- **Round:** <Initial/Adjustment/Final>
++- **Weighted Average:** <value>
++- **Floors breached?:** <yes/no>
++- **Notes:** <cross-domain issues, dependencies, actions>
++
++> Duplicate this table for each round. Preserve all iterations in the archived record.
+
+From 4f2a773f5ca957cb4fcd3365068714f5c4d85b6a Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 21:26:25 +0000
+Subject: [PATCH 044/112] chore: update scorecard (round1 )
+
+---
+ .../archive/proposal-138/scorecard.md         | 22 +++++++------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 9dd82b9..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,18 +1,12 @@
+-# Review Board Scorecard — <proposal-id>
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | Initial | | | |
+-| Ethics Steward | Ethics, rights, compliance | Initial | | | |
+-| Financial Controller | Cost, sustainability | Initial | | | |
+-| Implementation & DevX | Delivery feasibility | Initial | | | |
+-| Adoption & Community | Ecosystem alignment | Initial | | | |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-## Blended Score Summary
+-- **Weights:** Ethics 0.35, Innovation 0.25, Finance 0.15, DevX 0.15, Adoption 0.10 (adjust only with documented approval).
+-- **Round:** <Initial/Adjustment/Final>
+-- **Weighted Average:** <value>
+-- **Floors breached?:** <yes/no>
+-- **Notes:** <cross-domain issues, dependencies, actions>
+-
+-> Duplicate this table for each round. Preserve all iterations in the archived record.
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From 498e1e44afea7ee111f8bcd2d4ed0a135dec9d57 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 21:26:55 +0000
+Subject: [PATCH 045/112] chore: update scorecard (round1 )
+
+
+From 08583c0ad58eab131329ea6615ba033c65b12b80 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 21:26:56 +0000
+Subject: [PATCH 046/112] chore: update scorecard (round1 )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 77c9f9ff3498ab893c79c1c28e4675d85b7ae97f Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 21:27:11 +0000
+Subject: [PATCH 047/112] chore: update scorecard (round1 )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From 554cfec62453a29732ab0e4d2fe1bc0ef2a61363 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 21:28:54 +0000
+Subject: [PATCH 048/112] chore: update scorecard (round1 )
+
+
+From a4008c14e77a9d48e3f23a1adeaf535f68db3efa Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 22:17:15 +0000
+Subject: [PATCH 049/112] chore: update scorecard (round1 )
+
+
+From 543e28a2c901579079d8ca7c9effa4af6cd0f9a6 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 22:17:16 +0000
+Subject: [PATCH 050/112] chore: update scorecard (round1 )
+
+---
+ .../review-board/archive/proposal-138/scorecard.md   | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..e69de29 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +0,0 @@
+-## Round: initial
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+-
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From f933f60c7070dbd7cbc29ba160d7354c3be8b82e Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 22:17:27 +0000
+Subject: [PATCH 051/112] chore: update scorecard (round1 )
+
+---
+ .../review-board/archive/proposal-138/scorecard.md   | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index e69de29..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,12 @@
++## Round: initial
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From 56079cf1940eb5cd18e9b02923023c48930d4eff Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 22:18:15 +0000
+Subject: [PATCH 052/112] chore: update scorecard (round1 )
+
+---
+ .../review-board/archive/proposal-138/scorecard.md   | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..e69de29 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +0,0 @@
+-## Round: initial
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+-
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From dfa17bf16282db405ecfbad25a83e2a12cf32af9 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:00:35 +0000
+Subject: [PATCH 053/112] chore: update scorecard (round1 )
+
+---
+ .../review-board/archive/proposal-138/scorecard.md   | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index e69de29..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -0,0 +1,12 @@
++## Round: initial
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From bf18a8397822fb29c9371139b451ca77057a3f72 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:09:23 +0000
+Subject: [PATCH 054/112] chore: update scorecard (round1 )
+
+
+From eccd0ad961a9aff4bc1b65a738fc19e57ea3eb10 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:11:40 +0000
+Subject: [PATCH 055/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From ec5767349f25fd21415293ba9a1cd273e1474e4f Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:13:14 +0000
+Subject: [PATCH 056/112] chore: update scorecard (round 1)
+
+
+From 0b92e86783f4cf9545ab9ed3d048cd52c1eccd50 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:13:26 +0000
+Subject: [PATCH 057/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From e25f22d09533db6c3d0bb0a148f0745cd6a231c2 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:14:11 +0000
+Subject: [PATCH 058/112] chore: update scorecard (round 1)
+
+
+From 6f47b7eb261fd996cacc636281e9a94d5966423f Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:14:12 +0000
+Subject: [PATCH 059/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From d269849a044c30ecab8d884bd39e696ea8da6e2a Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:14:24 +0000
+Subject: [PATCH 060/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From c4a58b52308c1717687be1efeebd67fac9081a91 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:14:47 +0000
+Subject: [PATCH 061/112] chore: update scorecard (round 1)
+
+
+From 69e37080ee9661cb7bdaface51641d8645bc8d5d Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:14:48 +0000
+Subject: [PATCH 062/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 57132d2d4a7c78a49c87bcdd61dfcfbcacba4d9d Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:15:03 +0000
+Subject: [PATCH 063/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From 2df75734462178cbf6a6cb94dc66da23f095b6bf Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:18:33 +0000
+Subject: [PATCH 064/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 9d6ea935ea960fa5263030e0f06d654e0902f31e Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:18:42 +0000
+Subject: [PATCH 065/112] chore: update scorecard (round 1)
+
+
+From 4c437e6f1a3265eb0f8bd963a9c319ca51a44865 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:19:21 +0000
+Subject: [PATCH 066/112] chore: update scorecard (round 1)
+
+
+From f5aa6b090cfc93a12174917cdbba12140dc876c2 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:19:57 +0000
+Subject: [PATCH 067/112] chore: update scorecard (round 1)
+
+
+From bed92ce85de44e80dfcab877f4adea56e83d7eea Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:20:23 +0000
+Subject: [PATCH 068/112] chore: update scorecard (round 1)
+
+
+From b1a8ea23ca3a547c35d231abc7eb4889d695db7c Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:21:53 +0000
+Subject: [PATCH 069/112] chore: update scorecard (round 1)
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From a9eec1066cece3608f0662c508b1278119adcf67 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:23:58 +0000
+Subject: [PATCH 070/112] chore: update scorecard (round 1)
+
+
+From a063a5cf8ca68f682fcb0d2ab7005355d9b3b136 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:24:30 +0000
+Subject: [PATCH 071/112] chore: update scorecard (round 1)
+
+
+From 08cf833d761516735dde64c2b54eb2261cc531fc Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:33:27 +0000
+Subject: [PATCH 072/112] chore: update scorecard (round 1)
+
+---
+ .../review-board/archive/proposal-138/scorecard.md   | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..9e8364b 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | 1 |  | n/a |  |
++| Financial Controller | Cost, sustainability | 1 |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | 1 |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | 1 |  | n/a |  |
+ 
+ **Blended Score:** 0.0
+ **Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From 4b12ab4ab8af68028ad4172216cb3c9275c2b81b Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:33:38 +0000
+Subject: [PATCH 073/112] chore: update scorecard (round 1)
+
+
+From d476d97c30688b5ec0ca7a820eb75d1047672f8a Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:33:53 +0000
+Subject: [PATCH 074/112] chore: update scorecard (round 1)
+
+
+From f950ab24c3bb4f0e061b3166a3e54a2b84c50dd8 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:35:06 +0000
+Subject: [PATCH 075/112] chore: update scorecard (round 1)
+
+
+From 39c76359c7dbfaaf8d40ae26305d7e0d18a215f5 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:35:19 +0000
+Subject: [PATCH 076/112] chore: update scorecard (round 1)
+
+
+From 618f50d8c74073e3424c72802ddeab47ba5d6b6a Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:35:36 +0000
+Subject: [PATCH 077/112] chore: update scorecard (round 1)
+
+
+From a68f0bb254fb37197c8657ea98b506e70273b43c Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:39:00 +0000
+Subject: [PATCH 078/112] chore: update scorecard (round 1)
+
+
+From 1b2140679733e6757fc7336e8efc9451553b018f Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:41:01 +0000
+Subject: [PATCH 079/112] chore: update scorecard (round 1)
+
+
+From b34431ce70826b4c05c69174648dcfc04d9d20d8 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:47:00 +0000
+Subject: [PATCH 080/112] chore: update scorecard (round 1)
+
+---
+ .../review-board/archive/proposal-138/scorecard.md   | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 9e8364b..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | 1 |  | n/a |  |
+-| Financial Controller | Cost, sustainability | 1 |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | 1 |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | 1 |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+ **Blended Score:** 0.0
+ **Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From d0d06b69cc706c82906d71e7ccdcf77a5d874c0b Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:48:13 +0000
+Subject: [PATCH 081/112] chore: update scorecard (round 1)
+
+
+From 2fa7fb0fa396ca7818af53fb0b9d54906bac6588 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:48:34 +0000
+Subject: [PATCH 082/112] chore: update scorecard (round 1)
+
+
+From 126e608949e46e22182fa852b7a6f91bb20dc7b1 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:50:35 +0000
+Subject: [PATCH 083/112] chore: update scorecard (round 1)
+
+
+From dad6ae16370e1a2a14156455dc26654cadd9c676 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:52:43 +0000
+Subject: [PATCH 084/112] chore: update scorecard (round )
+
+
+From 0efa0926bbf7ddcf3871c11dfef2de000ef78c7d Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:53:28 +0000
+Subject: [PATCH 085/112] chore: update scorecard (round )
+
+
+From b16e54725a152842d826104c79a7cb02bb7bc4d9 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:54:25 +0000
+Subject: [PATCH 086/112] chore: update scorecard (round )
+
+
+From 67bd7a09bf4dd62630ceaab4ccd56e0845f5d22a Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:54:26 +0000
+Subject: [PATCH 087/112] chore: update scorecard (round )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 42123e902b3a2657dd088bb1fe3aad73ac3251fc Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:54:46 +0000
+Subject: [PATCH 088/112] chore: update scorecard (round )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From d21a712311284bd098f11e2cb6aa46c982ff4710 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:54:52 +0000
+Subject: [PATCH 089/112] chore: update scorecard (round )
+
+
+From 337f5731ff3460650615d4059ab63e4bc568ac5c Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:54:52 +0000
+Subject: [PATCH 090/112] chore: update scorecard (round )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From fd830b77ac82033349dd7bcae1e4e919b29e14b9 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:55:08 +0000
+Subject: [PATCH 091/112] chore: update scorecard (round )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From 33c3318e301f16f20b8778da6974905fd7cb3c82 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:55:16 +0000
+Subject: [PATCH 092/112] chore: update scorecard (round )
+
+
+From 325679b6013bdb17d57d55f3f7d802104713327d Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:55:16 +0000
+Subject: [PATCH 093/112] chore: update scorecard (round )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 5be021b58e1e64ed9d320e61547117af87807c8a Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Thu, 13 Nov 2025 23:57:41 +0000
+Subject: [PATCH 094/112] chore: update scorecard (round )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..3bbede4 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: 1
++## Round: initial
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
++| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
++| Financial Controller | Cost, sustainability | initial |  | n/a |  |
++| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
++| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+\ No newline at end of file
++**Blended Score:** 0.0
++**Floor Check:** ❌ Failed
+\ No newline at end of file
+
+From b830f59d3561e5e5046f588ab32a6d3a7e478c87 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Fri, 14 Nov 2025 00:00:37 +0000
+Subject: [PATCH 095/112] chore: update scorecard (round )
+
+---
+ .../archive/proposal-138/scorecard.md            | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 3bbede4..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -1,12 +1,12 @@
+-## Round: initial
++## Round: 1
+ 
+ | Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+ |---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | initial |  | n/a |  |
+-| Ethics Steward | Ethics, rights, compliance | initial |  | n/a |  |
+-| Financial Controller | Cost, sustainability | initial |  | n/a |  |
+-| Implementation & DevX | Delivery feasibility | initial |  | n/a |  |
+-| Adoption & Community | Ecosystem alignment | initial |  | n/a |  |
++| Innovation Lead | Ambition & capability expansion | 1 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 1 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 1 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 0.0
+-**Floor Check:** ❌ Failed
+\ No newline at end of file
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 76f438de4d331e35d0a35553db1a9aef56809311 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Fri, 14 Nov 2025 00:00:56 +0000
+Subject: [PATCH 096/112] chore: update scorecard (round )
+
+
+From 9ccf5b1b365ea4a02bf1aebfa93ac38c4394f3df Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Fri, 14 Nov 2025 00:02:58 +0000
+Subject: [PATCH 097/112] chore: update scorecard (round )
+
+---
+ .../review-board/archive/proposal-138/scorecard.md  | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 5a665a7..83b3a71 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -8,5 +8,18 @@
+ | Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+ | Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
++**Blended Score:** 79.2
++**Floor Check:** ✅ Passed
++
++## Round: 2
++
++| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
++|---------|---------------|-------|---------------|------------------|-------------------|
++| Innovation Lead | Ambition & capability expansion | 2 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
++| Ethics Steward | Ethics, rights, compliance | 2 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
++| Financial Controller | Cost, sustainability | 2 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
++| Implementation & DevX | Delivery feasibility | 2 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
++| Adoption & Community | Ecosystem alignment | 2 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
++
+ **Blended Score:** 79.2
+ **Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From b35eb6cc6f06a08734e01369fa91b323f903b595 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Fri, 14 Nov 2025 00:03:39 +0000
+Subject: [PATCH 098/112] chore: update scorecard (round )
+
+---
+ .../review-board/archive/proposal-138/scorecard.md  | 13 -------------
+ 1 file changed, 13 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/scorecard.md b/docs/governance/review-board/archive/proposal-138/scorecard.md
+index 83b3a71..5a665a7 100644
+--- a/docs/governance/review-board/archive/proposal-138/scorecard.md
++++ b/docs/governance/review-board/archive/proposal-138/scorecard.md
+@@ -8,18 +8,5 @@
+ | Implementation & DevX | Delivery feasibility | 1 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+ | Adoption & Community | Ecosystem alignment | 1 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+ 
+-**Blended Score:** 79.2
+-**Floor Check:** ✅ Passed
+-
+-## Round: 2
+-
+-| Persona | Domain Focus | Round | Score (0-100) | Floor Respected? | Key Justification |
+-|---------|---------------|-------|---------------|------------------|-------------------|
+-| Innovation Lead | Ambition & capability expansion | 2 | 82 | n/a | Adds deterministic enrichment + timeline primitives that unlock AI-powered discovery and provenance audits without breaking existing registries. |
+-| Ethics Steward | Ethics, rights, compliance | 2 | 78 | Yes | Portable AI insights include provenance metadata and default to non-portable, mitigating bias replication; timeline audit trail improves accountability. |
+-| Financial Controller | Cost, sustainability | 2 | 76 | Yes | Schema changes are additive and re-use existing infrastructure; migration effort is bounded to one sprint with clear automation hooks. |
+-| Implementation & DevX | Delivery feasibility | 2 | 80 | n/a | Provides standardised preview/attachment contract and migration script, reducing ad-hoc client logic and easing registry onboarding. |
+-| Adoption & Community | Ecosystem alignment | 2 | 79 | n/a | Clear upgrade messaging, version negotiation, and early timing (before multiple external registries) de-risk adoption churn. |
+-
+ **Blended Score:** 79.2
+ **Floor Check:** ✅ Passed
+\ No newline at end of file
+
+From 526b0ce0ee46f4ec421489b793f4efcfbf1cb7e9 Mon Sep 17 00:00:00 2001
+From: n8n Review Bot <n8n@punk.forge>
+Date: Fri, 14 Nov 2025 00:03:59 +0000
+Subject: [PATCH 099/112] chore: update scorecard (round )
+
+
+From c2030d649eb3b2ba50641b48f445a702d3d74cb8 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 10:37:41 +0000
+Subject: [PATCH 100/112] chore: Create File - decision-record.md
+
+---
+ .../archive/proposal-138/decision-record.md   | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/decision-record.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/decision-record.md b/docs/governance/review-board/archive/proposal-138/decision-record.md
+new file mode 100644
+index 0000000..5e9af83
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/decision-record.md
+@@ -0,0 +1,36 @@
++# Decision Record — <proposal-id>
++
++- **Proposal Title:** <title>
++- **GitHub Issue:** <link>
++- **Decision Date:** <YYYY-MM-DD>
++- **Chair:** <name>
++
++## Final Determination
++- **Outcome:** <approved / approved with conditions / rejected / escalated>
++- **Blended Score:** <value>
++- **Floor Breaches:** <none or list>
++- **Conditions / Actions:**
++  - <condition or follow-up>
++
++## Domain Summaries
++- **Innovation Lead:** <final position + rationale>
++- **Ethics Steward:** <final position + rationale>
++- **Financial Controller:** <final position + rationale>
++- **Implementation & DevX:** <final position + rationale>
++- **Adoption & Community:** <final position + rationale>
++
++## Dissent & Minority Reports
++- <persona + dissent summary>
++
++## Escalation (if applicable)
++- **Escalated To:** <name>
++- **Reason:** <summary>
++- **Next Review Date:** <optional>
++
++## Artefact Index
++- Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
++- Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
++- Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
++- Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
++
++> Commit this record alongside the supporting artefacts in the proposal archive.
+
+From 4243fa03b6b98a7d9fcf7334d21d34b61c1c5662 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 10:38:32 +0000
+Subject: [PATCH 101/112] Delete
+ docs/governance/review-board/archive/proposal-138/decision-record.md
+
+---
+ .../archive/proposal-138/decision-record.md   | 36 -------------------
+ 1 file changed, 36 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/decision-record.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/decision-record.md b/docs/governance/review-board/archive/proposal-138/decision-record.md
+deleted file mode 100644
+index 5e9af83..0000000
+--- a/docs/governance/review-board/archive/proposal-138/decision-record.md
++++ /dev/null
+@@ -1,36 +0,0 @@
+-# Decision Record — <proposal-id>
+-
+-- **Proposal Title:** <title>
+-- **GitHub Issue:** <link>
+-- **Decision Date:** <YYYY-MM-DD>
+-- **Chair:** <name>
+-
+-## Final Determination
+-- **Outcome:** <approved / approved with conditions / rejected / escalated>
+-- **Blended Score:** <value>
+-- **Floor Breaches:** <none or list>
+-- **Conditions / Actions:**
+-  - <condition or follow-up>
+-
+-## Domain Summaries
+-- **Innovation Lead:** <final position + rationale>
+-- **Ethics Steward:** <final position + rationale>
+-- **Financial Controller:** <final position + rationale>
+-- **Implementation & DevX:** <final position + rationale>
+-- **Adoption & Community:** <final position + rationale>
+-
+-## Dissent & Minority Reports
+-- <persona + dissent summary>
+-
+-## Escalation (if applicable)
+-- **Escalated To:** <name>
+-- **Reason:** <summary>
+-- **Next Review Date:** <optional>
+-
+-## Artefact Index
+-- Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
+-- Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
+-- Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
+-- Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
+-
+-> Commit this record alongside the supporting artefacts in the proposal archive.
+
+From 20f89fff91506814a4d3a2a430d6b012772c0790 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 10:41:25 +0000
+Subject: [PATCH 102/112] chore: Create File - decision-record.md
+
+---
+ .../archive/proposal-138/decision-record.md   | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/decision-record.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/decision-record.md b/docs/governance/review-board/archive/proposal-138/decision-record.md
+new file mode 100644
+index 0000000..5e9af83
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/decision-record.md
+@@ -0,0 +1,36 @@
++# Decision Record — <proposal-id>
++
++- **Proposal Title:** <title>
++- **GitHub Issue:** <link>
++- **Decision Date:** <YYYY-MM-DD>
++- **Chair:** <name>
++
++## Final Determination
++- **Outcome:** <approved / approved with conditions / rejected / escalated>
++- **Blended Score:** <value>
++- **Floor Breaches:** <none or list>
++- **Conditions / Actions:**
++  - <condition or follow-up>
++
++## Domain Summaries
++- **Innovation Lead:** <final position + rationale>
++- **Ethics Steward:** <final position + rationale>
++- **Financial Controller:** <final position + rationale>
++- **Implementation & DevX:** <final position + rationale>
++- **Adoption & Community:** <final position + rationale>
++
++## Dissent & Minority Reports
++- <persona + dissent summary>
++
++## Escalation (if applicable)
++- **Escalated To:** <name>
++- **Reason:** <summary>
++- **Next Review Date:** <optional>
++
++## Artefact Index
++- Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
++- Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
++- Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
++- Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
++
++> Commit this record alongside the supporting artefacts in the proposal archive.
+
+From 5cb422f0f9aa0b6afec57722f268ed43b2aa824b Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 11:18:32 +0000
+Subject: [PATCH 103/112] Delete
+ docs/governance/review-board/archive/proposal-138/decision-record.md
+
+---
+ .../archive/proposal-138/decision-record.md   | 36 -------------------
+ 1 file changed, 36 deletions(-)
+ delete mode 100644 docs/governance/review-board/archive/proposal-138/decision-record.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/decision-record.md b/docs/governance/review-board/archive/proposal-138/decision-record.md
+deleted file mode 100644
+index 5e9af83..0000000
+--- a/docs/governance/review-board/archive/proposal-138/decision-record.md
++++ /dev/null
+@@ -1,36 +0,0 @@
+-# Decision Record — <proposal-id>
+-
+-- **Proposal Title:** <title>
+-- **GitHub Issue:** <link>
+-- **Decision Date:** <YYYY-MM-DD>
+-- **Chair:** <name>
+-
+-## Final Determination
+-- **Outcome:** <approved / approved with conditions / rejected / escalated>
+-- **Blended Score:** <value>
+-- **Floor Breaches:** <none or list>
+-- **Conditions / Actions:**
+-  - <condition or follow-up>
+-
+-## Domain Summaries
+-- **Innovation Lead:** <final position + rationale>
+-- **Ethics Steward:** <final position + rationale>
+-- **Financial Controller:** <final position + rationale>
+-- **Implementation & DevX:** <final position + rationale>
+-- **Adoption & Community:** <final position + rationale>
+-
+-## Dissent & Minority Reports
+-- <persona + dissent summary>
+-
+-## Escalation (if applicable)
+-- **Escalated To:** <name>
+-- **Reason:** <summary>
+-- **Next Review Date:** <optional>
+-
+-## Artefact Index
+-- Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
+-- Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
+-- Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
+-- Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
+-
+-> Commit this record alongside the supporting artefacts in the proposal archive.
+
+From 4fe8c9a3804a4931505a26335576abd85a451e29 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 11:18:40 +0000
+Subject: [PATCH 104/112] chore: Create File - decision-record.md
+
+---
+ .../archive/proposal-138/decision-record.md   | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 docs/governance/review-board/archive/proposal-138/decision-record.md
+
+diff --git a/docs/governance/review-board/archive/proposal-138/decision-record.md b/docs/governance/review-board/archive/proposal-138/decision-record.md
+new file mode 100644
+index 0000000..5e9af83
+--- /dev/null
++++ b/docs/governance/review-board/archive/proposal-138/decision-record.md
+@@ -0,0 +1,36 @@
++# Decision Record — <proposal-id>
++
++- **Proposal Title:** <title>
++- **GitHub Issue:** <link>
++- **Decision Date:** <YYYY-MM-DD>
++- **Chair:** <name>
++
++## Final Determination
++- **Outcome:** <approved / approved with conditions / rejected / escalated>
++- **Blended Score:** <value>
++- **Floor Breaches:** <none or list>
++- **Conditions / Actions:**
++  - <condition or follow-up>
++
++## Domain Summaries
++- **Innovation Lead:** <final position + rationale>
++- **Ethics Steward:** <final position + rationale>
++- **Financial Controller:** <final position + rationale>
++- **Implementation & DevX:** <final position + rationale>
++- **Adoption & Community:** <final position + rationale>
++
++## Dissent & Minority Reports
++- <persona + dissent summary>
++
++## Escalation (if applicable)
++- **Escalated To:** <name>
++- **Reason:** <summary>
++- **Next Review Date:** <optional>
++
++## Artefact Index
++- Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
++- Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
++- Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
++- Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
++
++> Commit this record alongside the supporting artefacts in the proposal archive.
+
+From e76807416e9b52382c7fc96d3a16c49b3bcb72c5 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:03:56 +0000
+Subject: [PATCH 105/112] docs: log decision for proposal-138
+
+---
+ docs/governance/review-board/CHANGELOG.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/docs/governance/review-board/CHANGELOG.md b/docs/governance/review-board/CHANGELOG.md
+index b93dde2..efed1bf 100644
+--- a/docs/governance/review-board/CHANGELOG.md
++++ b/docs/governance/review-board/CHANGELOG.md
+@@ -1,7 +1,12 @@
++## 2025-11-14 — proposal-138 — approved
++- Title: Spec & Schema Alignment: Require `spec_version`
++- Decision: approved
++- Summary: All five personas converged on the same adjustment plan and blended score exceeded 80. The board accepts the schema update contingent on the documented follow-ups.
++- Follow-ups: Registry team to run dry-run migration before release; Comms working group to prep external announcement assets
+ # Review Board Decision Log
+ 
+ This file records the headline outcome for each Review Board deliberation. Append new entries at the top.
+ 
+ | Date | Proposal ID | Summary | Outcome | Follow-up |
+ |------|-------------|---------|---------|-----------|
+-| (pending) | | | | |
++| (pending) | | | | |
+\ No newline at end of file
+
+From 1eb52e4c3ed784ecc69b17bf0dbee3be5b848bc2 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:12:43 +0000
+Subject: [PATCH 106/112] docs: add decision record for proposal-138
+
+---
+ .../archive/proposal-138/decision-record.md   | 52 ++++++++-----------
+ 1 file changed, 21 insertions(+), 31 deletions(-)
+
+diff --git a/docs/governance/review-board/archive/proposal-138/decision-record.md b/docs/governance/review-board/archive/proposal-138/decision-record.md
+index 5e9af83..2ac140a 100644
+--- a/docs/governance/review-board/archive/proposal-138/decision-record.md
++++ b/docs/governance/review-board/archive/proposal-138/decision-record.md
+@@ -1,36 +1,26 @@
+-# Decision Record — <proposal-id>
++# Review Board Decision — proposal-138
+ 
+-- **Proposal Title:** <title>
+-- **GitHub Issue:** <link>
+-- **Decision Date:** <YYYY-MM-DD>
+-- **Chair:** <name>
++**Title:** Spec & Schema Alignment: Require `spec_version`
++**Outcome:** approved
++**Round:** final
++**Blended Score:** 81.5
+ 
+-## Final Determination
+-- **Outcome:** <approved / approved with conditions / rejected / escalated>
+-- **Blended Score:** <value>
+-- **Floor Breaches:** <none or list>
+-- **Conditions / Actions:**
+-  - <condition or follow-up>
++## Chair Summary
++All five personas converged on the same adjustment plan and blended score exceeded 80. The board accepts the schema update contingent on the documented follow-ups.
+ 
+-## Domain Summaries
+-- **Innovation Lead:** <final position + rationale>
+-- **Ethics Steward:** <final position + rationale>
+-- **Financial Controller:** <final position + rationale>
+-- **Implementation & DevX:** <final position + rationale>
+-- **Adoption & Community:** <final position + rationale>
++## Required Blockers
++- Publish public migration guide including timeline seeding
++- Document enrichment consent/opt-out workflow in registry handbook
+ 
+-## Dissent & Minority Reports
+-- <persona + dissent summary>
++## Recommended Actions
++- Registry team to run dry-run migration before release
++- Comms working group to prep external announcement assets
+ 
+-## Escalation (if applicable)
+-- **Escalated To:** <name>
+-- **Reason:** <summary>
+-- **Next Review Date:** <optional>
+-
+-## Artefact Index
+-- Dossier: `docs/governance/review-board/archive/<proposal-id>/dossier.md`
+-- Scorecards: `docs/governance/review-board/archive/<proposal-id>/scorecards/`
+-- Transcripts / prompts: `docs/governance/review-board/archive/<proposal-id>/transcripts/`
+-- Automation logs: `docs/governance/review-board/archive/<proposal-id>/automation.log`
+-
+-> Commit this record alongside the supporting artefacts in the proposal archive.
++## Persona Scores
++| Persona | Score | Key Points |
++| --- | --- | --- |
++| Innovation | 82 | Adds deterministic enrichment/timeline primitives unlocking AI discovery. |
++| Ethics | 78 | Portable flag + provenance metadata mitigate bias risk. |
++| Finance | 76 | Bounded infra cost; migration scripts keep effort predictable. |
++| DevX | 80 | Standardised preview API reduces bespoke client logic. |
++| Adoption | 79 | Clear upgrade path before third-party registries launch. |
+
+From a034eb6ca9226f04222f9998590c1f374c809b47 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:17:27 +0000
+Subject: [PATCH 107/112] docs: log decision for proposal-138
+
+---
+ docs/governance/review-board/CHANGELOG.md | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/docs/governance/review-board/CHANGELOG.md b/docs/governance/review-board/CHANGELOG.md
+index efed1bf..2418df5 100644
+--- a/docs/governance/review-board/CHANGELOG.md
++++ b/docs/governance/review-board/CHANGELOG.md
+@@ -1,3 +1,9 @@
++# Review Board Decision Log
++## 2025-11-14 — proposal-138 — approved
++- Title: Spec & Schema Alignment: Require `spec_version`
++- Decision: approved
++- Summary: All five personas converged on the same adjustment plan and blended score exceeded 80. The board accepts the schema update contingent on the documented follow-ups.
++- Follow-ups: Registry team to run dry-run migration before release; Comms working group to prep external announcement assets
+ ## 2025-11-14 — proposal-138 — approved
+ - Title: Spec & Schema Alignment: Require `spec_version`
+ - Decision: approved
+
+From bae1fa6cad3f3657da9a3b014739e84693fbd776 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:17:28 +0000
+Subject: [PATCH 108/112] docs: add decision record for proposal-138
+
+
+From 7b53c7d3d57fdc745eae585708fdeee084076356 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:18:08 +0000
+Subject: [PATCH 109/112] Delete docs/governance/review-board/CHANGELOG.md
+
+---
+ docs/governance/review-board/CHANGELOG.md | 18 ------------------
+ 1 file changed, 18 deletions(-)
+ delete mode 100644 docs/governance/review-board/CHANGELOG.md
+
+diff --git a/docs/governance/review-board/CHANGELOG.md b/docs/governance/review-board/CHANGELOG.md
+deleted file mode 100644
+index 2418df5..0000000
+--- a/docs/governance/review-board/CHANGELOG.md
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# Review Board Decision Log
+-## 2025-11-14 — proposal-138 — approved
+-- Title: Spec & Schema Alignment: Require `spec_version`
+-- Decision: approved
+-- Summary: All five personas converged on the same adjustment plan and blended score exceeded 80. The board accepts the schema update contingent on the documented follow-ups.
+-- Follow-ups: Registry team to run dry-run migration before release; Comms working group to prep external announcement assets
+-## 2025-11-14 — proposal-138 — approved
+-- Title: Spec & Schema Alignment: Require `spec_version`
+-- Decision: approved
+-- Summary: All five personas converged on the same adjustment plan and blended score exceeded 80. The board accepts the schema update contingent on the documented follow-ups.
+-- Follow-ups: Registry team to run dry-run migration before release; Comms working group to prep external announcement assets
+-# Review Board Decision Log
+-
+-This file records the headline outcome for each Review Board deliberation. Append new entries at the top.
+-
+-| Date | Proposal ID | Summary | Outcome | Follow-up |
+-|------|-------------|---------|---------|-----------|
+-| (pending) | | | | |
+\ No newline at end of file
+
+From 69079d1d68a8ba8863cc738aa4ad4baeca43f495 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:18:16 +0000
+Subject: [PATCH 110/112] chore: Create File - CHANGELOG.md
+
+---
+ docs/governance/review-board/CHANGELOG.md | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 docs/governance/review-board/CHANGELOG.md
+
+diff --git a/docs/governance/review-board/CHANGELOG.md b/docs/governance/review-board/CHANGELOG.md
+new file mode 100644
+index 0000000..b93dde2
+--- /dev/null
++++ b/docs/governance/review-board/CHANGELOG.md
+@@ -0,0 +1,7 @@
++# Review Board Decision Log
++
++This file records the headline outcome for each Review Board deliberation. Append new entries at the top.
++
++| Date | Proposal ID | Summary | Outcome | Follow-up |
++|------|-------------|---------|---------|-----------|
++| (pending) | | | | |
+
+From d89ab4c39290c73d8f0b3eef8846c092233b89cc Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:18:16 +0000
+Subject: [PATCH 111/112] docs: log decision for proposal-138
+
+---
+ docs/governance/review-board/CHANGELOG.md | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/docs/governance/review-board/CHANGELOG.md b/docs/governance/review-board/CHANGELOG.md
+index b93dde2..bd84f10 100644
+--- a/docs/governance/review-board/CHANGELOG.md
++++ b/docs/governance/review-board/CHANGELOG.md
+@@ -1,7 +1,7 @@
+ # Review Board Decision Log
+-
+-This file records the headline outcome for each Review Board deliberation. Append new entries at the top.
+-
+-| Date | Proposal ID | Summary | Outcome | Follow-up |
+-|------|-------------|---------|---------|-----------|
+-| (pending) | | | | |
++## 2025-11-14 — proposal-138 — approved
++- Title: Spec & Schema Alignment: Require `spec_version`
++- Decision: approved
++- Summary: All five personas converged on the same adjustment plan and blended score exceeded 80. The board accepts the schema update contingent on the documented follow-ups.
++- Follow-ups: Registry team to run dry-run migration before release; Comms working group to prep external announcement assets
++���pB�gij�]��?��ޮv�q��z�����j�pB�gl�����^�nkn����u�ִ���{�7�m��"�������i��ڦ("��r����h����G�����?�隞؜����+!�x>��-��%��'�����hr�������{�޾'������F�����
+\ No newline at end of file
+
+From 3337d18d6c9de6e4ba0a3cfcd21cb5f8e225d058 Mon Sep 17 00:00:00 2001
+From: Mark Stokes <mark.stokes@outlook.com>
+Date: Fri, 14 Nov 2025 12:18:17 +0000
+Subject: [PATCH 112/112] docs: add decision record for proposal-138
+
