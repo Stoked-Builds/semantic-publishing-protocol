@@ -1,3 +1,8 @@
+## 2025-11-14 — proposal-138 — pending
+- Title: Review: Enable Artifact Enrichment and version control
+- Decision: pending
+- Summary: n/a
+- Follow-ups: None
 # Review Board Decision Log
 ## 2025-11-14 — proposal-138 — approved
 - Title: Spec & Schema Alignment: Require `spec_version`
